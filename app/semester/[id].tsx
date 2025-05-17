@@ -6,7 +6,7 @@ import { Semester } from '@/types/semester';
 import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';
-import { ChevronLeft, Plus } from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 
 export default function SemesterScreen() {
   const { colors } = useTheme();
@@ -18,28 +18,6 @@ export default function SemesterScreen() {
     container: {
       flex: 1,
       backgroundColor: colors.background,
-    },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: colors.background,
-      height: 60,
-      paddingHorizontal: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    backButton: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    headerTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 18,
-      color: colors.text,
-      marginLeft: 8,
     },
     content: {
       flex: 1,
@@ -138,13 +116,6 @@ export default function SemesterScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <ChevronLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Semester Details</Text>
-      </View>
-
       <View style={styles.content}>
         <View style={styles.summaryContainer}>
           <Text style={styles.semesterTitle}>
