@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, Switch, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Switch, TouchableOpacity, Alert, ScrollView, Platform } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
 import { Info, CircleHelp as HelpCircle, Trash2, Sun, Moon } from 'lucide-react-native';
@@ -16,9 +16,11 @@ export default function SettingsScreen() {
     },
     content: {
       padding: 16,
+      paddingBottom: 32,
     },
     header: {
       marginBottom: 24,
+      paddingHorizontal: 4,
     },
     title: {
       fontFamily: 'Inter-Bold',
@@ -36,29 +38,42 @@ export default function SettingsScreen() {
     },
     sectionTitle: {
       fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
-      color: colors.text,
-      marginBottom: 16,
-      paddingBottom: 8,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginBottom: 8,
+      marginLeft: 16,
+      textTransform: 'uppercase',
+    },
+    sectionContainer: {
+      backgroundColor: colors.card,
+      borderRadius: Platform.OS === 'ios' ? 8 : 10,
+      overflow: 'hidden',
+      marginHorizontal: 0,
+      marginBottom: 8,
     },
     settingRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingVertical: 16,
-      borderBottomWidth: 1,
+      minHeight: Platform.OS === 'ios' ? 44 : 48,
+      paddingHorizontal: Platform.OS === 'ios' ? 16 : 16,
+      borderBottomWidth: Platform.OS === 'ios' ? 0.3 : 1,
       borderBottomColor: colors.border,
+      justifyContent: 'space-between',
+    },
+    settingLabelContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+      marginRight: 8,
     },
     settingLabel: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 16,
+      fontFamily: Platform.OS === 'ios' ? '-apple-system' : 'Inter-Regular',
+      fontSize: Platform.OS === 'ios' ? 17 : 16,
       color: colors.text,
-      flex: 1,
     },
     settingIcon: {
       marginRight: 12,
+      opacity: Platform.OS === 'ios' ? 0.6 : 1,
     },
     dangerButton: {
       backgroundColor: colors.error,
@@ -84,11 +99,7 @@ export default function SettingsScreen() {
       fontSize: 14,
       color: colors.textSecondary,
       marginTop: 4,
-    },
-    settingLabelContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
+    }
   });
 
   const confirmClearData = () => {
@@ -132,65 +143,82 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Appearance</Text>
-          
-          <View style={styles.settingRow}>
-            <View style={styles.settingLabelContainer}>
-              {isDark ? (
-                <Moon size={20} color={colors.text} style={styles.settingIcon} />
-              ) : (
-                <Sun size={20} color={colors.text} style={styles.settingIcon} />
-              )}
-              <Text style={styles.settingLabel}>Dark Theme</Text>
+          <View style={styles.sectionContainer}>
+            <View style={styles.settingRow}>
+              <View style={styles.settingLabelContainer}>
+                {isDark ? (
+                  <Moon size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                ) : (
+                  <Sun size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                )}
+                <Text style={styles.settingLabel}>Dark Theme</Text>
+              </View>
+              <Switch
+                value={isDark}
+                onValueChange={toggleTheme}
+                trackColor={{ 
+                  false: Platform.OS === 'ios' ? '#e9e9ea' : colors.border,
+                  true: Platform.OS === 'ios' ? colors.primary : colors.primary 
+                }}
+                thumbColor={Platform.select({
+                  android: isDark ? colors.primary : '#f4f3f4',
+                  ios: '#ffffff'
+                })}
+                ios_backgroundColor="#e9e9ea"
+              />
             </View>
-            <Switch
-              value={isDark}
-              onValueChange={toggleTheme}
-              trackColor={{ false: "#767577", true: colors.primaryLight }}
-              thumbColor={isDark ? colors.primary : "#f4f3f4"}
-            />
           </View>
           
-          <View style={styles.settingRow}>
-            <View style={styles.settingLabelContainer}>
-              <Info size={20} color={colors.text} style={styles.settingIcon} />
-              <Text style={styles.settingLabel}>Hide Grades</Text>
+          <View style={styles.sectionContainer}>
+            <View style={styles.settingRow}>
+              <View style={styles.settingLabelContainer}>
+                <Info size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                <Text style={styles.settingLabel}>Hide Grades</Text>
+              </View>
+              <Switch
+                value={hideGrades}
+                onValueChange={setHideGrades}
+                trackColor={{ 
+                  false: Platform.OS === 'ios' ? '#e9e9ea' : colors.border,
+                  true: Platform.OS === 'ios' ? colors.primary : colors.primary 
+                }}
+                thumbColor={Platform.select({
+                  android: hideGrades ? colors.primary : '#f4f3f4',
+                  ios: '#ffffff'
+                })}
+                ios_backgroundColor="#e9e9ea"
+              />
             </View>
-            <Switch
-              value={hideGrades}
-              onValueChange={setHideGrades}
-              trackColor={{ false: "#767577", true: colors.primaryLight }}
-              thumbColor={hideGrades ? colors.primary : "#f4f3f4"}
-            />
           </View>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Support</Text>
-          
-          <TouchableOpacity style={styles.settingRow} onPress={showHelp}>
-            <View style={styles.settingLabelContainer}>
-              <HelpCircle size={20} color={colors.text} style={styles.settingIcon} />
-              <Text style={styles.settingLabel}>Help & FAQ</Text>
-            </View>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.settingRow} onPress={showAbout}>
-            <View style={styles.settingLabelContainer}>
-              <Info size={20} color={colors.text} style={styles.settingIcon} />
-              <Text style={styles.settingLabel}>About</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.sectionContainer}>
+            <TouchableOpacity style={styles.settingRow} onPress={showHelp}>
+              <View style={styles.settingLabelContainer}>
+                <HelpCircle size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                <Text style={styles.settingLabel}>Help & FAQ</Text>
+              </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.settingRow} onPress={showAbout}>
+              <View style={styles.settingLabelContainer}>
+                <Info size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                <Text style={styles.settingLabel}>About</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Data Management</Text>
           
-          <TouchableOpacity style={styles.dangerButton} onPress={confirmClearData}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Trash2 size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
-              <Text style={styles.dangerButtonText}>Clear All Data</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.sectionContainer}>
+            <TouchableOpacity style={[styles.settingRow, { justifyContent: 'center' }]} onPress={confirmClearData}>
+              <Text style={{ fontFamily: 'Inter-Medium', color: colors.error }}>Clear All Data</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.appInfo}>

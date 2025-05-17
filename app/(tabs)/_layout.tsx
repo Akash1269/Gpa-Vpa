@@ -1,5 +1,10 @@
 import { Tabs } from 'expo-router';
-import { ChartBar as BarChart3, BookOpen, Chrome as Home, Settings } from 'lucide-react-native';
+import { 
+  LayoutDashboard, 
+  GraduationCap, 
+  BarChart3, 
+  Settings2 
+} from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
 
 export default function TabLayout() {
@@ -13,13 +18,17 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: colors.border,
+          borderTopWidth: 0.5,
           elevation: 0,
-          height: 60,
+          shadowOpacity: 0,
+          height: 58,
           paddingBottom: 8,
+          paddingTop: 5,
         },
         tabBarLabelStyle: {
           fontFamily: 'Inter-Medium',
-          fontSize: 12,
+          fontSize: 11,
+          marginTop: -2,
         },
         headerStyle: {
           backgroundColor: colors.background,
@@ -38,7 +47,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <LayoutDashboard size={size-2} strokeWidth={1.5} color={color} />,
           headerShown: true,
         }}
       />
@@ -46,7 +55,7 @@ export default function TabLayout() {
         name="courses"
         options={{
           title: 'Courses',
-          tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <GraduationCap size={size-2} strokeWidth={1.5} color={color} />,
           headerShown: true,
         }}
       />
@@ -54,7 +63,7 @@ export default function TabLayout() {
         name="academic-record"
         options={{
           title: 'Record',
-          tabBarIcon: ({ color, size }) => <BarChart3 size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <BarChart3 size={size-2} strokeWidth={1.5} color={color} />,
           headerShown: true,
         }}
       />
@@ -62,7 +71,7 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <Settings2 size={size-2} strokeWidth={1.5} color={color} />,
           headerShown: true,
         }}
       />
