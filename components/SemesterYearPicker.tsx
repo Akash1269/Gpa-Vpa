@@ -1,6 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Platform, ViewStyle, TextStyle, Modal, TouchableOpacity, Text } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useTheme } from '@/hooks/useTheme';
+import { ChevronDown } from 'lucide-react-native';
 
 type SemesterYearPickerProps = {
   semester: string;
@@ -13,101 +15,200 @@ const semesters = ['Fall', 'Spring', 'Summer'];
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
-const SemesterYearPicker: React.FC<SemesterYearPickerProps> = ({ 
-  semester, 
-  year, 
-  onChangeSemester, 
-  onChangeYear 
+const SemesterYearPicker: React.FC<SemesterYearPickerProps> = ({
+  semester,
+  year,
+  onChangeSemester,
+  onChangeYear
 }) => {
   const { colors } = useTheme();
-  
+  const [showSemesterPicker, setShowSemesterPicker] = useState(false);
+  const [showYearPicker, setShowYearPicker] = useState(false);
+
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      padding: 10,
-    },
+      alignItems: 'center',
+      gap: 12,
+      backgroundColor: 'transparent',
+      borderWidth: 0,
+      padding: 0,
+      margin: 0,
+    } as ViewStyle,
     pickerContainer: {
       flex: 1,
-      marginHorizontal: 5,
-    },
-    optionsContainer: {
+    } as ViewStyle,
+    pickerButton: {
       backgroundColor: colors.card,
       borderRadius: 8,
-      overflow: 'hidden',
-    },
-    option: {
       padding: 12,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    optionText: {
-      fontSize: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderWidth: Platform.OS === 'ios' ? 1 : 0,
+      borderColor: colors.border,
+    } as ViewStyle,
+    pickerText: {
       color: colors.text,
-      fontFamily: 'Inter-Regular',
-    },
-    selectedOption: {
-      backgroundColor: colors.primary,
-    },
-    selectedOptionText: {
-      color: '#FFFFFF',
-      fontFamily: 'Inter-Medium',
-    },
-    label: {
-      fontSize: 14,
-      color: colors.textSecondary,
-      marginBottom: 8,
-      fontFamily: 'Inter-Medium',
-    }
+      fontSize: 16,
+      fontFamily: Platform.OS === 'ios' ? '-apple-system' : 'Inter-Regular',
+    } as TextStyle,
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'flex-end',
+    } as ViewStyle,
+    picker: Platform.select({
+      ios: {
+        backgroundColor: colors.card,
+      },
+      android: {
+        color: colors.text,
+        backgroundColor: colors.card,
+        borderRadius: 8,
+      },
+    }) as TextStyle,
+    modalContent: {
+      backgroundColor: colors.card,
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12,
+      paddingTop: 16,
+    } as ViewStyle,
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      paddingHorizontal: 16,
+      paddingBottom: 8,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: colors.border,
+    } as ViewStyle,
+    doneButton: {
+      color: colors.primary,
+      fontSize: 16,
+      fontWeight: '600',
+    } as TextStyle,
   });
+
+  const renderIOSPicker = (
+    value: string | number,
+    items: Array<{ label: string; value: string | number }>,
+    isVisible: boolean,
+    onClose: () => void,
+    onChange: (value: any) => void
+  ) => (
+    <Modal
+      visible={isVisible}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.doneButton}>Done</Text>
+            </TouchableOpacity>
+          </View>
+          <Picker
+            selectedValue={value}
+            onValueChange={(itemValue) => {
+              onChange(itemValue);
+              onClose();
+            }}
+          >
+            {items.map(({ label, value }) => (
+              <Picker.Item
+                key={value.toString()}
+                label={label}
+                value={value}
+                color={colors.text}
+              />
+            ))}
+          </Picker>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.pickerContainer}>
-        <Text style={styles.label}>Semester</Text>
-        <View style={styles.optionsContainer}>
-          {semesters.map((s) => (
+        {Platform.OS === 'ios' ? (
+          <>
             <TouchableOpacity
-              key={s}
-              style={[
-                styles.option,
-                semester === s && styles.selectedOption
-              ]}
-              onPress={() => onChangeSemester(s)}
+              style={styles.pickerButton}
+              onPress={() => setShowSemesterPicker(true)}
             >
-              <Text style={[
-                styles.optionText,
-                semester === s && styles.selectedOptionText
-              ]}>
-                {s}
-              </Text>
+              <Text style={styles.pickerText}>{semester}</Text>
+              <ChevronDown size={20} color={colors.text} />
             </TouchableOpacity>
-          ))}
-        </View>
+            {renderIOSPicker(
+              semester,
+              semesters.map(s => ({ label: s, value: s })),
+              showSemesterPicker,
+              () => setShowSemesterPicker(false),
+              onChangeSemester
+            )}
+          </>
+        ) : (
+          <Picker
+            style={styles.picker}
+            selectedValue={semester}
+            onValueChange={onChangeSemester}
+            dropdownIconColor={colors.text}
+          >
+            {semesters.map((s) => (
+              <Picker.Item
+                key={s}
+                label={s}
+                value={s}
+                color={colors.text}
+              />
+            ))}
+          </Picker>
+        )}
       </View>
 
       <View style={styles.pickerContainer}>
-        <Text style={styles.label}>Year</Text>
-        <View style={styles.optionsContainer}>
-          {years.map((y) => (
+        {Platform.OS === 'ios' ? (
+          <>
             <TouchableOpacity
-              key={y}
-              style={[
-                styles.option,
-                year === y && styles.selectedOption
-              ]}
-              onPress={() => onChangeYear(y)}
+              style={styles.pickerButton}
+              onPress={() => setShowYearPicker(true)}
             >
-              <Text style={[
-                styles.optionText,
-                year === y && styles.selectedOptionText
-              ]}>
-                {y}
-              </Text>
+              <Text style={styles.pickerText}>{year}</Text>
+              <ChevronDown size={20} color={colors.text} />
             </TouchableOpacity>
-          ))}
-        </View>
+            {renderIOSPicker(
+              year,
+              years.map(y => ({ label: y.toString(), value: y })),
+              showYearPicker,
+              () => setShowYearPicker(false),
+              onChangeYear
+            )}
+          </>
+        ) : (
+          <Picker
+            style={styles.picker}
+            selectedValue={year}
+            onValueChange={onChangeYear}
+            dropdownIconColor={colors.text}
+          >
+            {years.map((y) => (
+              <Picker.Item
+                key={y}
+                label={y.toString()}
+                value={y}
+                color={colors.text}
+              />
+            ))}
+          </Picker>
+        )}
       </View>
     </View>
   );
