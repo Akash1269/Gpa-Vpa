@@ -68,7 +68,7 @@ export default function GpaCard({ gpa, academicStanding }: GpaCardProps) {
   });
 
   // Calculate width percentage based on GPA (0-4 scale)
-  const progressWidth = `${(gpa / 4) * 100}%`;
+  const progressWidth = (gpa / 4) * 100;
 
   return (
     <Animated.View entering={FadeIn.duration(800)}>
@@ -90,7 +90,7 @@ export default function GpaCard({ gpa, academicStanding }: GpaCardProps) {
             style={[
               styles.progressFill, 
               { 
-                width: progressWidth, 
+                width: `${progressWidth}%`, 
                 backgroundColor: academicStanding.color 
               }
             ]}

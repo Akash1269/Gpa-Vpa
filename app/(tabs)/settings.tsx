@@ -1,8 +1,25 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, Switch, TouchableOpacity, Alert, ScrollView, Platform } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Switch,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
-import { Info, CircleHelp as HelpCircle, Trash2, Sun, Moon } from 'lucide-react-native';
+import {
+  Info,
+  CircleHelp as HelpCircle,
+  Trash2,
+  Sun,
+  Moon,
+  Eye,
+  EyeOff,
+} from 'lucide-react-native';
 
 export default function SettingsScreen() {
   const { colors, isDark, toggleTheme } = useTheme();
@@ -99,37 +116,37 @@ export default function SettingsScreen() {
       fontSize: 14,
       color: colors.textSecondary,
       marginTop: 4,
-    }
+    },
   });
 
   const confirmClearData = () => {
     Alert.alert(
-      "Clear All Data",
-      "Are you sure you want to delete all your academic records? This action cannot be undone.",
+      'Clear All Data',
+      'Are you sure you want to delete all your academic records? This action cannot be undone.',
       [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Clear All Data", 
-          style: "destructive",
-          onPress: clearAllData
-        }
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Clear All Data',
+          style: 'destructive',
+          onPress: clearAllData,
+        },
       ]
     );
   };
 
   const showAbout = () => {
     Alert.alert(
-      "About GPA Calculator",
-      "A comprehensive GPA Calculator and Course Management System to help students track their academic progress.\n\nVersion 1.0.0",
-      [{ text: "OK" }]
+      'About GPA Calculator',
+      'A comprehensive GPA Calculator and Course Management System to help students track their academic progress.\n\nVersion 1.0.0',
+      [{ text: 'OK' }]
     );
   };
 
   const showHelp = () => {
     Alert.alert(
-      "GPA Calculator Help",
-      "1. Add courses using the + button on the Courses tab\n\n2. View your GPA summary on the Dashboard\n\n3. See your complete academic record in the Record tab\n\n4. GPA is calculated on a 4.0 scale (A = 4.0, B = 3.0, etc.)",
-      [{ text: "OK" }]
+      'GPA Calculator Help',
+      '1. Add courses using the + button on the Courses tab\n\n2. View your GPA summary on the Dashboard\n\n3. See your complete academic record in the Record tab\n\n4. GPA is calculated on a 4.0 scale (A = 4.0, B = 3.0, etc.)',
+      [{ text: 'OK' }]
     );
   };
 
@@ -138,7 +155,9 @@ export default function SettingsScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>Settings</Text>
-          <Text style={styles.subtitle}>Customize your GPA Calculator experience</Text>
+          <Text style={styles.subtitle}>
+            Customize your GPA Calculator experience
+          </Text>
         </View>
 
         <View style={styles.section}>
@@ -147,47 +166,40 @@ export default function SettingsScreen() {
             <View style={styles.settingRow}>
               <View style={styles.settingLabelContainer}>
                 {isDark ? (
-                  <Moon size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                  <Moon
+                    size={Platform.OS === 'ios' ? 18 : 20}
+                    color={colors.text}
+                    style={styles.settingIcon}
+                  />
                 ) : (
-                  <Sun size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                  <Sun
+                    size={Platform.OS === 'ios' ? 18 : 20}
+                    color={colors.text}
+                    style={styles.settingIcon}
+                  />
                 )}
                 <Text style={styles.settingLabel}>Dark Theme</Text>
               </View>
-              <Switch
-                value={isDark}
-                onValueChange={toggleTheme}
-                trackColor={{ 
-                  false: Platform.OS === 'ios' ? '#e9e9ea' : colors.border,
-                  true: Platform.OS === 'ios' ? colors.primary : colors.primary 
-                }}
-                thumbColor={Platform.select({
-                  android: isDark ? colors.primary : '#f4f3f4',
-                  ios: '#ffffff'
-                })}
-                ios_backgroundColor="#e9e9ea"
-              />
+              <Switch value={isDark} onValueChange={toggleTheme} />
             </View>
-          </View>
-          
-          <View style={styles.sectionContainer}>
             <View style={styles.settingRow}>
               <View style={styles.settingLabelContainer}>
-                <Info size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                {hideGrades ? (
+                  <EyeOff
+                    size={Platform.OS === 'ios' ? 18 : 20}
+                    color={colors.text}
+                    style={styles.settingIcon}
+                  />
+                ) : (
+                  <Eye
+                    size={Platform.OS === 'ios' ? 18 : 20}
+                    color={colors.text}
+                    style={styles.settingIcon}
+                  />
+                )}
                 <Text style={styles.settingLabel}>Hide Grades</Text>
               </View>
-              <Switch
-                value={hideGrades}
-                onValueChange={setHideGrades}
-                trackColor={{ 
-                  false: Platform.OS === 'ios' ? '#e9e9ea' : colors.border,
-                  true: Platform.OS === 'ios' ? colors.primary : colors.primary 
-                }}
-                thumbColor={Platform.select({
-                  android: hideGrades ? colors.primary : '#f4f3f4',
-                  ios: '#ffffff'
-                })}
-                ios_backgroundColor="#e9e9ea"
-              />
+              <Switch value={hideGrades} onValueChange={setHideGrades} />
             </View>
           </View>
         </View>
@@ -197,14 +209,22 @@ export default function SettingsScreen() {
           <View style={styles.sectionContainer}>
             <TouchableOpacity style={styles.settingRow} onPress={showHelp}>
               <View style={styles.settingLabelContainer}>
-                <HelpCircle size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                <HelpCircle
+                  size={Platform.OS === 'ios' ? 18 : 20}
+                  color={colors.text}
+                  style={styles.settingIcon}
+                />
                 <Text style={styles.settingLabel}>Help & FAQ</Text>
               </View>
             </TouchableOpacity>
-            
+
             <TouchableOpacity style={styles.settingRow} onPress={showAbout}>
               <View style={styles.settingLabelContainer}>
-                <Info size={Platform.OS === 'ios' ? 18 : 20} color={colors.text} style={styles.settingIcon} />
+                <Info
+                  size={Platform.OS === 'ios' ? 18 : 20}
+                  color={colors.text}
+                  style={styles.settingIcon}
+                />
                 <Text style={styles.settingLabel}>About</Text>
               </View>
             </TouchableOpacity>
@@ -213,10 +233,15 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Data Management</Text>
-          
+
           <View style={styles.sectionContainer}>
-            <TouchableOpacity style={[styles.settingRow, { justifyContent: 'center' }]} onPress={confirmClearData}>
-              <Text style={{ fontFamily: 'Inter-Medium', color: colors.error }}>Clear All Data</Text>
+            <TouchableOpacity
+              style={[styles.settingRow, { justifyContent: 'center' }]}
+              onPress={confirmClearData}
+            >
+              <Text style={{ fontFamily: 'Inter-Medium', color: colors.error }}>
+                Clear All Data
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
