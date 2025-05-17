@@ -1,0 +1,202 @@
+import { useState } from 'react';
+import { StyleSheet, View, Text, Switch, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { useGpa } from '@/hooks/useGpa';
+import { useTheme } from '@/hooks/useTheme';
+import { Info, CircleHelp as HelpCircle, Trash2, Sun, Moon } from 'lucide-react-native';
+
+export default function SettingsScreen() {
+  const { colors, isDark, toggleTheme } = useTheme();
+  const { clearAllData } = useGpa();
+  const [hideGrades, setHideGrades] = useState(false);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    content: {
+      padding: 16,
+    },
+    header: {
+      marginBottom: 24,
+    },
+    title: {
+      fontFamily: 'Inter-Bold',
+      fontSize: 22,
+      color: colors.text,
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontFamily: 'Inter-Regular',
+      fontSize: 14,
+      color: colors.textSecondary,
+    },
+    section: {
+      marginBottom: 24,
+    },
+    sectionTitle: {
+      fontFamily: 'Inter-SemiBold',
+      fontSize: 16,
+      color: colors.text,
+      marginBottom: 16,
+      paddingBottom: 8,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    settingRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    settingLabel: {
+      fontFamily: 'Inter-Regular',
+      fontSize: 16,
+      color: colors.text,
+      flex: 1,
+    },
+    settingIcon: {
+      marginRight: 12,
+    },
+    dangerButton: {
+      backgroundColor: colors.error,
+      borderRadius: 8,
+      padding: 16,
+      alignItems: 'center',
+      marginTop: 16,
+    },
+    dangerButtonText: {
+      fontFamily: 'Inter-SemiBold',
+      fontSize: 16,
+      color: '#FFFFFF',
+    },
+    appInfo: {
+      alignItems: 'center',
+      marginTop: 32,
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    appVersion: {
+      fontFamily: 'Inter-Regular',
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
+    settingLabelContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+  });
+
+  const confirmClearData = () => {
+    Alert.alert(
+      "Clear All Data",
+      "Are you sure you want to delete all your academic records? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Clear All Data", 
+          style: "destructive",
+          onPress: clearAllData
+        }
+      ]
+    );
+  };
+
+  const showAbout = () => {
+    Alert.alert(
+      "About GPA Calculator",
+      "A comprehensive GPA Calculator and Course Management System to help students track their academic progress.\n\nVersion 1.0.0",
+      [{ text: "OK" }]
+    );
+  };
+
+  const showHelp = () => {
+    Alert.alert(
+      "GPA Calculator Help",
+      "1. Add courses using the + button on the Courses tab\n\n2. View your GPA summary on the Dashboard\n\n3. See your complete academic record in the Record tab\n\n4. GPA is calculated on a 4.0 scale (A = 4.0, B = 3.0, etc.)",
+      [{ text: "OK" }]
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Settings</Text>
+          <Text style={styles.subtitle}>Customize your GPA Calculator experience</Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Appearance</Text>
+          
+          <View style={styles.settingRow}>
+            <View style={styles.settingLabelContainer}>
+              {isDark ? (
+                <Moon size={20} color={colors.text} style={styles.settingIcon} />
+              ) : (
+                <Sun size={20} color={colors.text} style={styles.settingIcon} />
+              )}
+              <Text style={styles.settingLabel}>Dark Theme</Text>
+            </View>
+            <Switch
+              value={isDark}
+              onValueChange={toggleTheme}
+              trackColor={{ false: "#767577", true: colors.primaryLight }}
+              thumbColor={isDark ? colors.primary : "#f4f3f4"}
+            />
+          </View>
+          
+          <View style={styles.settingRow}>
+            <View style={styles.settingLabelContainer}>
+              <Info size={20} color={colors.text} style={styles.settingIcon} />
+              <Text style={styles.settingLabel}>Hide Grades</Text>
+            </View>
+            <Switch
+              value={hideGrades}
+              onValueChange={setHideGrades}
+              trackColor={{ false: "#767577", true: colors.primaryLight }}
+              thumbColor={hideGrades ? colors.primary : "#f4f3f4"}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Support</Text>
+          
+          <TouchableOpacity style={styles.settingRow} onPress={showHelp}>
+            <View style={styles.settingLabelContainer}>
+              <HelpCircle size={20} color={colors.text} style={styles.settingIcon} />
+              <Text style={styles.settingLabel}>Help & FAQ</Text>
+            </View>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.settingRow} onPress={showAbout}>
+            <View style={styles.settingLabelContainer}>
+              <Info size={20} color={colors.text} style={styles.settingIcon} />
+              <Text style={styles.settingLabel}>About</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Data Management</Text>
+          
+          <TouchableOpacity style={styles.dangerButton} onPress={confirmClearData}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Trash2 size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+              <Text style={styles.dangerButtonText}>Clear All Data</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.appInfo}>
+          <Text style={styles.appVersion}>GPA Calculator v1.0.0</Text>
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
