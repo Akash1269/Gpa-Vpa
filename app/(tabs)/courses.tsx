@@ -1,21 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { Plus, Search, Filter } from 'lucide-react-native';
 import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import CourseCard from '@/components/CourseCard';
 import SemesterFilter from '@/components/SemesterFilter';
 import EmptyState from '@/components/EmptyState';
+import Toast from '@/components/Toast';
 import { useTheme } from '@/hooks/useTheme';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export default function CoursesScreen() {
   const { colors } = useTheme();
-  const { courses, semesters } = useGpa();
+  const { courses, semesters, lastDeletedCourse, undoDelete } = useGpa();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredCourses, setFilteredCourses] = useState(courses);
   const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (lastDeletedCourse) {
+      setShowToast(true);
+    }
+  }, [lastDeletedCourse]);
+
+  const handleUndo = useCallback(() => {
+    undoDelete();
+    setShowToast(false);
+  }, [undoDelete]);
+
+  const dismissToast = useCallback(() => {
+    setShowToast(false);
+  }, []);
 
   useEffect(() => {
     let result = courses;
@@ -172,6 +190,9 @@ export default function CoursesScreen() {
             renderItem={({ item }) => <CourseCard course={item} />}
             contentContainerStyle={{ paddingBottom: 88 }}
             showsVerticalScrollIndicator={false}
+            maxToRenderPerBatch={10}
+            windowSize={5}
+            getItemLayout={(_, index) => ({ length: 88, offset: 88 * index, index })}
           />
         ) : (
           <EmptyState 
@@ -182,9 +203,16 @@ export default function CoursesScreen() {
         )}
       </View>
 
-      <TouchableOpacity style={styles.fab} onPress={handleAddCourse}>
+      <TouchableOpacity style={styles.fab} onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); handleAddCourse(); }} accessibilityRole="button" accessibilityLabel="Add new course">
         <Plus size={24} color="#FFF" />
       </TouchableOpacity>
+
+      <Toast
+        message="Course deleted"
+        visible={showToast}
+        onDismiss={dismissToast}
+        action={{ label: 'Undo', onPress: handleUndo }}
+      />
     </View>
   );
 }

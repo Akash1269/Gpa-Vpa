@@ -1,3 +1,4 @@
+import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Semester } from '@/types/semester';
@@ -10,7 +11,7 @@ type SemesterCardProps = {
   semester: Semester;
 };
 
-export default function SemesterCard({ semester }: SemesterCardProps) {
+export default React.memo(function SemesterCard({ semester }: SemesterCardProps) {
   const { colors } = useTheme();
   const gpaColor = getGradeColor(semester.gpa ?? 0) ?? {
     background: '#FCE8E6',
@@ -123,4 +124,4 @@ export default function SemesterCard({ semester }: SemesterCardProps) {
       </TouchableOpacity>
     </Animated.View>
   );
-}
+});

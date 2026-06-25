@@ -17,6 +17,7 @@ export default function StackNavigator() {
           backgroundColor: colors.background
         }
       }}>
+      <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen 
         name="course/[id]" 

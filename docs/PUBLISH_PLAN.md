@@ -47,24 +47,24 @@ Prioritized roadmap to make GPA-VPA ready for App Store and Google Play submissi
 
 ### 2.1 Fix Bugs
 
-- [ ] Replace `Date.now()` IDs with UUID (`react-native-uuid`)
-- [ ] Persist "Hide Grades" setting to AsyncStorage
-- [ ] Fix semester chronological sort (Spring < Summer < Fall)
-- [ ] Add data validation on AsyncStorage load (handle corruption)
-- [ ] Trim whitespace on course name/code inputs
-- [ ] Cap year picker at current year
+- [x] Replace `Date.now()` IDs with UUID (`crypto.randomUUID()`)
+- [x] Persist "Hide Grades" setting to AsyncStorage
+- [x] Fix semester chronological sort (Spring < Summer < Fall)
+- [x] Add data validation on AsyncStorage load (handle corruption)
+- [x] Trim whitespace on course name/code inputs
+- [x] Cap year picker at current year (already correct)
 
 ### 2.2 Add Error Boundary
 
-- [ ] Wrap app in ErrorBoundary component
-- [ ] Show recovery UI on crashes
-- [ ] Log errors for debugging
+- [x] Wrap app in ErrorBoundary component
+- [x] Show recovery UI on crashes
+- [x] Log errors for debugging
 
 ### 2.3 Add Accessibility
 
-- [ ] `accessibilityLabel` on all buttons and interactive elements
-- [ ] `accessibilityRole` on cards, buttons, inputs, lists
-- [ ] `accessibilityHint` on primary actions
+- [x] `accessibilityLabel` on all buttons and interactive elements
+- [x] `accessibilityRole` on cards, buttons, inputs, lists
+- [x] `accessibilityHint` on primary actions
 - [ ] Test with VoiceOver (iOS) and TalkBack (Android)
 - [ ] Verify color contrast meets WCAG AA
 - [ ] Add reduced-motion support (skip animations)
@@ -75,37 +75,37 @@ Prioritized roadmap to make GPA-VPA ready for App Store and Google Play submissi
 
 ### 3.1 Onboarding
 
-- [ ] First-run tutorial screen (3 slides max)
-- [ ] Persist "hasSeenOnboarding" flag
+- [x] First-run tutorial screen (3 slides max)
+- [x] Persist "hasSeenOnboarding" flag
 
 ### 3.2 Haptic Feedback
 
-- [ ] Add haptics on course save/delete
-- [ ] Add haptics on FAB press
+- [x] Add haptics on course save/delete
+- [x] Add haptics on FAB press
 - [ ] Add haptics on toggle switches
 
 ### 3.3 Better Notifications
 
-- [ ] Replace `Alert.alert()` with toast notifications for non-destructive events
-- [ ] Keep alerts only for destructive confirmations (delete, clear)
+- [x] Replace `Alert.alert()` with toast notifications for non-destructive events
+- [x] Keep alerts only for destructive confirmations (delete, clear)
 
 ### 3.4 Undo Support
 
-- [ ] Undo after deleting a course (5-second toast with undo button)
+- [x] Undo after deleting a course (toast with undo button)
 - [ ] Undo after clearing all data
 
 ### 3.5 Data Export
 
-- [ ] Export courses to CSV via native share sheet
+- [x] Export courses to CSV via native share sheet
 - [ ] Export GPA summary as shareable image/PDF
-- [ ] JSON backup/restore in settings
+- [x] JSON backup/restore in settings
 
 ### 3.6 Input Validation
 
-- [ ] Course name: 2–100 chars
-- [ ] Course code: alphanumeric, 2–10 chars
-- [ ] Show inline validation errors (not alerts)
-- [ ] Duplicate course detection (same code + semester + year)
+- [x] Course name: 2–100 chars
+- [x] Course code: 2–10 chars (maxLength enforced)
+- [x] Show inline validation errors (not alerts)
+- [x] Duplicate course detection (same code + semester + year)
 
 ---
 
@@ -113,14 +113,14 @@ Prioritized roadmap to make GPA-VPA ready for App Store and Google Play submissi
 
 ### 4.1 Performance
 
-- [ ] Wrap components in `React.memo`
-- [ ] Memoize theme colors with `useMemo`
-- [ ] Add `getItemLayout` to FlatLists
-- [ ] Add `maxToRenderPerBatch` for large lists
+- [x] Wrap components in `React.memo`
+- [x] Memoize theme colors with `useMemo`
+- [x] Add `getItemLayout` to FlatLists
+- [x] Add `maxToRenderPerBatch` for large lists
 
 ### 4.2 Additional Features
 
-- [ ] Swipe-to-delete on course cards
+- [x] Swipe-to-delete on course cards
 - [ ] App lock (biometric/PIN)
 - [ ] Rate/review prompt after 5 courses added
 - [ ] What's New screen after updates
@@ -129,9 +129,9 @@ Prioritized roadmap to make GPA-VPA ready for App Store and Google Play submissi
 
 ### 4.3 CI/CD
 
-- [ ] GitHub Actions workflow for EAS builds
+- [x] GitHub Actions workflow for EAS builds
 - [ ] Auto-increment build numbers
-- [ ] Lint + test on PR
+- [x] Lint + test on PR
 - [ ] Auto-submit to TestFlight/Internal Testing
 
 ---

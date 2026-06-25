@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,6 +7,7 @@ import {
   Alert,
   ScrollView,
   Platform,
+  Share,
 } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
@@ -19,12 +19,13 @@ import {
   Moon,
   Eye,
   EyeOff,
+  Download,
+  Upload,
 } from 'lucide-react-native';
 
 export default function SettingsScreen() {
-  const { colors, isDark, toggleTheme } = useTheme();
-  const { clearAllData } = useGpa();
-  const [hideGrades, setHideGrades] = useState(false);
+  const { colors, isDark, toggleTheme, hideGrades, toggleHideGrades } = useTheme();
+  const { clearAllData, courses } = useGpa();
 
   const styles = StyleSheet.create({
     container: {
@@ -119,6 +120,26 @@ export default function SettingsScreen() {
     },
   });
 
+  const exportAsCSV = async () => {
+    if (courses.length === 0) {
+      Alert.alert('No Data', 'Add some courses before exporting.');
+      return;
+    }
+    const header = 'Name,Code,Credits,Grade,Semester,Year';
+    const rows = courses.map(c => `"${c.name}","${c.code}",${c.credits},${c.grade},${c.semester},${c.year}`);
+    const csv = [header, ...rows].join('\n');
+    await Share.share({ message: csv, title: 'GPA Calculator - Courses.csv' });
+  };
+
+  const exportAsJSON = async () => {
+    if (courses.length === 0) {
+      Alert.alert('No Data', 'Add some courses before exporting.');
+      return;
+    }
+    const json = JSON.stringify({ courses, exportedAt: new Date().toISOString() }, null, 2);
+    await Share.share({ message: json, title: 'GPA Calculator - Backup.json' });
+  };
+
   const confirmClearData = () => {
     Alert.alert(
       'Clear All Data',
@@ -180,7 +201,7 @@ export default function SettingsScreen() {
                 )}
                 <Text style={styles.settingLabel}>Dark Theme</Text>
               </View>
-              <Switch value={isDark} onValueChange={toggleTheme} />
+              <Switch value={isDark} onValueChange={toggleTheme} accessibilityLabel="Dark theme toggle" />
             </View>
             <View style={styles.settingRow}>
               <View style={styles.settingLabelContainer}>
@@ -199,7 +220,7 @@ export default function SettingsScreen() {
                 )}
                 <Text style={styles.settingLabel}>Hide Grades</Text>
               </View>
-              <Switch value={hideGrades} onValueChange={setHideGrades} />
+              <Switch value={hideGrades} onValueChange={toggleHideGrades} accessibilityLabel="Hide grades toggle" />
             </View>
           </View>
         </View>
@@ -226,6 +247,33 @@ export default function SettingsScreen() {
                   style={styles.settingIcon}
                 />
                 <Text style={styles.settingLabel}>About</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Export Data</Text>
+          <View style={styles.sectionContainer}>
+            <TouchableOpacity style={styles.settingRow} onPress={exportAsCSV}>
+              <View style={styles.settingLabelContainer}>
+                <Download
+                  size={Platform.OS === 'ios' ? 18 : 20}
+                  color={colors.text}
+                  style={styles.settingIcon}
+                />
+                <Text style={styles.settingLabel}>Export as CSV</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.settingRow} onPress={exportAsJSON}>
+              <View style={styles.settingLabelContainer}>
+                <Upload
+                  size={Platform.OS === 'ios' ? 18 : 20}
+                  color={colors.text}
+                  style={styles.settingIcon}
+                />
+                <Text style={styles.settingLabel}>Export as JSON Backup</Text>
               </View>
             </TouchableOpacity>
           </View>
