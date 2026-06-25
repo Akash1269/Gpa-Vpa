@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import { Course } from '@/types/course';
 import { gradePoints, calculateGradeValue } from '@/utils/gpaCalculator';
@@ -14,10 +15,10 @@ export default function CourseScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const isNew = id === 'new';
-  const { getCourse, addCourse, updateCourse, deleteCourse } = useGpa();
+  const { getCourse, addCourse, updateCourse, deleteCourse, courses } = useGpa();
   
   const [course, setCourse] = useState<Course>({
-    id: isNew ? Date.now().toString() : id,
+    id: isNew ? crypto.randomUUID() : id,
     name: '',
     code: '',
     credits: 3,
@@ -25,6 +26,8 @@ export default function CourseScreen() {
     semester: 'Fall',
     year: new Date().getFullYear(),
   });
+
+  const [errors, setErrors] = useState<{ name?: string; code?: string }>({});
 
   useEffect(() => {
     if (!isNew) {
@@ -36,23 +39,55 @@ export default function CourseScreen() {
   }, [id, isNew, getCourse]);
 
   const handleSave = () => {
-    // Validate input
-    if (!course.name.trim()) {
-      Alert.alert('Error', 'Course name is required');
-      return;
+    const trimmedName = course.name.trim();
+    const trimmedCode = course.code.trim();
+    const newErrors: { name?: string; code?: string } = {};
+
+    if (!trimmedName) {
+      newErrors.name = 'Course name is required';
+    } else if (trimmedName.length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    } else if (trimmedName.length > 100) {
+      newErrors.name = 'Name must be 100 characters or fewer';
     }
-    
-    if (!course.code.trim()) {
-      Alert.alert('Error', 'Course code is required');
+
+    if (!trimmedCode) {
+      newErrors.code = 'Course code is required';
+    } else if (trimmedCode.length < 2) {
+      newErrors.code = 'Code must be at least 2 characters';
+    } else if (trimmedCode.length > 10) {
+      newErrors.code = 'Code must be 10 characters or fewer';
+    }
+
+    // Duplicate detection
+    if (!newErrors.code && trimmedCode) {
+      const duplicate = courses.find(
+        c => c.code.toLowerCase() === trimmedCode.toLowerCase() &&
+             c.semester === course.semester &&
+             c.year === course.year &&
+             c.id !== course.id
+      );
+      if (duplicate) {
+        newErrors.code = `A course with code "${trimmedCode}" already exists in ${course.semester} ${course.year}`;
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       return;
     }
 
+    setErrors({});
+    const courseToSave = { ...course, name: trimmedName, code: trimmedCode };
+
     if (isNew) {
-      addCourse(course);
+      addCourse(courseToSave);
     } else {
-      updateCourse(course);
+      updateCourse(courseToSave);
     }
     
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     router.back();
   };
 
@@ -66,6 +101,7 @@ export default function CourseScreen() {
           text: "Delete", 
           style: "destructive",
           onPress: () => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
             deleteCourse(course.id);
             router.back();
           }
@@ -124,6 +160,15 @@ export default function CourseScreen() {
       borderWidth: 1,
       borderColor: colors.border,
     },
+    inputError: {
+      borderColor: colors.error,
+    },
+    errorText: {
+      fontFamily: 'Inter-Regular',
+      fontSize: 13,
+      color: colors.error,
+      marginTop: 4,
+    },
     pickerContainer: {
       borderWidth: 1,
       borderColor: colors.border,
@@ -173,7 +218,7 @@ export default function CourseScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close">
           <X size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>
@@ -186,23 +231,29 @@ export default function CourseScreen() {
         <View style={styles.formGroup}>
           <Text style={styles.label}>Course Name</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, errors.name ? styles.inputError : undefined]}
             value={course.name}
-            onChangeText={(text) => setCourse({ ...course, name: text })}
+            onChangeText={(text) => { setCourse({ ...course, name: text }); if (errors.name) setErrors(e => ({ ...e, name: undefined })); }}
             placeholder="Introduction to Computer Science"
             placeholderTextColor={colors.textSecondary}
+            accessibilityLabel="Course name"
+            maxLength={100}
           />
+          {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
         </View>
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Course Code</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, errors.code ? styles.inputError : undefined]}
             value={course.code}
-            onChangeText={(text) => setCourse({ ...course, code: text })}
+            onChangeText={(text) => { setCourse({ ...course, code: text }); if (errors.code) setErrors(e => ({ ...e, code: undefined })); }}
             placeholder="CS101"
             placeholderTextColor={colors.textSecondary}
+            accessibilityLabel="Course code"
+            maxLength={10}
           />
+          {errors.code && <Text style={styles.errorText}>{errors.code}</Text>}
         </View>
 
         <View style={styles.formGroup}>
@@ -243,7 +294,7 @@ export default function CourseScreen() {
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave} accessibilityRole="button" accessibilityLabel="Save course">
             <Save size={20} color="#FFFFFF" />
             <Text style={styles.saveButtonText}>Save Course</Text>
           </TouchableOpacity>

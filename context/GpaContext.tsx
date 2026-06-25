@@ -17,6 +17,8 @@ type GpaContextType = {
   getCourse: (id: string) => Course | undefined;
   getSemester: (id: string) => Semester | undefined;
   clearAllData: () => void;
+  lastDeletedCourse: Course | null;
+  undoDelete: () => void;
 };
 
 export const GpaContext = createContext<GpaContextType>({
@@ -32,10 +34,27 @@ export const GpaContext = createContext<GpaContextType>({
   getCourse: () => undefined,
   getSemester: () => undefined,
   clearAllData: () => {},
+  lastDeletedCourse: null,
+  undoDelete: () => {},
 });
 
 export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const isValidCourse = (item: unknown): item is Course => {
+    if (typeof item !== 'object' || item === null) return false;
+    const c = item as Record<string, unknown>;
+    return (
+      typeof c.id === 'string' &&
+      typeof c.name === 'string' &&
+      typeof c.code === 'string' &&
+      typeof c.credits === 'number' &&
+      typeof c.grade === 'string' &&
+      typeof c.semester === 'string' &&
+      typeof c.year === 'number'
+    );
+  };
+
   const [courses, setCourses] = useState<Course[]>([]);
+  const [lastDeletedCourse, setLastDeletedCourse] = useState<Course | null>(null);
   const [cumulativeGpa, setCumulativeGpa] = useState(0);
   const [totalCredits, setTotalCredits] = useState(0);
   const [semesters, setSemesters] = useState<Semester[]>([]);
@@ -48,10 +67,17 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const storedCourses = await AsyncStorage.getItem('courses');
         if (storedCourses) {
-          setCourses(JSON.parse(storedCourses));
+          const parsed = JSON.parse(storedCourses);
+          if (Array.isArray(parsed) && parsed.every(isValidCourse)) {
+            setCourses(parsed);
+          } else {
+            console.error('Invalid course data format, resetting');
+            await AsyncStorage.removeItem('courses');
+          }
         }
       } catch (error) {
         console.error('Error loading data:', error);
+        await AsyncStorage.removeItem('courses').catch(() => {});
       }
     };
     
@@ -151,8 +177,19 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const deleteCourse = useCallback((id: string) => {
-    setCourses(prevCourses => prevCourses.filter(c => c.id !== id));
+    setCourses(prevCourses => {
+      const courseToDelete = prevCourses.find(c => c.id === id);
+      if (courseToDelete) setLastDeletedCourse(courseToDelete);
+      return prevCourses.filter(c => c.id !== id);
+    });
   }, []);
+
+  const undoDelete = useCallback(() => {
+    if (lastDeletedCourse) {
+      setCourses(prev => [...prev, lastDeletedCourse]);
+      setLastDeletedCourse(null);
+    }
+  }, [lastDeletedCourse]);
 
   const getCourse = useCallback((id: string) => {
     return courses.find(course => course.id === id);
@@ -186,6 +223,8 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         getCourse,
         getSemester,
         clearAllData,
+        lastDeletedCourse,
+        undoDelete,
       }}
     >
       {children}

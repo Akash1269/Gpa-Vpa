@@ -1,3 +1,4 @@
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -10,7 +11,7 @@ type GpaCardProps = {
   };
 };
 
-export default function GpaCard({ gpa, academicStanding }: GpaCardProps) {
+export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardProps) {
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -99,4 +100,4 @@ export default function GpaCard({ gpa, academicStanding }: GpaCardProps) {
       </View>
     </Animated.View>
   );
-}
+});
