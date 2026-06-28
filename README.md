@@ -1,96 +1,185 @@
-# GPA-VPA
+<div align="center">
 
-A mobile GPA Calculator & Academic Tracker built with React Native (Expo). Helps students track courses, calculate GPA, and monitor academic progress — all data stored locally on-device.
+# 📱 GPA-VPA
 
-## Tech Stack
+**A modern GPA Calculator & Academic Tracker for students**
 
-- **Expo 53** + **React 19** + **React Native 0.79** + **TypeScript 5.8**
-- **Expo Router** — File-based routing
-- **AsyncStorage** — Local data persistence
-- **React Native Reanimated** — Animations
-- **Lucide React Native** — Icons
-- **Inter font** via @expo-google-fonts
+Track courses, compute semester & cumulative GPA, and monitor academic standing — all locally on your device.
 
-## Features
+[![CI](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/ci.yml/badge.svg)](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/ci.yml)
+[![Expo SDK](https://img.shields.io/badge/Expo-SDK%2056-000020?logo=expo)](https://expo.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![React Native](https://img.shields.io/badge/React%20Native-0.85-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-| Tab | Purpose |
-|-----|---------|
-| **Dashboard** | Cumulative GPA, quick stats, current semester preview, recent courses |
-| **Courses** | Add/edit/delete courses with search & semester filtering |
-| **Academic Record** | Full history, GPA progression chart, semester breakdowns |
-| **Settings** | Dark/light theme, hide grades, clear all data |
+</div>
 
-### GPA Calculation
+---
 
-- Standard **4.0 scale** (A = 4.0, A- = 3.7, B+ = 3.3, …)
-- Weighted average by credit hours
-- Semester GPA and Cumulative GPA computed in real-time
+## 📸 Screenshots
 
-### Academic Standing (color-coded)
+<!-- Replace these placeholders with actual screenshots -->
+<div align="center">
+<table>
+<tr>
+<td align="center"><strong>Dashboard</strong></td>
+<td align="center"><strong>Courses</strong></td>
+<td align="center"><strong>Academic Record</strong></td>
+<td align="center"><strong>Settings</strong></td>
+</tr>
+<tr>
+<td><img src="docs/screenshots/dashboard.png" width="200" alt="Dashboard"/></td>
+<td><img src="docs/screenshots/courses.png" width="200" alt="Courses"/></td>
+<td><img src="docs/screenshots/academic-record.png" width="200" alt="Academic Record"/></td>
+<td><img src="docs/screenshots/settings.png" width="200" alt="Settings"/></td>
+</tr>
+</table>
+</div>
 
-| Standing | GPA Range |
-|----------|-----------|
-| Excellent | ≥ 3.7 |
-| Very Good | ≥ 3.0 |
-| Satisfactory | ≥ 2.0 |
-| Probation | ≥ 1.0 |
-| Academic Warning | < 1.0 |
+> 💡 *Screenshots coming soon — add your own to `docs/screenshots/`*
 
-## Project Structure
+---
 
-```
-app/
-  (tabs)/          → Tab screens (Dashboard, Courses, Academic Record, Settings)
-  course/[id].tsx  → Course detail/edit screen
-  semester/[id].tsx→ Semester detail screen
-components/        → Reusable UI components (CourseCard, GpaChart, etc.)
-context/           → GpaContext (global state via Context API)
-hooks/             → Custom hooks (useGpa, useTheme, useFrameworkReady)
-types/             → TypeScript types (Course, Semester)
-utils/             → GPA calculation logic
-```
+## ✨ Features
 
-## Architecture
+- **Real-time GPA calculation** — weighted by credit hours on a 4.0 scale
+- **Semester & cumulative GPA** — track progress across your entire academic career
+- **Academic standing indicators** — color-coded status (Excellent → Academic Warning)
+- **Course management** — add, edit, delete with search & semester filtering
+- **GPA progression chart** — visualize your academic trajectory
+- **Dark/Light theme** — automatic or manual toggle
+- **Privacy-first** — all data stored locally via AsyncStorage (no server, no tracking)
+- **Cross-platform** — runs on iOS, Android, and Web
 
-- **Context API** (`GpaContext`) manages all state globally
-- **Derived data model**: courses are the single source of truth → semesters and GPAs are computed in real-time
-- **Custom hooks** (`useGpa`, `useTheme`) for clean data access
-- **Reusable components** (`CourseCard`, `SemesterCard`, `GpaChart`, `EmptyState`, etc.)
+---
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js (LTS)
-- Expo CLI (`npm install -g expo-cli`)
-
-### Install & Run
+## 🚀 Quick Start
 
 ```bash
+# Clone the repository
+git clone https://github.com/Akash1269/Gpa-Vpa.git
+cd Gpa-Vpa
+
 # Install dependencies
 npm install
 
-# Start development server
+# Start the development server
 npm start
-
-# Run on specific platform
-npm run android
-npm run ios
-npm run web
 ```
 
-## Scripts
+Then scan the QR code with **Expo Go** (iOS/Android) or press `w` to open in your browser.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | [Expo](https://expo.dev) SDK 56 |
+| **UI** | React Native 0.85 + React 19 |
+| **Language** | TypeScript 5.8 |
+| **Routing** | Expo Router v5 (file-based) |
+| **State** | React Context API |
+| **Storage** | AsyncStorage (local, no backend) |
+| **Animations** | React Native Reanimated |
+| **Icons** | Lucide React Native |
+| **Font** | Inter (via @expo-google-fonts) |
+| **CI/CD** | GitHub Actions + EAS Build |
+
+---
+
+## 🏗️ Architecture
+
+```
+Single Source of Truth: courses[] → derives → semesters, GPAs, standings
+```
+
+- **Context API** (`GpaContext`) manages all global state
+- **Derived data model** — semesters and GPAs are computed from courses in real-time
+- **Custom hooks** — `useGpa()` for data, `useTheme()` for theming
+- **Reusable components** — `CourseCard`, `SemesterCard`, `GpaChart`, `EmptyState`, etc.
+
+> 📖 For detailed architecture docs, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+
+---
+
+## 📁 Project Structure
+
+```
+app/                  → Screens (Expo Router file-based routing)
+├── (tabs)/           → Tab screens (Dashboard, Courses, Academic Record, Settings)
+├── course/[id].tsx   → Course add/edit modal
+└── semester/[id].tsx → Semester detail screen
+components/           → Reusable UI components
+context/              → GpaContext (global state + persistence)
+hooks/                → Custom hooks (useGpa, useTheme)
+types/                → TypeScript type definitions
+utils/                → GPA calculation business logic
+__tests__/            → Unit tests (Jest)
+docs/                 → Documentation
+.github/              → CI workflows, issue/PR templates
+```
+
+---
+
+## 📊 GPA Scale
+
+| Grade | Points | | Grade | Points |
+|-------|--------|-|-------|--------|
+| A     | 4.0    | | C+    | 2.3    |
+| A-    | 3.7    | | C     | 2.0    |
+| B+    | 3.3    | | C-    | 1.7    |
+| B     | 3.0    | | D+    | 1.3    |
+| B-    | 2.7    | | D     | 1.0    |
+|       |        | | F     | 0.0    |
+
+---
+
+## 🧪 Scripts
 
 | Command | Description |
 |---------|-------------|
 | `npm start` | Start Expo dev server |
-| `npm run dev` | Start without telemetry |
 | `npm run android` | Run on Android |
 | `npm run ios` | Run on iOS |
 | `npm run web` | Run in browser |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests |
+| `npm run test:coverage` | Tests with coverage report |
 | `npm run build:web` | Export for web deployment |
-| `npm run lint` | Run linter |
 
-## License
+---
 
-Private project.
+## 🤝 Contributing
+
+Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- Setting up your development environment
+- Coding conventions and project patterns
+- Pull request process
+
+See the [open issues](https://github.com/Akash1269/Gpa-Vpa/issues) for things to work on.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Expo](https://expo.dev) for the incredible React Native toolchain
+- [Lucide](https://lucide.dev) for beautiful open-source icons
+- [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/) for smooth animations
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [Akash](https://github.com/Akash1269)**
+
+⭐ Star this repo if you find it useful!
+
+</div>
