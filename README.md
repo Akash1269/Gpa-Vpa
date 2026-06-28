@@ -7,10 +7,13 @@
 Track courses, compute semester & cumulative GPA, and monitor academic standing — all locally on your device.
 
 [![CI](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/ci.yml/badge.svg)](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/ci.yml)
+[![Deploy](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/deploy-web.yml/badge.svg)](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/deploy-web.yml)
 [![Expo SDK](https://img.shields.io/badge/Expo-SDK%2056-000020?logo=expo)](https://expo.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![React Native](https://img.shields.io/badge/React%20Native-0.85-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
+🌐 **[Live Demo](https://akash1269.github.io/Gpa-Vpa/)**
 
 </div>
 
