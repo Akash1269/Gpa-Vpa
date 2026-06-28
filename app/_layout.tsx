@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, useSegments } from 'expo-router';
+import Head from 'expo-router/head';
 import { GpaProvider } from '@/context/GpaContext';
 import StackNavigator from '@/components/StackNavigator';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -47,6 +48,15 @@ export default function RootLayout() {
     return null;
   }  return (
     <ErrorBoundary>
+      <Head>
+        <meta name="description" content="Track courses, compute semester & cumulative GPA, and monitor academic standing. Free, private, no sign-up required." />
+        <meta property="og:title" content="GPA Calculator — Academic Tracker" />
+        <meta property="og:description" content="Track courses, compute GPA, and monitor academic standing. All data stored locally." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://akash1269.github.io/Gpa-Vpa/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="theme-color" content="#1A73E8" />
+      </Head>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <GpaProvider>
           <StackNavigator />
