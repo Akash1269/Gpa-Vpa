@@ -21,9 +21,10 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.card,
-      borderRadius: 12,
-      marginBottom: 16,
-      elevation: 1,
+      borderRadius: 16,
+      marginBottom: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
       overflow: 'hidden',
     },
     cardContent: {

@@ -21,11 +21,12 @@ import {
   EyeOff,
   Download,
   Upload,
+  Database,
 } from 'lucide-react-native';
 
 export default function SettingsScreen() {
   const { colors, isDark, toggleTheme, hideGrades, toggleHideGrades } = useTheme();
-  const { clearAllData, courses } = useGpa();
+  const { clearAllData, courses, loadDemoData } = useGpa();
 
   const styles = StyleSheet.create({
     container: {
@@ -35,6 +36,7 @@ export default function SettingsScreen() {
     content: {
       padding: 16,
       paddingBottom: 32,
+      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
       marginBottom: 24,
@@ -283,6 +285,35 @@ export default function SettingsScreen() {
           <Text style={styles.sectionTitle}>Data Management</Text>
 
           <View style={styles.sectionContainer}>
+            <TouchableOpacity
+              style={styles.settingRow}
+              onPress={() => {
+                if (courses.length > 0) {
+                  Alert.alert(
+                    'Load Demo Data',
+                    'This will replace your current courses with sample data. Continue?',
+                    [
+                      { text: 'Cancel', style: 'cancel' },
+                      { text: 'Load Demo', onPress: loadDemoData },
+                    ]
+                  );
+                } else {
+                  loadDemoData();
+                }
+              }}
+              accessibilityLabel="Load demo data"
+              accessibilityHint="Loads sample courses to preview how the app looks with data"
+            >
+              <View style={styles.settingLabelContainer}>
+                <Database
+                  size={Platform.OS === 'ios' ? 18 : 20}
+                  color={colors.primary}
+                  style={styles.settingIcon}
+                />
+                <Text style={[styles.settingLabel, { color: colors.primary }]}>Load Demo Data</Text>
+              </View>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={[styles.settingRow, { justifyContent: 'center' }]}
               onPress={confirmClearData}

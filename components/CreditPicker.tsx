@@ -24,11 +24,15 @@ export default function CreditPicker({ value, onChange }: CreditPickerProps) {
       height: 48,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 8,
+      borderRadius: 10,
       marginHorizontal: 4,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      backgroundColor: colors.card,
     },
     selectedOption: {
       backgroundColor: colors.primaryLight,
+      borderColor: colors.primary,
     },
     optionText: {
       fontFamily: 'Inter-Medium',

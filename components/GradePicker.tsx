@@ -23,11 +23,15 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
       height: 48,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 8,
+      borderRadius: 10,
       marginRight: 8,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      backgroundColor: colors.card,
     },
     selectedOption: {
       backgroundColor: colors.primaryLight,
+      borderColor: colors.primary,
     },
     optionText: {
       fontFamily: 'Inter-Medium',
