@@ -22,7 +22,7 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 ## Install on Android
 
 1. Go to the [Latest Release](https://github.com/Akash1269/Gpa-Vpa/releases/latest)
-2. Download `gpa-calculator-v0.1.0.apk`
+2. Download `gpa-vpa-v0.1.0.apk`
 3. On your Android device, open the downloaded file
 4. If prompted, allow **"Install from unknown sources"** for your browser/file manager
 5. Tap **Install** → **Open**

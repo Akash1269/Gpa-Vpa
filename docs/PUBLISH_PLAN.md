@@ -124,11 +124,11 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | # | Category | Task |
 |---|----------|------|
 | 1 | App Config | Rename app: "bolt-expo-nativewind" → "GPA Calculator" |
-| 2 | App Config | Set `slug`: "gpa-calculator" |
-| 3 | App Config | Set `scheme`: "gpacalculator" |
-| 4 | App Config | Add iOS `bundleIdentifier`: "com.akash1269.gpacalculator" |
+| 2 | App Config | Set `slug`: "gpa-vpa" |
+| 3 | App Config | Set `scheme`: "gpavpa" |
+| 4 | App Config | Add iOS `bundleIdentifier`: "com.akash1269.gpavpa" |
 | 5 | App Config | Add iOS `buildNumber`: "1" |
-| 6 | App Config | Add Android `package`: "com.akash1269.gpacalculator" |
+| 6 | App Config | Add Android `package`: "com.akash1269.gpavpa" |
 | 7 | App Config | Add Android `versionCode`: 1 |
 | 8 | App Config | Add Android `adaptiveIcon` with foreground/background |
 | 9 | App Config | Add `runtimeVersion`: "1.0.0" |

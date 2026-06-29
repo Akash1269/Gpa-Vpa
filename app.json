@@ -1,12 +1,12 @@
 {
   "expo": {
     "name": "GPA Calculator",
-    "slug": "gpa-calculator",
+    "slug": "gpa-vpa",
     "version": "0.1.0",
     "runtimeVersion": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "gpacalculator",
+    "scheme": "gpavpa",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -16,11 +16,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.akash1269.gpacalculator",
+      "bundleIdentifier": "com.akash1269.gpavpa",
       "buildNumber": "1"
     },
     "android": {
-      "package": "com.akash1269.gpacalculator",
+      "package": "com.akash1269.gpavpa",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
