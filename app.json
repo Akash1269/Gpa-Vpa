@@ -2,8 +2,8 @@
   "expo": {
     "name": "GPA Calculator",
     "slug": "gpa-calculator",
-    "version": "1.0.0",
-    "runtimeVersion": "1.0.0",
+    "version": "0.1.0",
+    "runtimeVersion": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "gpacalculator",
@@ -45,8 +45,10 @@
     },
     "extra": {
       "eas": {
-        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
-      }
-    }
+        "projectId": "cdc61fa1-5392-47ce-a861-ce415358623e"
+      },
+      "router": {}
+    },
+    "owner": "akash1269"
   }
 }

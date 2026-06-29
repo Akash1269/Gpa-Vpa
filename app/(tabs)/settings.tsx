@@ -162,7 +162,7 @@ export default function SettingsScreen() {
   const showAbout = () => {
     Alert.alert(
       'About GPA Calculator',
-      'A comprehensive GPA Calculator and Course Management System to help students track their academic progress.\n\nVersion 1.0.0',
+      'A comprehensive GPA Calculator and Course Management System to help students track their academic progress.\n\nVersion 0.1.0',
       [{ text: 'OK' }]
     );
   };
@@ -339,7 +339,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.appInfo}>
-          <Text style={styles.appVersion}>GPA Calculator v1.0.0</Text>
+          <Text style={styles.appVersion}>GPA Calculator v0.1.0</Text>
         </View>
       </ScrollView>
     </View>
