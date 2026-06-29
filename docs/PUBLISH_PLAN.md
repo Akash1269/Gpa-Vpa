@@ -37,7 +37,7 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | 1 | Create Expo account + run `eas login` + `eas init` | ⏳ |
 | 2 | Create app icon (1024×1024 PNG, no alpha, no rounded corners) | ✅ |
 | 3 | Create splash screen asset | ✅ (reuses icon.png) |
-| 4 | Host Privacy Policy at a public URL | ⏳ |
+| 4 | Host Privacy Policy at a public URL | ✅ (GitHub + in-app) |
 | 5 | Add open-source license attributions | ✅ (MIT LICENSE) |
 | 6 | Google Play Developer account ($25 one-time) | ⏳ |
 | 7 | Apple Developer account ($99/year) | ⏳ |
@@ -51,7 +51,7 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | 2 | Screenshots: 6.7", 6.5", 5.5" iPhone + iPad if supported | ⏳ |
 | 3 | App description (max 4000 chars) | ✅ (STORE_LISTING.md) |
 | 4 | Keywords (max 100 chars) | ✅ (STORE_LISTING.md) |
-| 5 | Privacy Policy URL | ⏳ (doc exists, not hosted) |
+| 5 | Privacy Policy URL | ✅ (GitHub URL) |
 | 6 | App Review notes | ✅ (STORE_LISTING.md) |
 | 7 | Age rating questionnaire | ⏳ |
 | 8 | App Privacy details (data not collected) | ✅ (STORE_LISTING.md) |
@@ -67,7 +67,7 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | 3 | Screenshots: phone + tablet (min 2) | ⏳ |
 | 4 | Short description (max 80 chars) | ✅ (STORE_LISTING.md) |
 | 5 | Full description (max 4000 chars) | ✅ (STORE_LISTING.md) |
-| 6 | Privacy Policy URL | ⏳ (doc exists, not hosted) |
+| 6 | Privacy Policy URL | ✅ (GitHub URL) |
 | 7 | Data Safety form (no data collected/shared) | ✅ (STORE_LISTING.md) |
 | 8 | Content rating questionnaire | ⏳ |
 | 9 | Target audience declaration | ⏳ |
@@ -83,7 +83,7 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | # | Category | Task | Status |
 |---|----------|------|--------|
 | 1 | App Config | Create proper app icon (1024×1024) and splash screen assets | ✅ |
-| 2 | Legal | Host Privacy Policy at a public URL (for store submission) | ⏳ |
+| 2 | Legal | Host Privacy Policy at a public URL (for store submission) | ✅ (GitHub + in-app) |
 | 3 | Legal | Add data handling disclosure for Google Play | ✅ (STORE_LISTING.md) |
 | 4 | Legal | Add open-source license attributions | ✅ (MIT LICENSE) |
 

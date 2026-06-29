@@ -8,6 +8,7 @@ import {
   ScrollView,
   Platform,
   Share,
+  Linking,
 } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
@@ -22,6 +23,7 @@ import {
   Download,
   Upload,
   Database,
+  Shield,
 } from 'lucide-react-native';
 
 export default function SettingsScreen() {
@@ -249,6 +251,17 @@ export default function SettingsScreen() {
                   style={styles.settingIcon}
                 />
                 <Text style={styles.settingLabel}>About</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.settingRow} onPress={() => Linking.openURL('https://github.com/Akash1269/Gpa-Vpa/blob/main/docs/PRIVACY_POLICY.md')}>
+              <View style={styles.settingLabelContainer}>
+                <Shield
+                  size={Platform.OS === 'ios' ? 18 : 20}
+                  color={colors.text}
+                  style={styles.settingIcon}
+                />
+                <Text style={styles.settingLabel}>Privacy Policy</Text>
               </View>
             </TouchableOpacity>
           </View>
