@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "GPA Calculator",
-    "slug": "gpa-vpa",
-    "version": "0.1.0",
-    "runtimeVersion": "0.1.0",
+    "slug": "gpa-calculator",
+    "version": "0.1.1",
+    "runtimeVersion": "0.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "gpavpa",
@@ -35,9 +35,19 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-web-browser",
       "expo-splash-screen",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "useLegacyPackaging": false,
+            "extraProguardRules": "-dontobfuscate"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

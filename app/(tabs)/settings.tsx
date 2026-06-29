@@ -339,7 +339,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.appInfo}>
-          <Text style={styles.appVersion}>GPA Calculator v0.1.0</Text>
+          <Text style={styles.appVersion}>GPA Calculator v0.1.1</Text>
         </View>
       </ScrollView>
     </View>

@@ -8,32 +8,37 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "buildArtifactName": "gpa-vpa-dev-v${appVersion}.apk"
+        "buildType": "apk"
       },
       "ios": {
-        "simulator": true,
-        "buildArtifactName": "gpa-vpa-dev-v${appVersion}.tar.gz"
+        "simulator": true
+      },
+      "cache": {
+        "key": "dev-v1"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "buildArtifactName": "gpa-vpa-v${appVersion}.apk"
+        "buildType": "apk"
       },
-      "ios": {
-        "buildArtifactName": "gpa-vpa-v${appVersion}.ipa"
+      "cache": {
+        "key": "preview-v1"
+      },
+      "env": {
+        "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.parallel=true -Dorg.gradle.daemon=true -Dorg.gradle.caching=true"
       }
     },
     "production": {
       "autoIncrement": true,
       "android": {
-        "buildType": "app-bundle",
-        "buildArtifactName": "gpa-vpa-v${appVersion}.aab"
+        "buildType": "app-bundle"
       },
-      "ios": {
-        "buildArtifactName": "gpa-vpa-v${appVersion}.ipa"
+      "cache": {
+        "key": "prod-v1"
+      },
+      "env": {
+        "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.parallel=true -Dorg.gradle.daemon=true -Dorg.gradle.caching=true"
       }
     }
   },
