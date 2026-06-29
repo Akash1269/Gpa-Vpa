@@ -8,16 +8,21 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 
 | # | Task | Status |
 |---|------|--------|
-| 1 | Verify `npm run build:web` completes without errors | ⏳ |
-| 2 | Test built output locally (serve `dist/` folder) | ⏳ |
-| 3 | Create GitHub Actions workflow for Pages deployment | ⏳ |
-| 4 | Enable GitHub Pages in repo settings (source: GitHub Actions) | ⏳ |
-| 5 | Verify all routes work with SPA fallback (single output mode) | ⏳ |
-| 6 | Test localStorage persistence (add course → refresh → data stays) | ⏳ |
-| 7 | Add favicon and meta tags (title, description, OG image) | ⏳ |
-| 8 | Test responsive layout on desktop/tablet/mobile viewports | ⏳ |
-| 9 | Set homepage URL in GitHub repo settings | ⏳ |
-| 10 | Add web demo link to README | ⏳ |
+| 1 | Verify `npm run build:web` completes without errors | ✅ |
+| 2 | Test built output locally (serve `dist/` folder) | ✅ |
+| 3 | Create GitHub Actions workflow for Pages deployment | ✅ |
+| 4 | Enable GitHub Pages in repo settings (source: GitHub Actions) | ✅ |
+| 5 | Verify all routes work with SPA fallback (single output mode) | ✅ |
+| 6 | Test localStorage persistence (add course → refresh → data stays) | ✅ |
+| 7 | Add favicon and meta tags (title, description, OG image) | ✅ |
+| 8 | Test responsive layout on desktop/tablet/mobile viewports | ✅ |
+| 9 | Set homepage URL in GitHub repo settings | ✅ |
+| 10 | Add web demo link to README | ✅ |
+| 6 | Test localStorage persistence (add course → refresh → data stays) | ✅ |
+| 7 | Add favicon and meta tags (title, description, OG image) | ✅ |
+| 8 | Test responsive layout on desktop/tablet/mobile viewports | ✅ |
+| 9 | Set homepage URL in GitHub repo settings | ✅ |
+| 10 | Add web demo link to README | ✅ |
 
 **Deploy URL:** `https://akash1269.github.io/Gpa-Vpa/`
 
@@ -30,10 +35,10 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | # | Task | Status |
 |---|------|--------|
 | 1 | Create Expo account + run `eas login` + `eas init` | ⏳ |
-| 2 | Create app icon (1024×1024 PNG, no alpha, no rounded corners) | ⏳ |
-| 3 | Create splash screen asset | ⏳ |
+| 2 | Create app icon (1024×1024 PNG, no alpha, no rounded corners) | ✅ |
+| 3 | Create splash screen asset | ✅ (reuses icon.png) |
 | 4 | Host Privacy Policy at a public URL | ⏳ |
-| 5 | Add open-source license attributions | ⏳ |
+| 5 | Add open-source license attributions | ✅ (MIT LICENSE) |
 | 6 | Google Play Developer account ($25 one-time) | ⏳ |
 | 7 | Apple Developer account ($99/year) | ⏳ |
 | 8 | Set up support email for store listings | ⏳ |
@@ -42,14 +47,14 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 
 | # | Task | Status |
 |---|------|--------|
-| 1 | App icon 1024×1024 (no alpha, no rounded corners) | ⏳ |
+| 1 | App icon 1024×1024 (no alpha, no rounded corners) | ✅ |
 | 2 | Screenshots: 6.7", 6.5", 5.5" iPhone + iPad if supported | ⏳ |
-| 3 | App description (max 4000 chars) | ⏳ |
-| 4 | Keywords (max 100 chars) | ⏳ |
-| 5 | Privacy Policy URL | ⏳ |
-| 6 | App Review notes | ⏳ |
+| 3 | App description (max 4000 chars) | ✅ (STORE_LISTING.md) |
+| 4 | Keywords (max 100 chars) | ✅ (STORE_LISTING.md) |
+| 5 | Privacy Policy URL | ⏳ (doc exists, not hosted) |
+| 6 | App Review notes | ✅ (STORE_LISTING.md) |
 | 7 | Age rating questionnaire | ⏳ |
-| 8 | App Privacy details (data not collected) | ⏳ |
+| 8 | App Privacy details (data not collected) | ✅ (STORE_LISTING.md) |
 | 9 | Run `eas build --platform ios --profile production` | ⏳ |
 | 10 | Submit via `eas submit --platform ios` | ⏳ |
 
@@ -57,13 +62,13 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 
 | # | Task | Status |
 |---|------|--------|
-| 1 | App icon 512×512 | ⏳ |
+| 1 | App icon 512×512 | ✅ (generated from 1024 source) |
 | 2 | Feature graphic 1024×500 | ⏳ |
 | 3 | Screenshots: phone + tablet (min 2) | ⏳ |
-| 4 | Short description (max 80 chars) | ⏳ |
-| 5 | Full description (max 4000 chars) | ⏳ |
-| 6 | Privacy Policy URL | ⏳ |
-| 7 | Data Safety form (no data collected/shared) | ⏳ |
+| 4 | Short description (max 80 chars) | ✅ (STORE_LISTING.md) |
+| 5 | Full description (max 4000 chars) | ✅ (STORE_LISTING.md) |
+| 6 | Privacy Policy URL | ⏳ (doc exists, not hosted) |
+| 7 | Data Safety form (no data collected/shared) | ✅ (STORE_LISTING.md) |
 | 8 | Content rating questionnaire | ⏳ |
 | 9 | Target audience declaration | ⏳ |
 | 10 | Run `eas build --platform android --profile production` | ⏳ |
@@ -75,12 +80,12 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 
 ### Priority 1 — Critical (Blockers)
 
-| # | Category | Task |
-|---|----------|------|
-| 1 | App Config | Create proper app icon (1024×1024) and splash screen assets |
-| 2 | Legal | Host Privacy Policy at a public URL (for store submission) |
-| 3 | Legal | Add data handling disclosure for Google Play |
-| 4 | Legal | Add open-source license attributions |
+| # | Category | Task | Status |
+|---|----------|------|--------|
+| 1 | App Config | Create proper app icon (1024×1024) and splash screen assets | ✅ |
+| 2 | Legal | Host Privacy Policy at a public URL (for store submission) | ⏳ |
+| 3 | Legal | Add data handling disclosure for Google Play | ✅ (STORE_LISTING.md) |
+| 4 | Legal | Add open-source license attributions | ✅ (MIT LICENSE) |
 
 ### Priority 2 — High (Quality)
 
@@ -158,6 +163,21 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | 38 | Undo | Undo after deleting a course (toast with undo button) |
 | 39 | Data Export | Export courses to CSV via native share sheet |
 | 40 | Data Export | JSON backup/restore in settings |
+| 41 | App Config | Create premium SVG app icon with graduation cap + GPA math expression |
+| 42 | App Config | Generate 1024×1024 icon.png, 48×48 favicon.png |
+| 43 | App Config | Create simplified favicon variant for web (cap + GPA) |
+| 44 | Web Deploy | Build verified (`npm run build:web` succeeds) |
+| 45 | Web Deploy | GitHub Actions CI workflow (lint, typecheck, test) |
+| 46 | Web Deploy | GitHub Actions deploy-web workflow (Pages) |
+| 47 | Web Deploy | GitHub Pages enabled (build_type: workflow) |
+| 48 | Web Deploy | SPA fallback via public/404.html |
+| 49 | Web Deploy | Meta tags (title, description, OG, Twitter card, theme-color) |
+| 50 | Web Deploy | README with live demo link + CI/deploy badges |
+| 51 | Web Deploy | Homepage URL set in GitHub repo settings |
+| 52 | Web Deploy | Responsive layout (1200px max-width, custom header + tab bar) |
+| 53 | Legal | MIT LICENSE file added |
+| 54 | Legal | Store listing descriptions (STORE_LISTING.md) |
+| 55 | Repo | Description, topics, delete-branch-on-merge configured |
 | 41 | Validation | Course name: 2–100 chars |
 | 42 | Validation | Course code: 2–10 chars (maxLength enforced) |
 | 43 | Validation | Show inline validation errors (not alerts) |

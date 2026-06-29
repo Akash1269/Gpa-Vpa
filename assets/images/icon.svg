@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Rich multi-stop background gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#2E8BF7"/>
+      <stop offset="45%" stop-color="#1A6DE0"/>
+      <stop offset="100%" stop-color="#0F47A0"/>
+    </linearGradient>
+
+    <!-- Aurora/mesh glow spots -->
+    <radialGradient id="glow1" cx="0.75" cy="0.2" r="0.45">
+      <stop offset="0%" stop-color="rgba(100,180,255,0.25)"/>
+      <stop offset="100%" stop-color="rgba(100,180,255,0)"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.2" cy="0.85" r="0.4">
+      <stop offset="0%" stop-color="rgba(80,120,255,0.2)"/>
+      <stop offset="100%" stop-color="rgba(80,120,255,0)"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="0.5" cy="0.55" r="0.3">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+
+    <!-- Text glow behind 4.0 -->
+    <radialGradient id="textGlow" cx="0.5" cy="0.72" r="0.25">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.1)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+
+    <!-- Frosted glass card -->
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
+    </linearGradient>
+
+    <!-- Cap gradient with highlight -->
+    <linearGradient id="capGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="50%" stop-color="#F0F2F5"/>
+      <stop offset="100%" stop-color="#D8DCE2"/>
+    </linearGradient>
+
+    <!-- Gold gradient (richer) -->
+    <linearGradient id="gold" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#FFE082"/>
+      <stop offset="50%" stop-color="#FFD54F"/>
+      <stop offset="100%" stop-color="#F9A825"/>
+    </linearGradient>
+
+    <!-- Gold glow -->
+    <radialGradient id="goldGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="rgba(255,213,79,0.5)"/>
+      <stop offset="100%" stop-color="rgba(255,213,79,0)"/>
+    </radialGradient>
+
+    <!-- Top shine -->
+    <linearGradient id="topShine" x1="0" y1="0" x2="0" y2="0.5">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.1)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- Aurora glow layers -->
+  <rect width="1024" height="1024" fill="url(#glow1)"/>
+  <rect width="1024" height="1024" fill="url(#glow2)"/>
+  <rect width="1024" height="1024" fill="url(#glow3)"/>
+
+  <!-- Top shine -->
+  <rect width="1024" height="1024" fill="url(#topShine)"/>
+
+  <!-- Subtle geometric grid dots -->
+  <g opacity="0.04">
+    <circle cx="250" cy="200" r="3" fill="white"/>
+    <circle cx="350" cy="200" r="3" fill="white"/>
+    <circle cx="450" cy="200" r="3" fill="white"/>
+    <circle cx="550" cy="200" r="3" fill="white"/>
+    <circle cx="650" cy="200" r="3" fill="white"/>
+    <circle cx="750" cy="200" r="3" fill="white"/>
+    <circle cx="250" cy="850" r="3" fill="white"/>
+    <circle cx="350" cy="850" r="3" fill="white"/>
+    <circle cx="450" cy="850" r="3" fill="white"/>
+    <circle cx="550" cy="850" r="3" fill="white"/>
+    <circle cx="650" cy="850" r="3" fill="white"/>
+    <circle cx="750" cy="850" r="3" fill="white"/>
+  </g>
+
+  <!-- ========== CONTENT (within 174px safe zone) ========== -->
+
+  <!-- Graduation Cap — centered -->
+  <g transform="translate(512, 280)">
+    <!-- Cap glow -->
+    <ellipse cx="0" cy="0" rx="160" ry="50" fill="rgba(255,255,255,0.06)"/>
+    <!-- Cap board -->
+    <polygon points="0,-58 210,0 0,58 -210,0" fill="url(#capGrad)"/>
+    <!-- Cap board highlight edge -->
+    <polygon points="0,-58 210,0 0,-2 -210,0" fill="rgba(255,255,255,0.3)"/>
+    <!-- Cap shadow -->
+    <polygon points="0,58 210,0 210,10 0,68" fill="rgba(0,0,0,0.08)"/>
+    <polygon points="0,58 -210,0 -210,10 0,68" fill="rgba(0,0,0,0.04)"/>
+    <!-- Gold button with glow -->
+    <circle cx="0" cy="-58" r="18" fill="url(#goldGlow)"/>
+    <circle cx="0" cy="-58" r="11" fill="url(#gold)"/>
+    <circle cx="-3" cy="-61" r="3" fill="rgba(255,255,255,0.5)"/>
+    <!-- Tassel string -->
+    <line x1="0" y1="-47" x2="145" y2="5" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+    <!-- Tassel knot -->
+    <circle cx="145" cy="5" r="7" fill="url(#gold)"/>
+    <!-- Tassel threads -->
+    <line x1="145" y1="12" x2="145" y2="58" stroke="#FFCA28" stroke-width="5" stroke-linecap="round"/>
+    <line x1="145" y1="58" x2="134" y2="76" stroke="#FFCA28" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="145" y1="58" x2="145" y2="79" stroke="#FFCA28" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="145" y1="58" x2="156" y2="76" stroke="#FFCA28" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Frosted glass card behind math expression -->
+  <rect x="185" y="420" width="654" height="400" rx="32" fill="url(#glass)"/>
+  <rect x="185" y="420" width="654" height="400" rx="32" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+
+  <!-- Text glow -->
+  <rect width="1024" height="1024" fill="url(#textGlow)"/>
+
+  <!-- Sigma watermark -->
+  <text x="275" y="610" font-family="Georgia, 'Times New Roman', serif" font-size="190" font-weight="bold" fill="rgba(255,255,255,0.1)" text-anchor="middle" dominant-baseline="central">Σ</text>
+
+  <!-- "GPA" text -->
+  <text x="512" y="560" font-family="Arial, Helvetica, sans-serif" font-size="148" font-weight="900" fill="white" text-anchor="middle" letter-spacing="10">GPA</text>
+
+  <!-- Fraction line with glow -->
+  <rect x="352" y="596" width="320" height="5" rx="2.5" fill="rgba(255,255,255,0.3)"/>
+  <rect x="362" y="597" width="300" height="3" rx="1.5" fill="rgba(255,255,255,0.7)"/>
+
+  <!-- "4.0" text -->
+  <text x="512" y="765" font-family="Arial, Helvetica, sans-serif" font-size="168" font-weight="900" fill="white" text-anchor="middle" opacity="0.97">4.0</text>
+
+  <!-- Thin accent line at bottom of glass card -->
+  <line x1="320" y1="810" x2="704" y2="810" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+</svg>
