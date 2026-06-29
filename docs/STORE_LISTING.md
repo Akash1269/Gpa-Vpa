@@ -50,3 +50,11 @@ Education
 
 ## Age Rating
 4+ (no objectionable content)
+
+## Privacy Policy URLs
+
+- **In-App:** Settings → Privacy Policy (built-in screen)
+- **GitHub (public):** https://github.com/Akash1269/Gpa-Vpa/blob/main/docs/PRIVACY_POLICY.md
+- **Web App:** https://akash1269.github.io/Gpa-Vpa/privacy-policy
+
+Use the GitHub URL for Apple App Store and Google Play store submission forms.
