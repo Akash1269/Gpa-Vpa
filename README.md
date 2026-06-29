@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📱 GPA-VPA
+# GPA-VPA
 
 **A modern GPA Calculator & Academic Tracker for students**
 
@@ -13,13 +13,13 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 [![React Native](https://img.shields.io/badge/React%20Native-0.85-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-🌐 **[Live Demo](https://akash1269.github.io/Gpa-Vpa/)** · 📥 **[Download APK](https://github.com/Akash1269/Gpa-Vpa/releases/latest)**
+**[Live Demo](https://akash1269.github.io/Gpa-Vpa/)** · **[Download APK](https://github.com/Akash1269/Gpa-Vpa/releases/latest)**
 
 </div>
 
 ---
 
-## 📥 Install on Android
+## Install on Android
 
 1. Go to the [Latest Release](https://github.com/Akash1269/Gpa-Vpa/releases/latest)
 2. Download `gpa-calculator-v0.1.0.apk`
@@ -27,11 +27,11 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 4. If prompted, allow **"Install from unknown sources"** for your browser/file manager
 5. Tap **Install** → **Open**
 
-> ⚠️ Your phone may show a "Play Protect" warning since the app isn't on the Play Store — tap **"Install anyway"** to proceed.
+> Your phone may show a "Play Protect" warning since the app isn't on the Play Store — tap **"Install anyway"** to proceed.
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 <!-- Replace these placeholders with actual screenshots -->
 <div align="center">
@@ -51,11 +51,11 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 </table>
 </div>
 
-> 💡 *Screenshots coming soon — add your own to `docs/screenshots/`*
+> *Screenshots coming soon — add your own to `docs/screenshots/`*
 
 ---
 
-## ✨ Features
+## Features
 
 - **Real-time GPA calculation** — weighted by credit hours on a 4.0 scale
 - **Semester & cumulative GPA** — track progress across your entire academic career
@@ -68,7 +68,7 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clone the repository
@@ -86,7 +86,7 @@ Then scan the QR code with **Expo Go** (iOS/Android) or press `w` to open in you
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -103,7 +103,7 @@ Then scan the QR code with **Expo Go** (iOS/Android) or press `w` to open in you
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 Single Source of Truth: courses[] → derives → semesters, GPAs, standings
@@ -114,11 +114,11 @@ Single Source of Truth: courses[] → derives → semesters, GPAs, standings
 - **Custom hooks** — `useGpa()` for data, `useTheme()` for theming
 - **Reusable components** — `CourseCard`, `SemesterCard`, `GpaChart`, `EmptyState`, etc.
 
-> 📖 For detailed architecture docs, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+> For detailed architecture docs, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 app/                  → Screens (Expo Router file-based routing)
@@ -137,7 +137,7 @@ docs/                 → Documentation
 
 ---
 
-## 📊 GPA Scale
+## GPA Scale
 
 | Grade | Points | | Grade | Points |
 |-------|--------|-|-------|--------|
@@ -150,7 +150,7 @@ docs/                 → Documentation
 
 ---
 
-## 🧪 Scripts
+## Scripts
 
 | Command | Description |
 |---------|-------------|
@@ -165,7 +165,7 @@ docs/                 → Documentation
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md) for details on:
 
@@ -177,13 +177,13 @@ See the [open issues](https://github.com/Akash1269/Gpa-Vpa/issues) for things to
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Expo](https://expo.dev) for the incredible React Native toolchain
 - [Lucide](https://lucide.dev) for beautiful open-source icons
@@ -193,8 +193,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 <div align="center">
 
-**Built with ❤️ by [Akash](https://github.com/Akash1269)**
-
-⭐ Star this repo if you find it useful!
+**Built by [Akash](https://github.com/Akash1269)**
 
 </div>
