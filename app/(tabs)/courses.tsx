@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { Plus, Search, Filter } from 'lucide-react-native';
 import { router } from 'expo-router';
@@ -13,29 +13,21 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 export default function CoursesScreen() {
   const { colors } = useTheme();
-  const { courses, semesters, lastDeletedCourse, undoDelete } = useGpa();
+  const { courses, semesters, lastDeletedCourse, undoDelete, clearLastDeleted } = useGpa();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredCourses, setFilteredCourses] = useState(courses);
   const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-
-  useEffect(() => {
-    if (lastDeletedCourse) {
-      setShowToast(true);
-    }
-  }, [lastDeletedCourse]);
+  const showToast = !!lastDeletedCourse;
 
   const handleUndo = useCallback(() => {
     undoDelete();
-    setShowToast(false);
   }, [undoDelete]);
 
   const dismissToast = useCallback(() => {
-    setShowToast(false);
-  }, []);
+    clearLastDeleted();
+  }, [clearLastDeleted]);
 
-  useEffect(() => {
+  const filteredCourses = useMemo(() => {
     let result = courses;
     
     // Apply search filter
@@ -51,7 +43,7 @@ export default function CoursesScreen() {
       result = result.filter(course => `${course.semester}-${course.year}` === selectedSemester);
     }
     
-    setFilteredCourses(result);
+    return result;
   }, [searchQuery, selectedSemester, courses]);
 
   const handleAddCourse = () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -17,26 +17,23 @@ export default function CourseScreen() {
   const isNew = id === 'new';
   const { getCourse, addCourse, updateCourse, deleteCourse, courses } = useGpa();
   
-  const [course, setCourse] = useState<Course>({
-    id: isNew ? crypto.randomUUID() : id,
-    name: '',
-    code: '',
-    credits: 3,
-    grade: 'A',
-    semester: 'Fall',
-    year: new Date().getFullYear(),
+  const [course, setCourse] = useState<Course>(() => {
+    if (!isNew) {
+      const existingCourse = getCourse(id);
+      if (existingCourse) return existingCourse;
+    }
+    return {
+      id: isNew ? crypto.randomUUID() : id,
+      name: '',
+      code: '',
+      credits: 3,
+      grade: 'A',
+      semester: 'Fall',
+      year: new Date().getFullYear(),
+    };
   });
 
   const [errors, setErrors] = useState<{ name?: string; code?: string }>({});
-
-  useEffect(() => {
-    if (!isNew) {
-      const existingCourse = getCourse(id);
-      if (existingCourse) {
-        setCourse(existingCourse);
-      }
-    }
-  }, [id, isNew, getCourse]);
 
   const handleSave = () => {
     const trimmedName = course.name.trim();

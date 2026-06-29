@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, Platform } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
@@ -13,7 +13,7 @@ export default function SemesterScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getSemester } = useGpa();
-  const [semester, setSemester] = useState<Semester | null>(null);
+  const semester = useMemo(() => id ? getSemester(id) ?? null : null, [id, getSemester]);
   const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
@@ -116,15 +116,6 @@ export default function SemesterScreen() {
       elevation: 4,
     },
   });
-
-  useEffect(() => {
-    if (id) {
-      const foundSemester = getSemester(id);
-      if (foundSemester) {
-        setSemester(foundSemester);
-      }
-    }
-  }, [id, getSemester]);
 
   const handleAddCourse = () => {
     router.push({

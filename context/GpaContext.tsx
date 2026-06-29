@@ -20,6 +20,7 @@ type GpaContextType = {
   loadDemoData: () => void;
   lastDeletedCourse: Course | null;
   undoDelete: () => void;
+  clearLastDeleted: () => void;
 };
 
 export const GpaContext = createContext<GpaContextType>({
@@ -38,6 +39,7 @@ export const GpaContext = createContext<GpaContextType>({
   loadDemoData: () => {},
   lastDeletedCourse: null,
   undoDelete: () => {},
+  clearLastDeleted: () => {},
 });
 
 export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -202,6 +204,10 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [lastDeletedCourse]);
 
+  const clearLastDeleted = useCallback(() => {
+    setLastDeletedCourse(null);
+  }, []);
+
   const getCourse = useCallback((id: string) => {
     return courses.find(course => course.id === id);
   }, [courses]);
@@ -270,6 +276,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         loadDemoData,
         lastDeletedCourse,
         undoDelete,
+        clearLastDeleted,
       }}
     >
       {children}
