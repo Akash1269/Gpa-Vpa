@@ -13,9 +13,21 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 [![React Native](https://img.shields.io/badge/React%20Native-0.85-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-🌐 **[Live Demo](https://akash1269.github.io/Gpa-Vpa/)**
+🌐 **[Live Demo](https://akash1269.github.io/Gpa-Vpa/)** · 📥 **[Download APK](https://github.com/Akash1269/Gpa-Vpa/releases/latest)**
 
 </div>
+
+---
+
+## 📥 Install on Android
+
+1. Go to the [Latest Release](https://github.com/Akash1269/Gpa-Vpa/releases/latest)
+2. Download `gpa-calculator-v0.1.0.apk`
+3. On your Android device, open the downloaded file
+4. If prompted, allow **"Install from unknown sources"** for your browser/file manager
+5. Tap **Install** → **Open**
+
+> ⚠️ Your phone may show a "Play Protect" warning since the app isn't on the Play Store — tap **"Install anyway"** to proceed.
 
 ---
 
