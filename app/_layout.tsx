@@ -1,24 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter, useSegments } from 'expo-router';
 import Head from 'expo-router/head';
 import { GpaProvider } from '@/context/GpaContext';
 import StackNavigator from '@/components/StackNavigator';
 import ErrorBoundary from '@/components/ErrorBoundary';
+if (Platform.OS === 'web') {
+  require('../global.css');
+}
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useFrameworkReady();
-  const router = useRouter();
-  const segments = useSegments();
-  const [onboardingChecked, setOnboardingChecked] = useState(false);
 
   const [fontsLoaded, fontError] = useFonts({
     'Inter-Regular': Inter_400Regular,
@@ -33,17 +32,6 @@ export default function RootLayout() {
     }
   }, [fontsLoaded, fontError]);
 
-  useEffect(() => {
-    if (!fontsLoaded && !fontError) return;
-
-    AsyncStorage.getItem('@hasSeenOnboarding').then((value) => {
-      setOnboardingChecked(true);
-      if (!value && (segments[0] as string) !== 'onboarding') {
-        router.replace('/onboarding' as any);
-      }
-    });
-  }, [fontsLoaded, fontError]);
-
   if (!fontsLoaded && !fontError) {
     return null;
   }  return (
@@ -55,9 +43,10 @@ export default function RootLayout() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://akash1269.github.io/Gpa-Vpa/" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="theme-color" content="#1A73E8" />
+        <meta name="theme-color" content="#F8F9FA" />
+        <style type="text/css">{`html, body, #root { background-color: #F8F9FA; }`}</style>
       </Head>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
         <GpaProvider>
           <StackNavigator />
           <StatusBar style="auto" />

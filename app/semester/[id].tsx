@@ -1,27 +1,60 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Platform } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
 import { Semester } from '@/types/semester';
 import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';
-import { Plus } from 'lucide-react-native';
+import { Plus, ArrowLeft } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SemesterScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getSemester } = useGpa();
   const [semester, setSemester] = useState<Semester | null>(null);
+  const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: colors.background,
     },
+    header: {
+      backgroundColor: colors.background,
+      paddingTop: insets.top,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 3,
+      elevation: 2,
+    },
+    headerInner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: 56,
+      paddingHorizontal: 20,
+      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+    },
+    backButton: {
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      backgroundColor: colors.card,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 12,
+    },
+    headerTitle: {
+      fontFamily: 'Inter-Bold',
+      fontSize: 18,
+      color: colors.text,
+    },
     content: {
       flex: 1,
-      padding: 16,
+      padding: 20,
+      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     summaryContainer: {
       backgroundColor: colors.card,
@@ -116,6 +149,14 @@ export default function SemesterScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.headerInner}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityLabel="Go back">
+            <ArrowLeft size={18} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Semester Details</Text>
+        </View>
+      </View>
       <View style={styles.content}>
         <View style={styles.summaryContainer}>
           <Text style={styles.semesterTitle}>

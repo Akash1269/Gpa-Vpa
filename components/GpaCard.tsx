@@ -14,88 +14,105 @@ type GpaCardProps = {
 export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardProps) {
   const { colors } = useTheme();
 
+  const progressWidth = (gpa / 4) * 100;
+
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 16,
-      marginVertical: 8,
-      elevation: 1,
+      backgroundColor: colors.primary,
+      borderRadius: 20,
+      padding: 24,
+      overflow: 'hidden',
     },
-    title: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
-      color: colors.textSecondary,
-      marginBottom: 12,
-    },
-    gpaContainer: {
+    topRow: {
       flexDirection: 'row',
-      alignItems: 'flex-end',
-      marginBottom: 16,
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: 20,
+    },
+    label: {
+      fontFamily: 'Inter-Medium',
+      fontSize: 13,
+      color: 'rgba(255,255,255,0.75)',
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+    },
+    standingBadge: {
+      backgroundColor: 'rgba(255,255,255,0.2)',
+      paddingHorizontal: 12,
+      paddingVertical: 5,
+      borderRadius: 20,
+    },
+    standingText: {
+      fontFamily: 'Inter-SemiBold',
+      fontSize: 12,
+      color: '#FFFFFF',
+    },
+    gpaRow: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      marginBottom: 20,
     },
     gpaValue: {
       fontFamily: 'Inter-Bold',
-      fontSize: 48,
-      color: colors.text,
+      fontSize: 56,
+      color: '#FFFFFF',
+      lineHeight: 60,
     },
     gpaScale: {
       fontFamily: 'Inter-Regular',
-      fontSize: 14,
-      color: colors.textSecondary,
+      fontSize: 18,
+      color: 'rgba(255,255,255,0.6)',
       marginLeft: 8,
-      marginBottom: 8,
     },
-    academicStandingContainer: {
-      backgroundColor: colors.background,
-      padding: 8,
-      borderRadius: 8,
-      alignSelf: 'flex-start',
-    },
-    academicStandingLabel: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
-    },
-    progressBar: {
-      height: 8,
-      backgroundColor: colors.background,
-      borderRadius: 4,
-      marginTop: 16,
+    progressTrack: {
+      height: 6,
+      backgroundColor: 'rgba(255,255,255,0.2)',
+      borderRadius: 3,
       overflow: 'hidden',
     },
     progressFill: {
       height: '100%',
-      borderRadius: 4,
+      borderRadius: 3,
+      backgroundColor: '#FFFFFF',
+    },
+    // Decorative circles
+    decorCircle1: {
+      position: 'absolute',
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      backgroundColor: 'rgba(255,255,255,0.06)',
+      top: -30,
+      right: -20,
+    },
+    decorCircle2: {
+      position: 'absolute',
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: 'rgba(255,255,255,0.04)',
+      bottom: -20,
+      left: 40,
     },
   });
 
-  // Calculate width percentage based on GPA (0-4 scale)
-  const progressWidth = (gpa / 4) * 100;
-
   return (
-    <Animated.View entering={FadeIn.duration(800)}>
+    <Animated.View entering={FadeIn.duration(600)}>
       <View style={styles.container}>
-        <Text style={styles.title}>CUMULATIVE GPA</Text>
-        <View style={styles.gpaContainer}>
+        <View style={styles.decorCircle1} />
+        <View style={styles.decorCircle2} />
+        <View style={styles.topRow}>
+          <Text style={styles.label}>Cumulative GPA</Text>
+          <View style={styles.standingBadge}>
+            <Text style={styles.standingText}>{academicStanding.label}</Text>
+          </View>
+        </View>
+        <View style={styles.gpaRow}>
           <Text style={styles.gpaValue}>{gpa.toFixed(2)}</Text>
           <Text style={styles.gpaScale}>/ 4.0</Text>
         </View>
-        
-        <View style={styles.academicStandingContainer}>
-          <Text style={[styles.academicStandingLabel, { color: academicStanding.color }]}>
-            {academicStanding.label}
-          </Text>
-        </View>
-        
-        <View style={styles.progressBar}>
-          <Animated.View 
-            style={[
-              styles.progressFill, 
-              { 
-                width: `${progressWidth}%`, 
-                backgroundColor: academicStanding.color 
-              }
-            ]}
-          />
+        <View style={styles.progressTrack}>
+          <Animated.View style={[styles.progressFill, { width: `${progressWidth}%` }]} />
         </View>
       </View>
     </Animated.View>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
@@ -114,6 +114,7 @@ export default function CourseScreen() {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
       flexDirection: 'row',
@@ -121,24 +122,24 @@ export default function CourseScreen() {
       justifyContent: 'space-between',
       backgroundColor: colors.background,
       height: 60,
-      paddingHorizontal: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+      paddingHorizontal: 20,
+      borderBottomWidth: 0,
     },
     headerTitle: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: 'Inter-Bold',
       fontSize: 18,
       color: colors.text,
     },
     closeButton: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      backgroundColor: colors.card,
       justifyContent: 'center',
       alignItems: 'center',
     },
     content: {
-      padding: 16,
+      padding: 20,
     },
     formGroup: {
       marginBottom: 20,
@@ -152,7 +153,7 @@ export default function CourseScreen() {
     input: {
       height: 48,
       backgroundColor: colors.card,
-      borderRadius: 8,
+      borderRadius: 12,
       paddingHorizontal: 16,
       fontFamily: 'Inter-Regular',
       fontSize: 16,
@@ -170,10 +171,7 @@ export default function CourseScreen() {
       marginTop: 4,
     },
     pickerContainer: {
-      borderWidth: 1,
-      borderColor: colors.border,
       borderRadius: 8,
-      backgroundColor: colors.card,
     },
     gradeInfo: {
       marginTop: 8,
@@ -192,8 +190,8 @@ export default function CourseScreen() {
     saveButton: {
       flex: 1,
       backgroundColor: colors.primary,
-      height: 56,
-      borderRadius: 8,
+      height: 54,
+      borderRadius: 14,
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
@@ -219,12 +217,12 @@ export default function CourseScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.closeButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close">
-          <X size={24} color={colors.text} />
+          <X size={18} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>
           {isNew ? 'Add New Course' : 'Edit Course'}
         </Text>
-        <View style={{ width: 40 }} />
+        <View style={{ width: 36 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>

@@ -11,13 +11,11 @@ export default function StackNavigator() {
     <Stack 
       screenOptions={{ 
         headerBackTitle: " ",
-        // Add bottom padding to accommodate the iOS home indicator
         contentStyle: {
           paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 20) : 0,
-          backgroundColor: colors.background
+          backgroundColor: colors.background,
         }
       }}>
-      <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen 
         name="course/[id]" 
@@ -31,19 +29,8 @@ export default function StackNavigator() {
         name="semester/[id]" 
         options={{ 
           presentation: 'card',
-          headerShown: true,
-          headerTitle: "Semester Details",
+          headerShown: false,
           animation: 'slide_from_right',
-          headerShadowVisible: false,
-          headerTitleStyle: {
-            fontFamily: 'Inter-SemiBold',
-            fontSize: 18,
-            color: colors.text
-          },
-          headerStyle: {
-            backgroundColor: colors.card
-          },
-          headerTintColor: colors.primary
         }}
       />
     </Stack>

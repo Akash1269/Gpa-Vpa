@@ -1,0 +1,19 @@
+html, body, #root, #root > * {
+  background-color: #F8F9FA !important;
+}
+
+/* Hide scrollbar to prevent layout shift between header and content */
+*::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+* {
+  scrollbar-width: none;
+}
+
+/* Override React Navigation container default background */
+[data-testid="NavigationContainer"],
+#root div[style*="background-color: rgb(242, 242, 242)"],
+#root div[style*="background-color:rgb(242,242,242)"] {
+  background-color: #F8F9FA !important;
+}

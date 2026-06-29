@@ -90,7 +90,9 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
       alignItems: 'center',
       padding: 12,
       backgroundColor: colors.background,
-      borderRadius: 8,
+      borderRadius: 10,
+      borderWidth: 1.5,
+      borderColor: colors.primary,
     },
     viewAllText: {
       fontFamily: 'Inter-Medium',

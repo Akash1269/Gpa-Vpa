@@ -92,8 +92,8 @@ export default function GpaChart({ semesters }: GpaChartProps) {
     );
   }
 
-  // Create y-axis labels
-  const yAxisLabels = [0, 1.0, 2.0, 3.0, 4.0];
+  // Create y-axis labels (4.0 at top, 0.0 at bottom)
+  const yAxisLabels = [4.0, 3.0, 2.0, 1.0, 0];
 
   return (
     <View style={styles.container}>

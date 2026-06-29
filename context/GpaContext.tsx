@@ -17,6 +17,7 @@ type GpaContextType = {
   getCourse: (id: string) => Course | undefined;
   getSemester: (id: string) => Semester | undefined;
   clearAllData: () => void;
+  loadDemoData: () => void;
   lastDeletedCourse: Course | null;
   undoDelete: () => void;
 };
@@ -34,6 +35,7 @@ export const GpaContext = createContext<GpaContextType>({
   getCourse: () => undefined,
   getSemester: () => undefined,
   clearAllData: () => {},
+  loadDemoData: () => {},
   lastDeletedCourse: null,
   undoDelete: () => {},
 });
@@ -55,6 +57,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [lastDeletedCourse, setLastDeletedCourse] = useState<Course | null>(null);
+  const [loadDemoOnMount, setLoadDemoOnMount] = useState(false);
   const [cumulativeGpa, setCumulativeGpa] = useState(0);
   const [totalCredits, setTotalCredits] = useState(0);
   const [semesters, setSemesters] = useState<Semester[]>([]);
@@ -73,6 +76,14 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           } else {
             console.error('Invalid course data format, resetting');
             await AsyncStorage.removeItem('courses');
+          }
+        } else {
+          // First launch: load demo data so the app isn't empty
+          const hasLaunched = await AsyncStorage.getItem('@hasLaunched');
+          if (!hasLaunched) {
+            await AsyncStorage.setItem('@hasLaunched', 'true');
+            // Will be set after loadDemoData is defined
+            setLoadDemoOnMount(true);
           }
         }
       } catch (error) {
@@ -208,6 +219,39 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
+  const loadDemoData = useCallback(() => {
+    const demoCourses: Course[] = [
+      // Fall 2024 - Freshman Year
+      { id: 'demo-1', name: 'Introduction to CS', code: 'CS101', credits: 3, grade: 'A', semester: 'Fall', year: 2024 },
+      { id: 'demo-2', name: 'Calculus I', code: 'MATH101', credits: 4, grade: 'B+', semester: 'Fall', year: 2024 },
+      { id: 'demo-3', name: 'English Composition', code: 'ENG101', credits: 3, grade: 'A-', semester: 'Fall', year: 2024 },
+      { id: 'demo-4', name: 'Physics I', code: 'PHY101', credits: 4, grade: 'B', semester: 'Fall', year: 2024 },
+      // Spring 2025
+      { id: 'demo-5', name: 'Data Structures', code: 'CS201', credits: 3, grade: 'A', semester: 'Spring', year: 2025 },
+      { id: 'demo-6', name: 'Calculus II', code: 'MATH202', credits: 4, grade: 'A-', semester: 'Spring', year: 2025 },
+      { id: 'demo-7', name: 'Discrete Mathematics', code: 'MATH210', credits: 3, grade: 'B+', semester: 'Spring', year: 2025 },
+      { id: 'demo-8', name: 'Technical Writing', code: 'ENG210', credits: 2, grade: 'A', semester: 'Spring', year: 2025 },
+      // Fall 2025 - Sophomore Year
+      { id: 'demo-9', name: 'Algorithms', code: 'CS301', credits: 3, grade: 'A-', semester: 'Fall', year: 2025 },
+      { id: 'demo-10', name: 'Linear Algebra', code: 'MATH301', credits: 3, grade: 'B+', semester: 'Fall', year: 2025 },
+      { id: 'demo-11', name: 'Computer Architecture', code: 'CS250', credits: 3, grade: 'A', semester: 'Fall', year: 2025 },
+      { id: 'demo-12', name: 'Probability & Stats', code: 'MATH320', credits: 3, grade: 'B+', semester: 'Fall', year: 2025 },
+      // Spring 2026 - Current
+      { id: 'demo-13', name: 'Operating Systems', code: 'CS310', credits: 3, grade: 'A-', semester: 'Spring', year: 2026 },
+      { id: 'demo-14', name: 'Database Systems', code: 'CS340', credits: 3, grade: 'A', semester: 'Spring', year: 2026 },
+      { id: 'demo-15', name: 'Software Engineering', code: 'CS350', credits: 3, grade: 'B+', semester: 'Spring', year: 2026 },
+    ];
+    setCourses(demoCourses);
+  }, []);
+
+  // Auto-load demo data on first launch
+  useEffect(() => {
+    if (loadDemoOnMount) {
+      loadDemoData();
+      setLoadDemoOnMount(false);
+    }
+  }, [loadDemoOnMount, loadDemoData]);
+
   return (
     <GpaContext.Provider
       value={{
@@ -223,6 +267,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         getCourse,
         getSemester,
         clearAllData,
+        loadDemoData,
         lastDeletedCourse,
         undoDelete,
       }}

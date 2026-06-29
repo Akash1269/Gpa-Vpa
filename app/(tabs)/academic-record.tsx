@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Platform } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import SemesterCard from '@/components/SemesterCard';
 import GpaChart from '@/components/GpaChart';
@@ -15,7 +15,8 @@ export default function AcademicRecord() {
       backgroundColor: colors.background,
     },
     content: {
-      padding: 16,
+      padding: 20,
+      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
       marginBottom: 24,

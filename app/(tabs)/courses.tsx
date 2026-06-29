@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { Plus, Search, Filter } from 'lucide-react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -70,7 +70,8 @@ export default function CoursesScreen() {
     },
     content: {
       flex: 1,
-      padding: 16,
+      padding: 20,
+      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
       flexDirection: 'row',
@@ -82,25 +83,29 @@ export default function CoursesScreen() {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.card,
-      borderRadius: 8,
-      paddingHorizontal: 12,
-      height: 48,
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      height: 46,
+      borderWidth: 1,
+      borderColor: colors.border,
     },
     searchInput: {
       flex: 1,
       fontFamily: 'Inter-Regular',
-      fontSize: 16,
+      fontSize: 15,
       color: colors.text,
-      marginLeft: 8,
+      marginLeft: 10,
     },
     filterButton: {
-      marginLeft: 12,
-      width: 48,
-      height: 48,
-      borderRadius: 8,
+      marginLeft: 10,
+      width: 46,
+      height: 46,
+      borderRadius: 12,
       backgroundColor: colors.card,
       justifyContent: 'center',
       alignItems: 'center',
+      borderWidth: 1,
+      borderColor: colors.border,
     },
     fab: {
       position: 'absolute',
