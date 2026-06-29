@@ -51,4 +51,4 @@ jobs:
         run: npm ci
 
       - name: Build preview
-        run: eas build --platform all --profile preview --non-interactive
+        run: eas build --platform android --profile preview --non-interactive --no-wait
