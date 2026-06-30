@@ -2,7 +2,7 @@
   "expo": {
     "name": "GPA Calculator",
     "slug": "gpa-calculator",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "runtimeVersion": "0.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
