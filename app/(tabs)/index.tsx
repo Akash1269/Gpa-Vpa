@@ -1,4 +1,5 @@
-import { StyleSheet, View, Text, ScrollView, Platform } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Platform, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
 import GpaCard from '@/components/GpaCard';
 import RecentCoursesList from '@/components/RecentCoursesList';
@@ -93,7 +94,7 @@ export default function Dashboard() {
         <GpaCard gpa={cumulativeGpa} academicStanding={academicStanding} />
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.statsRow}>
-          <View style={styles.statCard}>
+          <TouchableOpacity style={styles.statCard} onPress={() => router.push('/credits')} accessibilityLabel="View credits breakdown">
             <View style={styles.statIconRow}>
               <View style={[styles.statIconBg, { backgroundColor: '#E8F5E9' }]}>
                 <BookOpen size={18} color="#4CAF50" />
@@ -101,8 +102,8 @@ export default function Dashboard() {
             </View>
             <Text style={styles.statValue}>{totalCredits}</Text>
             <Text style={styles.statLabel}>Total Credits</Text>
-          </View>
-          <View style={styles.statCard}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.statCard} onPress={() => router.push('/(tabs)/academic-record')} accessibilityLabel="View semesters">
             <View style={styles.statIconRow}>
               <View style={[styles.statIconBg, { backgroundColor: '#E3F2FD' }]}>
                 <Trophy size={18} color="#1A73E8" />
@@ -110,8 +111,8 @@ export default function Dashboard() {
             </View>
             <Text style={styles.statValue}>{semesters.length}</Text>
             <Text style={styles.statLabel}>Semesters</Text>
-          </View>
-          <View style={styles.statCard}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.statCard} onPress={() => router.push('/(tabs)/courses')} accessibilityLabel="View courses">
             <View style={styles.statIconRow}>
               <View style={[styles.statIconBg, { backgroundColor: '#FFF3E0' }]}>
                 <TrendingUp size={18} color="#F57C00" />
@@ -119,7 +120,7 @@ export default function Dashboard() {
             </View>
             <Text style={styles.statValue}>{courses.length}</Text>
             <Text style={styles.statLabel}>Courses</Text>
-          </View>
+          </TouchableOpacity>
         </Animated.View>
 
         {currentSemester && (

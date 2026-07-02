@@ -66,8 +66,9 @@ export default function AcademicRecord() {
     chartContainer: {
       backgroundColor: colors.card,
       borderRadius: 12,
-      padding: 16,
-      marginBottom: 24,
+      paddingHorizontal: 14,
+      paddingVertical: 4,
+      marginBottom: 8,
       elevation: 1,
     },
   });
@@ -79,8 +80,8 @@ export default function AcademicRecord() {
       {hasSemesters ? (
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>Academic Record</Text>
-            <Text style={styles.subtitle}>Your complete academic history and performance</Text>
+            <Text style={styles.title}>Semesters</Text>
+            <Text style={styles.subtitle}>Your semester-by-semester academic performance</Text>
           </View>
 
           <View style={styles.summaryContainer}>
@@ -95,7 +96,6 @@ export default function AcademicRecord() {
           </View>
 
           <View style={styles.chartContainer}>
-            <Text style={[styles.sectionTitle, { marginTop: 0 }]}>GPA Progression</Text>
             <GpaChart semesters={semesters} />
           </View>
 

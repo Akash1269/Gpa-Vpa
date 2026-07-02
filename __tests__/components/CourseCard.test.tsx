@@ -89,8 +89,8 @@ describe('CourseCard', () => {
     expect(getByText('3 CR')).toBeTruthy();
   });
 
-  it('renders semester and year', () => {
-    const { getByText } = render(<CourseCard course={mockCourse} />);
+  it('renders semester and year when showSemester is true', () => {
+    const { getByText } = render(<CourseCard course={mockCourse} showSemester />);
     expect(getByText('Fall 2025')).toBeTruthy();
   });
 

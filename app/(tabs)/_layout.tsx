@@ -172,7 +172,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="academic-record"
         options={{
-          title: 'Record',
+          title: 'Semesters',
           tabBarIcon: ({ color, size }) => <BarChart3 size={size-2} strokeWidth={1.5} color={color} />,
         }}
       />

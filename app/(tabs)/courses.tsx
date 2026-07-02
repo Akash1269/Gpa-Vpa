@@ -1,22 +1,19 @@
 import { useState, useCallback, useMemo } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput, Platform } from 'react-native';
-import { Plus, Search, Filter } from 'lucide-react-native';
+import { StyleSheet, View, Text, SectionList, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { Plus, Search } from 'lucide-react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import CourseCard from '@/components/CourseCard';
-import SemesterFilter from '@/components/SemesterFilter';
 import EmptyState from '@/components/EmptyState';
 import Toast from '@/components/Toast';
 import { useTheme } from '@/hooks/useTheme';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { Course } from '@/types/course';
 
 export default function CoursesScreen() {
   const { colors } = useTheme();
-  const { courses, semesters, lastDeletedCourse, undoDelete, clearLastDeleted } = useGpa();
+  const { courses, lastDeletedCourse, undoDelete, clearLastDeleted } = useGpa();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
   const showToast = !!lastDeletedCourse;
 
   const handleUndo = useCallback(() => {
@@ -27,32 +24,42 @@ export default function CoursesScreen() {
     clearLastDeleted();
   }, [clearLastDeleted]);
 
-  const filteredCourses = useMemo(() => {
-    let result = courses;
-    
-    // Apply search filter
+  const sections = useMemo(() => {
+    let filtered = courses;
+
     if (searchQuery) {
-      result = result.filter(course => 
-        course.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      filtered = filtered.filter(course =>
+        course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.code.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
-    // Apply semester filter
-    if (selectedSemester) {
-      result = result.filter(course => `${course.semester}-${course.year}` === selectedSemester);
-    }
-    
-    return result;
-  }, [searchQuery, selectedSemester, courses]);
+
+    // Group by semester-year
+    const grouped: Record<string, Course[]> = {};
+    filtered.forEach(course => {
+      const key = `${course.semester}-${course.year}`;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(course);
+    });
+
+    // Sort semesters: latest first
+    const semesterOrder = ['Summer', 'Spring', 'Fall', 'Winter'];
+    return Object.entries(grouped)
+      .sort(([a], [b]) => {
+        const [semA, yearA] = a.split('-');
+        const [semB, yearB] = b.split('-');
+        const yearDiff = Number(yearB) - Number(yearA);
+        if (yearDiff !== 0) return yearDiff;
+        return semesterOrder.indexOf(semA) - semesterOrder.indexOf(semB);
+      })
+      .map(([key, data]) => {
+        const [sem, year] = key.split('-');
+        return { title: `${sem} ${year}`, data, key };
+      });
+  }, [courses, searchQuery]);
 
   const handleAddCourse = () => {
     router.push('/course/new');
-  };
-
-  const handleSelectSemester = (semesterId: string | null) => {
-    setSelectedSemester(semesterId);
-    setShowFilters(false);
   };
 
   const styles = StyleSheet.create({
@@ -88,17 +95,6 @@ export default function CoursesScreen() {
       color: colors.text,
       marginLeft: 10,
     },
-    filterButton: {
-      marginLeft: 10,
-      width: 46,
-      height: 46,
-      borderRadius: 12,
-      backgroundColor: colors.card,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
     fab: {
       position: 'absolute',
       right: 24,
@@ -111,35 +107,27 @@ export default function CoursesScreen() {
       alignItems: 'center',
       elevation: 4,
     },
-    filterContainer: {
-      position: 'absolute',
-      top: 64,
-      left: 16,
-      right: 16,
-      backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 16,
-      elevation: 5,
-      zIndex: 10,
-    },
-    filterTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
-      color: colors.text,
-      marginBottom: 12,
-    },
-    emptyState: {
-      flex: 1,
-      justifyContent: 'center',
+    sectionHeader: {
+      flexDirection: 'row',
       alignItems: 'center',
-      marginTop: 40,
+      justifyContent: 'space-between',
+      paddingVertical: 10,
+      paddingHorizontal: 4,
+      marginTop: 8,
     },
-    emptyStateText: {
+    sectionTitle: {
+      fontFamily: 'Inter-SemiBold',
+      fontSize: 15,
+      color: colors.text,
+    },
+    sectionCount: {
       fontFamily: 'Inter-Medium',
-      fontSize: 16,
+      fontSize: 12,
       color: colors.textSecondary,
-      textAlign: 'center',
-      marginTop: 16,
+      backgroundColor: colors.card,
+      paddingHorizontal: 8,
+      paddingVertical: 3,
+      borderRadius: 8,
     },
   });
 
@@ -157,45 +145,28 @@ export default function CoursesScreen() {
               onChangeText={setSearchQuery}
             />
           </View>
-          <TouchableOpacity 
-            style={styles.filterButton}
-            onPress={() => setShowFilters(!showFilters)}
-          >
-            <Filter size={20} color={selectedSemester ? colors.primary : colors.textSecondary} />
-          </TouchableOpacity>
         </View>
 
-        {showFilters && (
-          <Animated.View 
-            style={styles.filterContainer}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(200)}
-          >
-            <Text style={styles.filterTitle}>Filter by Semester</Text>
-            <SemesterFilter 
-              semesters={semesters}
-              selectedSemester={selectedSemester}
-              onSelectSemester={handleSelectSemester}
-            />
-          </Animated.View>
-        )}
-
-        {filteredCourses.length > 0 ? (
-          <FlatList
-            data={filteredCourses}
+        {sections.length > 0 ? (
+          <SectionList
+            sections={sections}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <CourseCard course={item} />}
+            renderSectionHeader={({ section }) => (
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>{section.title}</Text>
+                <Text style={styles.sectionCount}>{section.data.length} course{section.data.length !== 1 ? 's' : ''}</Text>
+              </View>
+            )}
             contentContainerStyle={{ paddingBottom: 88 }}
             showsVerticalScrollIndicator={false}
-            maxToRenderPerBatch={10}
-            windowSize={5}
-            getItemLayout={(_, index) => ({ length: 88, offset: 88 * index, index })}
+            stickySectionHeadersEnabled={false}
           />
         ) : (
-          <EmptyState 
+          <EmptyState
             icon="book-open"
             title="No courses found"
-            message={searchQuery || selectedSemester ? "Try adjusting your filters" : "Add your first course to get started"} 
+            message={searchQuery ? "Try adjusting your search" : "Add your first course to get started"}
           />
         )}
       </View>

@@ -37,7 +37,7 @@ export default function RecentCoursesList({ courses }: RecentCoursesListProps) {
       <FlatList
         data={courses}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CourseCard course={item} />}
+        renderItem={({ item }) => <CourseCard course={item} showSemester />}
         scrollEnabled={false}
       />
     </View>

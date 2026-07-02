@@ -8,13 +8,13 @@ import { Course } from '@/types/course';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
 import { useGpa } from '@/hooks/useGpa';
-import Animated, { FadeInRight } from 'react-native-reanimated';
 
 type CourseCardProps = {
   course: Course;
+  showSemester?: boolean;
 };
 
-export default React.memo(function CourseCard({ course }: CourseCardProps) {
+export default React.memo(function CourseCard({ course, showSemester = false }: CourseCardProps) {
   const { colors } = useTheme();
   const { deleteCourse } = useGpa();
   const gradeColor = getGradeColor(course.grade);
@@ -22,65 +22,78 @@ export default React.memo(function CourseCard({ course }: CourseCardProps) {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.card,
-      borderRadius: 14,
-      marginBottom: 10,
+      borderRadius: 12,
+      marginBottom: 8,
       borderWidth: 1,
       borderColor: colors.border,
       overflow: 'hidden',
     },
     cardContent: {
-      padding: 14,
+      paddingVertical: 12,
+      paddingHorizontal: 14,
       flexDirection: 'row',
       alignItems: 'center',
     },
-    infoContainer: {
-      flex: 1,
-    },
-    courseName: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 15,
-      color: colors.text,
-      marginBottom: 3,
-    },
-    courseCode: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 13,
-      color: colors.textSecondary,
-    },
-    semesterText: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
-      color: colors.textSecondary,
-      marginTop: 4,
-    },
-    gradeContainer: {
-      width: 44,
-      height: 44,
-      borderRadius: 12,
+    gradePill: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
       backgroundColor: gradeColor.background,
       justifyContent: 'center',
       alignItems: 'center',
-      marginLeft: 12,
+      marginRight: 12,
     },
     gradeText: {
       fontFamily: 'Inter-Bold',
       fontSize: 14,
       color: gradeColor.text,
     },
-    creditText: {
+    infoContainer: {
+      flex: 1,
+      marginRight: 8,
+    },
+    topRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 2,
+    },
+    courseName: {
+      fontFamily: 'Inter-SemiBold',
+      fontSize: 14,
+      color: colors.text,
+      flex: 1,
+    },
+    courseCode: {
       fontFamily: 'Inter-Medium',
+      fontSize: 12,
+      color: colors.textSecondary,
+    },
+    semesterText: {
+      fontFamily: 'Inter-Regular',
       fontSize: 11,
       color: colors.textSecondary,
-      textAlign: 'center',
-      marginTop: 3,
+      marginTop: 2,
+    },
+    creditBadge: {
+      backgroundColor: colors.background,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    creditText: {
+      fontFamily: 'Inter-SemiBold',
+      fontSize: 12,
+      color: colors.textSecondary,
     },
     deleteAction: {
       backgroundColor: '#EA4335',
       justifyContent: 'center',
       alignItems: 'center',
-      width: 72,
-      borderRadius: 14,
-      marginBottom: 10,
+      width: 64,
+      borderRadius: 12,
+      marginBottom: 8,
       marginLeft: 8,
     },
   });
@@ -101,37 +114,37 @@ export default React.memo(function CourseCard({ course }: CourseCardProps) {
       accessibilityRole="button"
       accessibilityLabel="Delete course"
     >
-      <Trash2 size={20} color="#FFFFFF" />
+      <Trash2 size={18} color="#FFFFFF" />
     </TouchableOpacity>
   );
 
   return (
-    <Animated.View entering={FadeInRight.duration(300).delay(100)}>
-      <Swipeable renderRightActions={renderRightActions} overshootRight={false}>
-        <TouchableOpacity
-          style={styles.container}
-          onPress={handlePress}
-          accessibilityRole="button"
-          accessibilityLabel={`${course.name}, ${course.code}, grade ${course.grade}, ${course.credits} credits, ${course.semester} ${course.year}`}
-          accessibilityHint="Double tap to edit this course"
-        >
-          <View style={styles.cardContent}>
-            <View style={styles.infoContainer}>
-              <Text style={styles.courseName}>{course.name}</Text>
-              <Text style={styles.courseCode}>{course.code}</Text>
-              <Text style={styles.semesterText}>
-                {course.semester} {course.year}
-              </Text>
-            </View>
-            <View>
-              <View style={styles.gradeContainer}>
-                <Text style={styles.gradeText}>{course.grade}</Text>
-              </View>
-              <Text style={styles.creditText}>{course.credits} CR</Text>
-            </View>
+    <Swipeable renderRightActions={renderRightActions} overshootRight={false}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={handlePress}
+        accessibilityRole="button"
+        accessibilityLabel={`${course.name}, ${course.code}, grade ${course.grade}, ${course.credits} credits`}
+        accessibilityHint="Double tap to edit this course"
+      >
+        <View style={styles.cardContent}>
+          <View style={styles.gradePill}>
+            <Text style={styles.gradeText}>{course.grade}</Text>
           </View>
-        </TouchableOpacity>
-      </Swipeable>
-    </Animated.View>
+          <View style={styles.infoContainer}>
+            <View style={styles.topRow}>
+              <Text style={styles.courseName} numberOfLines={1}>{course.name}</Text>
+            </View>
+            <Text style={styles.courseCode}>{course.code}</Text>
+            {showSemester && (
+              <Text style={styles.semesterText}>{course.semester} {course.year}</Text>
+            )}
+          </View>
+          <View style={styles.creditBadge}>
+            <Text style={styles.creditText}>{course.credits} CR</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </Swipeable>
   );
 });
