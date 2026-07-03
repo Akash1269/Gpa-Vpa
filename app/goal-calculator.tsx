@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
-import { ArrowLeft, Target, GraduationCap, TrendingUp, Plus, Trash2 } from 'lucide-react-native';
+import { ArrowLeft, Plus, Trash2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { gradePoints } from '@/utils/gpaCalculator';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -119,6 +120,7 @@ export default function GoalCalculatorScreen() {
   }, [graduationCredits, creditsPerSemester, totalCredits, semesters.length, avgCreditsPerSemester]);
 
   const addPlannedCourse = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setPlannedCourses(prev => [
       ...prev,
       { id: Date.now().toString(), name: `Course ${prev.length + 1}`, credits: 3 },
@@ -126,6 +128,7 @@ export default function GoalCalculatorScreen() {
   };
 
   const removePlannedCourse = (id: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setPlannedCourses(prev => prev.filter(c => c.id !== id));
   };
 
@@ -142,6 +145,7 @@ export default function GoalCalculatorScreen() {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
       flexDirection: 'row',
@@ -157,7 +161,6 @@ export default function GoalCalculatorScreen() {
       width: 36,
       height: 36,
       borderRadius: 10,
-      backgroundColor: colors.card,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -170,7 +173,6 @@ export default function GoalCalculatorScreen() {
     content: {
       padding: 20,
       paddingBottom: 40,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     tabRow: {
       flexDirection: 'row',
@@ -223,12 +225,12 @@ export default function GoalCalculatorScreen() {
     },
     input: {
       flex: 1,
+      height: 48,
       backgroundColor: colors.background,
-      borderRadius: 8,
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      fontFamily: 'Inter-Regular',
+      fontSize: 16,
       color: colors.text,
       borderWidth: 1,
       borderColor: colors.border,
@@ -311,25 +313,25 @@ export default function GoalCalculatorScreen() {
     },
     courseNameInput: {
       flex: 1,
+      height: 44,
       backgroundColor: colors.background,
-      borderRadius: 8,
-      paddingHorizontal: 10,
-      paddingVertical: 8,
+      borderRadius: 12,
+      paddingHorizontal: 14,
       fontFamily: 'Inter-Regular',
-      fontSize: 13,
+      fontSize: 14,
       color: colors.text,
       borderWidth: 1,
       borderColor: colors.border,
       marginRight: 8,
     },
     courseCreditInput: {
-      width: 50,
+      width: 54,
+      height: 44,
       backgroundColor: colors.background,
-      borderRadius: 8,
+      borderRadius: 12,
       paddingHorizontal: 8,
-      paddingVertical: 8,
       fontFamily: 'Inter-Medium',
-      fontSize: 13,
+      fontSize: 14,
       color: colors.text,
       borderWidth: 1,
       borderColor: colors.border,
@@ -401,7 +403,7 @@ export default function GoalCalculatorScreen() {
   });
 
   const renderSemesterGoal = () => (
-    <Animated.View entering={FadeInDown.duration(300)}>
+    <Animated.View entering={FadeInDown.delay(100).duration(400)}>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Target Semester GPA</Text>
         <View style={styles.inputRow}>
@@ -439,12 +441,14 @@ export default function GoalCalculatorScreen() {
             <TouchableOpacity
               style={styles.removeButton}
               onPress={() => removePlannedCourse(course.id)}
+              accessibilityRole="button"
+              accessibilityLabel="Remove course"
             >
               <Trash2 size={16} color={colors.error} />
             </TouchableOpacity>
           </View>
         ))}
-        <TouchableOpacity style={styles.addButton} onPress={addPlannedCourse}>
+        <TouchableOpacity style={styles.addButton} onPress={addPlannedCourse} accessibilityRole="button" accessibilityLabel="Add planned course">
           <Plus size={14} color={colors.primary} />
           <Text style={styles.addButtonText}>Add Course</Text>
         </TouchableOpacity>
@@ -488,7 +492,7 @@ export default function GoalCalculatorScreen() {
   );
 
   const renderCumulativeGoal = () => (
-    <Animated.View entering={FadeInDown.duration(300)}>
+    <Animated.View entering={FadeInDown.delay(100).duration(400)}>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Cumulative GPA Goal</Text>
         <Text style={styles.currentGpaNote}>
@@ -587,7 +591,7 @@ export default function GoalCalculatorScreen() {
   );
 
   const renderGraduation = () => (
-    <Animated.View entering={FadeInDown.duration(300)}>
+    <Animated.View entering={FadeInDown.delay(100).duration(400)}>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Graduation Requirements</Text>
         <Text style={styles.currentGpaNote}>
@@ -666,29 +670,38 @@ export default function GoalCalculatorScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
           <ArrowLeft size={20} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Goal Calculator</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.tabRow}>
+        <View style={styles.tabRow} accessibilityRole="tablist">
           <TouchableOpacity
             style={[styles.tab, activeTab === 'semester' && styles.tabActive]}
             onPress={() => setActiveTab('semester')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'semester' }}
+            accessibilityLabel="Semester goal"
           >
             <Text style={[styles.tabText, activeTab === 'semester' && styles.tabTextActive]}>Semester</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'cumulative' && styles.tabActive]}
             onPress={() => setActiveTab('cumulative')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'cumulative' }}
+            accessibilityLabel="Cumulative goal"
           >
             <Text style={[styles.tabText, activeTab === 'cumulative' && styles.tabTextActive]}>Cumulative</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'graduation' && styles.tabActive]}
             onPress={() => setActiveTab('graduation')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'graduation' }}
+            accessibilityLabel="Graduation progress"
           >
             <Text style={[styles.tabText, activeTab === 'graduation' && styles.tabTextActive]}>Graduation</Text>
           </TouchableOpacity>
