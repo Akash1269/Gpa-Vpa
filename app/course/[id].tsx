@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Platform, Dimensions, Pressable } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
@@ -9,7 +9,7 @@ import GradePicker from '@/components/GradePicker';
 import CreditPicker from '@/components/CreditPicker';
 import SemesterYearPicker from '@/components/SemesterYearPicker';
 import { useTheme } from '@/hooks/useTheme';
-import { X, Save, Trash2 } from 'lucide-react-native';
+import { X, Save, Trash2, PlusCircle, Pencil } from 'lucide-react-native';
 
 function generateId(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -118,25 +118,49 @@ export default function CourseScreen() {
     );
   };
 
+  const screenHeight = Dimensions.get('window').height;
+  const isWeb = Platform.OS === 'web';
+  const drawerHeight = screenHeight * 0.8;
+
   const styles = StyleSheet.create({
-    container: {
+    overlay: {
       flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.4)',
+      justifyContent: isWeb ? 'center' : 'flex-end',
+      alignItems: isWeb ? 'center' : 'stretch',
+    },
+    drawer: {
       backgroundColor: colors.background,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      overflow: 'hidden' as const,
+      ...(isWeb
+        ? { width: 500, maxHeight: '85%' as unknown as number, borderRadius: 20 }
+        : { height: drawerHeight, borderTopLeftRadius: 24, borderTopRightRadius: 24 }),
+    },
+    handle: {
+      width: 40,
+      height: 4,
+      backgroundColor: colors.border,
+      borderRadius: 2,
+      alignSelf: 'center',
+      marginTop: 10,
+      marginBottom: 6,
+      ...(isWeb ? { display: 'none' as const } : {}),
     },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      backgroundColor: colors.background,
-      height: 60,
       paddingHorizontal: 20,
-      borderBottomWidth: 0,
+      paddingVertical: 14,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+      backgroundColor: colors.card,
     },
     headerTitle: {
       fontFamily: 'Inter-Bold',
       fontSize: 18,
       color: colors.text,
+      marginLeft: 10,
     },
     closeButton: {
       width: 36,
@@ -145,9 +169,13 @@ export default function CourseScreen() {
       backgroundColor: colors.card,
       justifyContent: 'center',
       alignItems: 'center',
+      borderWidth: 1.5,
+      borderColor: colors.border,
     },
     content: {
-      padding: 20,
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom: 20,
     },
     formGroup: {
       marginBottom: 20,
@@ -191,9 +219,13 @@ export default function CourseScreen() {
       fontSize: 14,
       color: colors.textSecondary,
     },
-    buttonContainer: {
+    footer: {
       flexDirection: 'row',
-      marginTop: 32,
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      backgroundColor: colors.background,
     },
     saveButton: {
       flex: 1,
@@ -211,107 +243,113 @@ export default function CourseScreen() {
       marginLeft: 8,
     },
     deleteButton: {
-      width: 56,
-      height: 56,
+      width: 54,
+      height: 54,
       backgroundColor: colors.error,
-      borderRadius: 8,
+      borderRadius: 14,
       justifyContent: 'center',
       alignItems: 'center',
-      marginLeft: 16,
+      marginLeft: 12,
     },
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close">
-          <X size={18} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>
-          {isNew ? 'Add New Course' : 'Edit Course'}
-        </Text>
-        <View style={{ width: 36 }} />
-      </View>
-
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Course Name</Text>
-          <TextInput
-            style={[styles.input, errors.name ? styles.inputError : undefined]}
-            value={course.name}
-            onChangeText={(text) => { setCourse({ ...course, name: text }); if (errors.name) setErrors(e => ({ ...e, name: undefined })); }}
-            placeholder="Introduction to Computer Science"
-            placeholderTextColor={colors.textSecondary}
-            accessibilityLabel="Course name"
-            maxLength={100}
-          />
-          {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-        </View>
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Course Code</Text>
-          <TextInput
-            style={[styles.input, errors.code ? styles.inputError : undefined]}
-            value={course.code}
-            onChangeText={(text) => { setCourse({ ...course, code: text }); if (errors.code) setErrors(e => ({ ...e, code: undefined })); }}
-            placeholder="CS101"
-            placeholderTextColor={colors.textSecondary}
-            accessibilityLabel="Course code"
-            maxLength={10}
-          />
-          {errors.code && <Text style={styles.errorText}>{errors.code}</Text>}
-        </View>
-
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Grade</Text>
-          <View style={styles.pickerContainer}>
-            <GradePicker
-              value={course.grade}
-              onChange={(grade) => setCourse({ ...course, grade })}
-            />
-          </View>
-          <View style={styles.gradeInfo}>
-            <Text style={styles.gradeValue}>
-              Grade Value: {calculateGradeValue(course.grade).toFixed(1)}
+    <Pressable style={styles.overlay} onPress={() => router.back()}>
+      {!isWeb && <View style={{ flex: 1 }} />}
+      <Pressable style={styles.drawer} onPress={(e) => e.stopPropagation()}>
+        <View style={styles.handle} />
+        <View style={styles.header}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {isNew ? <PlusCircle size={20} color={colors.primary} /> : <Pencil size={18} color={colors.primary} />}
+            <Text style={styles.headerTitle}>
+              {isNew ? 'Add New Course' : 'Edit Course'}
             </Text>
           </View>
+          <TouchableOpacity style={styles.closeButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close">
+            <X size={18} color={colors.text} />
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Credit Hours</Text>
-          <View style={styles.pickerContainer}>
-            <CreditPicker
-              value={course.credits}
-              onChange={(credits) => setCourse({ ...course, credits })}
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Course Name</Text>
+            <TextInput
+              style={[styles.input, errors.name ? styles.inputError : undefined]}
+              value={course.name}
+              onChangeText={(text) => { setCourse({ ...course, name: text }); if (errors.name) setErrors(e => ({ ...e, name: undefined })); }}
+              placeholder="Introduction to Computer Science"
+              placeholderTextColor={colors.textSecondary}
+              accessibilityLabel="Course name"
+              maxLength={100}
             />
+            {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
           </View>
-        </View>
 
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Semester & Year</Text>
-          <View style={styles.pickerContainer}>
-            <SemesterYearPicker
-              semester={course.semester}
-              year={course.year}
-              onChangeSemester={(semester) => setCourse({ ...course, semester })}
-              onChangeYear={(year) => setCourse({ ...course, year })}
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Course Code</Text>
+            <TextInput
+              style={[styles.input, errors.code ? styles.inputError : undefined]}
+              value={course.code}
+              onChangeText={(text) => { setCourse({ ...course, code: text }); if (errors.code) setErrors(e => ({ ...e, code: undefined })); }}
+              placeholder="CS101"
+              placeholderTextColor={colors.textSecondary}
+              accessibilityLabel="Course code"
+              maxLength={10}
             />
+            {errors.code && <Text style={styles.errorText}>{errors.code}</Text>}
           </View>
-        </View>
 
-        <View style={styles.buttonContainer}>
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Grade</Text>
+            <View style={styles.pickerContainer}>
+              <GradePicker
+                value={course.grade}
+                onChange={(grade) => setCourse({ ...course, grade })}
+              />
+            </View>
+            <View style={styles.gradeInfo}>
+              <Text style={styles.gradeValue}>
+                Grade Value: {calculateGradeValue(course.grade).toFixed(1)}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Credit Hours</Text>
+            <View style={styles.pickerContainer}>
+              <CreditPicker
+                value={course.credits}
+                onChange={(credits) => setCourse({ ...course, credits })}
+              />
+            </View>
+          </View>
+
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Semester & Year</Text>
+            <View style={styles.pickerContainer}>
+              <SemesterYearPicker
+                semester={course.semester}
+                year={course.year}
+                onChangeSemester={(semester) => setCourse({ ...course, semester })}
+                onChangeYear={(year) => setCourse({ ...course, year })}
+              />
+            </View>
+          </View>
+        </ScrollView>
+
+        <View style={styles.footer}>
           <TouchableOpacity style={styles.saveButton} onPress={handleSave} accessibilityRole="button" accessibilityLabel="Save course">
             <Save size={20} color="#FFFFFF" />
             <Text style={styles.saveButtonText}>Save Course</Text>
           </TouchableOpacity>
           
           {!isNew && (
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-              <Trash2 size={24} color="#FFFFFF" />
+            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete} accessibilityRole="button" accessibilityLabel="Delete course">
+              <Trash2 size={22} color="#FFFFFF" />
             </TouchableOpacity>
           )}
         </View>
-      </ScrollView>
-    </View>
+      </Pressable>
+    </Pressable>
   );
 }
