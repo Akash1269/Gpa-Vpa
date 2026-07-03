@@ -15,7 +15,7 @@ This is a React Native (Expo 56) mobile app for tracking courses, calculating GP
 - **Icons:** Lucide React Native
 - **Font:** Inter (via @expo-google-fonts)
 - **Build:** EAS Build (cloud)
-- **CI/CD:** GitHub Actions (lint, test, web deploy)
+- **CI/CD:** GitHub Actions (Build & Test on push, Release App on tag, web deploy)
 
 ## Architecture
 
@@ -55,7 +55,7 @@ docs/             → Documentation, publishing guides
 - FlatList for all lists (not ScrollView with map)
 - Animations use `entering` prop from Reanimated (FadeIn, FadeInRight, etc.)
 - Destructive actions require Alert.alert() confirmation
-- Course IDs should use UUID (not Date.now())
+- Course IDs should use `generateId()` helper in `app/course/[id].tsx` (UUID with Android fallback)
 - Web layout uses max-width 1200px for content areas
 
 ## GPA Scale
@@ -79,6 +79,13 @@ npm run build:web  # Export for web deployment
 ```bash
 eas build --profile preview --platform android   # APK for testing
 eas build --profile production --platform android # AAB for Play Store
+```
+
+### Release Process (Tag-Based)
+```bash
+# Bump version in app.json, commit, then:
+git tag vX.Y.Z
+git push origin vX.Y.Z   # Triggers Release App workflow → builds APK → creates GitHub Release
 ```
 
 - EAS project ID: `cdc61fa1-5392-47ce-a861-ce415358623e`
