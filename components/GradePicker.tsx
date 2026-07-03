@@ -10,6 +10,7 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
   const { colors } = useTheme();
   
   const gradeOptions = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
+  const allOptions: (string | null)[] = [null, ...gradeOptions];
 
   const styles = StyleSheet.create({
     container: {
@@ -51,22 +52,24 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}
       >
-        {gradeOptions.map((grade) => (
+        {allOptions.map((grade) => (
           <TouchableOpacity
-            key={grade}
+            key={grade ?? 'na'}
             style={[
               styles.option,
-              value === grade && styles.selectedOption,
+              grade === null && { backgroundColor: value === null ? '#FFF3E0' : colors.card, borderColor: value === null ? '#F57C00' : colors.border },
+              grade !== null && value === grade && styles.selectedOption,
             ]}
             onPress={() => onChange(grade)}
           >
             <Text
               style={[
                 styles.optionText,
-                value === grade && styles.selectedOptionText,
+                grade === null && { fontSize: 12, color: value === null ? '#F57C00' : colors.textSecondary },
+                grade !== null && value === grade && styles.selectedOptionText,
               ]}
             >
-              {grade}
+              {grade ?? 'N/A'}
             </Text>
           </TouchableOpacity>
         ))}

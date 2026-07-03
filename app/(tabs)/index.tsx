@@ -195,8 +195,8 @@ export default function Dashboard() {
           <Animated.View entering={FadeInDown.delay(200).duration(500)}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>This Semester</Text>
-              <View style={[styles.sectionBadge, { backgroundColor: '#FFF3E0' }]}>
-                <Text style={[styles.sectionBadgeText, { color: '#F57C00' }]}>{inProgressSemester.semester} {inProgressSemester.year} • In Progress</Text>
+              <View style={[styles.sectionBadge, { backgroundColor: '#E3F2FD' }]}>
+                <Text style={[styles.sectionBadgeText, { color: '#1976D2' }]}>In Progress</Text>
               </View>
             </View>
             <SemesterProgress semester={inProgressSemester} />
@@ -207,9 +207,6 @@ export default function Dashboard() {
           <Animated.View entering={FadeInDown.delay(250).duration(500)}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Last Semester</Text>
-              <View style={styles.sectionBadge}>
-                <Text style={styles.sectionBadgeText}>{lastCompletedSemester.semester} {lastCompletedSemester.year}</Text>
-              </View>
             </View>
             <SemesterProgress semester={lastCompletedSemester} />
           </Animated.View>

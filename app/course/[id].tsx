@@ -44,14 +44,6 @@ export default function CourseScreen() {
     };
   });
 
-  const [notYetGraded, setNotYetGraded] = useState(() => {
-    if (!isNew) {
-      const existingCourse = getCourse(id);
-      return existingCourse?.grade === null;
-    }
-    return false;
-  });
-
   const [errors, setErrors] = useState<{ name?: string; code?: string }>({});
 
   const handleSave = () => {
@@ -95,7 +87,7 @@ export default function CourseScreen() {
     }
 
     setErrors({});
-    const courseToSave = { ...course, name: trimmedName, code: trimmedCode, grade: notYetGraded ? null : course.grade };
+    const courseToSave = { ...course, name: trimmedName, code: trimmedCode };
 
     if (isNew) {
       addCourse(courseToSave);
@@ -309,51 +301,20 @@ export default function CourseScreen() {
           </View>
 
           <View style={styles.formGroup}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <Text style={styles.label}>Grade</Text>
-              <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: notYetGraded ? colors.primary + '15' : colors.card,
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderRadius: 8,
-                  borderWidth: 1,
-                  borderColor: notYetGraded ? colors.primary : colors.border,
-                }}
-                onPress={() => setNotYetGraded(!notYetGraded)}
-                accessibilityRole="switch"
-                accessibilityLabel="Not yet graded"
-                accessibilityState={{ checked: notYetGraded }}
-              >
-                <Text style={{ fontFamily: 'Inter-Medium', fontSize: 13, color: notYetGraded ? colors.primary : colors.textSecondary }}>
-                  Not yet graded
-                </Text>
-              </TouchableOpacity>
+            <Text style={styles.label}>Grade</Text>
+            <View style={styles.pickerContainer}>
+              <GradePicker
+                value={course.grade}
+                onChange={(grade) => setCourse({ ...course, grade })}
+              />
             </View>
-            {!notYetGraded && (
-              <>
-                <View style={styles.pickerContainer}>
-                  <GradePicker
-                    value={course.grade}
-                    onChange={(grade) => setCourse({ ...course, grade })}
-                  />
-                </View>
-                <View style={styles.gradeInfo}>
-                  <Text style={styles.gradeValue}>
-                    Grade Value: {course.grade ? calculateGradeValue(course.grade).toFixed(1) : '—'}
-                  </Text>
-                </View>
-              </>
-            )}
-            {notYetGraded && (
-              <View style={{ backgroundColor: colors.card, borderRadius: 12, padding: 16, borderWidth: 1, borderColor: colors.border }}>
-                <Text style={{ fontFamily: 'Inter-Regular', fontSize: 14, color: colors.textSecondary, textAlign: 'center' }}>
-                  This course will be tracked as in-progress. You can add the grade later.
-                </Text>
-              </View>
-            )}
+            <View style={styles.gradeInfo}>
+              <Text style={styles.gradeValue}>
+                {course.grade === null
+                  ? 'Not yet graded — tracked as in-progress'
+                  : `Grade Value: ${calculateGradeValue(course.grade).toFixed(1)}`}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.formGroup}>

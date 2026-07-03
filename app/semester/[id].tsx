@@ -6,13 +6,14 @@ import { Semester } from '@/types/semester';
 import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';
+import { getGradeColor } from '@/utils/gpaCalculator';
 import { Plus, ArrowLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SemesterScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { getSemester } = useGpa();
+  const { getSemester, targetSemesterGpa } = useGpa();
   const semester = useMemo(() => id ? getSemester(id) ?? null : null, [id, getSemester]);
   const insets = useSafeAreaInsets();
 
@@ -58,36 +59,88 @@ export default function SemesterScreen() {
     },
     summaryContainer: {
       backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 16,
+      borderRadius: 16,
+      padding: 20,
       marginBottom: 24,
-      elevation: 1,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    summaryTop: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
     },
     semesterTitle: {
       fontFamily: 'Inter-Bold',
       fontSize: 20,
       color: colors.text,
-      marginBottom: 4,
+    },
+    statusBadge: {
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: 12,
+    },
+    statusText: {
+      fontFamily: 'Inter-Medium',
+      fontSize: 11,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    gpaSection: {
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    gpaValue: {
+      fontFamily: 'Inter-Bold',
+      fontSize: 40,
+    },
+    gpaLabel: {
+      fontFamily: 'Inter-Regular',
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    progressSection: {
+      marginBottom: 16,
+    },
+    progressBar: {
+      height: 6,
+      backgroundColor: colors.border,
+      borderRadius: 3,
+      overflow: 'hidden',
+      marginBottom: 6,
+    },
+    progressFill: {
+      height: '100%',
+      borderRadius: 3,
+    },
+    progressText: {
+      fontFamily: 'Inter-Regular',
+      fontSize: 12,
+      color: colors.textSecondary,
     },
     statsRow: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 16,
+      gap: 10,
     },
-    statContainer: {
-      alignItems: 'center',
+    statPill: {
       flex: 1,
+      backgroundColor: colors.background,
+      borderRadius: 10,
+      paddingVertical: 10,
+      alignItems: 'center',
     },
-    statValue: {
+    statPillValue: {
       fontFamily: 'Inter-Bold',
-      fontSize: 18,
+      fontSize: 16,
       color: colors.text,
     },
-    statLabel: {
+    statPillLabel: {
       fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontSize: 11,
       color: colors.textSecondary,
-      marginTop: 4,
+      marginTop: 2,
     },
     coursesContainer: {
       flex: 1,
@@ -150,25 +203,57 @@ export default function SemesterScreen() {
       </View>
       <View style={styles.content}>
         <View style={styles.summaryContainer}>
-          <Text style={styles.semesterTitle}>
-            {semester.semester} {semester.year}
-          </Text>
-          
+          <View style={styles.summaryTop}>
+            <Text style={styles.semesterTitle}>
+              {semester.semester} {semester.year}
+            </Text>
+            <View style={[styles.statusBadge, { backgroundColor: semester.status === 'in-progress' ? '#FFF3E0' : '#E8F5E9' }]}>
+              <Text style={[styles.statusText, { color: semester.status === 'in-progress' ? '#F57C00' : '#34A853' }]}>
+                {semester.status === 'in-progress' ? 'In Progress' : 'Completed'}
+              </Text>
+            </View>
+          </View>
+
+          {semester.gpa > 0 && (
+            <View style={styles.gpaSection}>
+              <Text style={[styles.gpaValue, { color: getGradeColor(semester.gpa).text }]}>
+                {semester.gpa.toFixed(2)}
+              </Text>
+              <Text style={styles.gpaLabel}>Semester GPA</Text>
+            </View>
+          )}
+
+          {semester.status === 'in-progress' && (() => {
+            const gradedCount = semester.courses.filter(c => c.grade !== null).length;
+            const totalCount = semester.courses.length;
+            const progress = totalCount > 0 ? gradedCount / totalCount : 0;
+            return (
+              <View style={styles.progressSection}>
+                <View style={styles.progressBar}>
+                  <View style={[styles.progressFill, { width: `${progress * 100}%`, backgroundColor: colors.primary }]} />
+                </View>
+                <Text style={styles.progressText}>{gradedCount}/{totalCount} courses graded</Text>
+              </View>
+            );
+          })()}
+
           <View style={styles.statsRow}>
-            <View style={styles.statContainer}>
-              <Text style={styles.statValue}>{semester.gpa.toFixed(2)}</Text>
-              <Text style={styles.statLabel}>GPA</Text>
+            <View style={styles.statPill}>
+              <Text style={styles.statPillValue}>{semester.courses.length}</Text>
+              <Text style={styles.statPillLabel}>Courses</Text>
             </View>
-            <View style={styles.statContainer}>
-              <Text style={styles.statValue}>{semester.courses.length}</Text>
-              <Text style={styles.statLabel}>Courses</Text>
-            </View>
-            <View style={styles.statContainer}>
-              <Text style={styles.statValue}>
+            <View style={styles.statPill}>
+              <Text style={styles.statPillValue}>
                 {semester.courses.reduce((sum, course) => sum + course.credits, 0)}
               </Text>
-              <Text style={styles.statLabel}>Total Credits</Text>
+              <Text style={styles.statPillLabel}>Credits</Text>
             </View>
+            {semester.status === 'in-progress' && targetSemesterGpa !== null && (
+              <View style={styles.statPill}>
+                <Text style={[styles.statPillValue, { color: '#9C27B0' }]}>🎯 {targetSemesterGpa.toFixed(2)}</Text>
+                <Text style={styles.statPillLabel}>Goal</Text>
+              </View>
+            )}
           </View>
         </View>
 
