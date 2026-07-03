@@ -36,3 +36,28 @@ Tasks that need your personal action (can't be automated).
 - [ ] Set up a support email for app store listings
 - [ ] Monitor crash reports and reviews
 - [ ] Plan update cadence (bug fixes, features from Priority 2-4)
+
+---
+
+## Future Features Roadmap
+
+### Priority 1 — In Progress
+- [x] **GPA Goal Calculator** — Set target GPA, see what grades are needed
+- [x] **Graduation Credit Progress** — Set credit target, track progress + semesters remaining
+
+### Priority 2 — Next Up
+- [ ] **What-If Simulator** — Add hypothetical courses/grades to see projected GPA without saving
+- [ ] **Grade Distribution** — Visual breakdown of A's, B's, C's across all courses
+- [ ] **Export/Share Transcript** — Generate PDF or shareable summary of academic record
+
+### Priority 3 — Planned
+- [ ] **Strongest/Weakest Subjects** — GPA grouped by course prefix (CS, MATH, ENG)
+- [ ] **Academic Standing Warnings** — Alert when GPA approaches probation threshold
+- [ ] **Dean's List Tracker** — Show if current semester qualifies for Dean's List (3.5+)
+- [ ] **Backup/Restore** — Export data as JSON, import on new device
+
+### Priority 4 — Wishlist
+- [ ] **Semester Notes** — Add notes per semester ("heavy workload", "internship")
+- [ ] **Course Difficulty Rating** — Rate courses 1-5 stars for personal reference
+- [ ] **Streak/Achievements** — "3 semesters above 3.0" type motivational badges
+- [ ] **Course Schedule Integration** — Import courses from university schedule

@@ -41,6 +41,14 @@ export default function StackNavigator() {
           animation: 'slide_from_right',
         }}
       />
+      <Stack.Screen 
+        name="goal-calculator" 
+        options={{ 
+          presentation: 'card',
+          headerShown: false,
+          animation: 'slide_from_right',
+        }}
+      />
     </Stack>
   );
 }

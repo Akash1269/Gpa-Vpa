@@ -6,7 +6,7 @@ import RecentCoursesList from '@/components/RecentCoursesList';
 import SemesterProgress from '@/components/SemesterProgress';
 import { getAcademicStanding } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
-import { BookOpen, Trophy, TrendingUp } from 'lucide-react-native';
+import { BookOpen, Trophy, TrendingUp, Target } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function Dashboard() {
@@ -86,6 +86,27 @@ export default function Dashboard() {
       fontSize: 12,
       color: colors.primary,
     },
+    goalCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.card,
+      borderRadius: 14,
+      padding: 14,
+      marginTop: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    goalCardTitle: {
+      fontFamily: 'Inter-SemiBold',
+      fontSize: 14,
+      color: colors.text,
+    },
+    goalCardSubtitle: {
+      fontFamily: 'Inter-Regular',
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
   });
 
   return (
@@ -120,6 +141,22 @@ export default function Dashboard() {
             </View>
             <Text style={styles.statValue}>{courses.length}</Text>
             <Text style={styles.statLabel}>Courses</Text>
+          </TouchableOpacity>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(150).duration(500)}>
+          <TouchableOpacity
+            style={styles.goalCard}
+            onPress={() => router.push('/goal-calculator')}
+            accessibilityLabel="Open GPA Goal Calculator"
+          >
+            <View style={[styles.statIconBg, { backgroundColor: '#F3E5F5' }]}>
+              <Target size={18} color="#9C27B0" />
+            </View>
+            <View style={{ flex: 1, marginLeft: 12 }}>
+              <Text style={styles.goalCardTitle}>GPA Goal Calculator</Text>
+              <Text style={styles.goalCardSubtitle}>Plan grades needed to reach your target</Text>
+            </View>
           </TouchableOpacity>
         </Animated.View>
 
