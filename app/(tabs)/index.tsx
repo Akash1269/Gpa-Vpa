@@ -163,7 +163,7 @@ export default function Dashboard() {
         {currentSemester && (
           <Animated.View entering={FadeInDown.delay(200).duration(500)}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Current Semester</Text>
+              <Text style={styles.sectionTitle}>Last Semester</Text>
               <View style={styles.sectionBadge}>
                 <Text style={styles.sectionBadgeText}>{currentSemester.semester} {currentSemester.year}</Text>
               </View>
