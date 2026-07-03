@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
-import { router } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
-import { ArrowLeft, ChevronDown, ChevronRight } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ChevronDown, ChevronRight } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import ScreenHeader from '@/components/ScreenHeader';
 
 export default function CreditsScreen() {
   const { colors } = useTheme();
   const { semesters, totalCredits } = useGpa();
-  const insets = useSafeAreaInsets();
   const [expandedSemester, setExpandedSemester] = useState<string | null>(null);
 
   const toggleSemester = (id: string) => {
@@ -21,30 +19,6 @@ export default function CreditsScreen() {
     container: {
       flex: 1,
       backgroundColor: colors.background,
-    },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 16,
-      paddingTop: insets.top + 8,
-      paddingBottom: 12,
-      backgroundColor: colors.background,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    backButton: {
-      width: 36,
-      height: 36,
-      borderRadius: 10,
-      backgroundColor: colors.card,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    headerTitle: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 18,
-      color: colors.text,
-      marginLeft: 12,
     },
     content: {
       padding: 20,
@@ -138,12 +112,7 @@ export default function CreditsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <ArrowLeft size={20} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Credits Breakdown</Text>
-      </View>
+      <ScreenHeader title="Credits Breakdown" />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Animated.View entering={FadeInDown.duration(400)}>

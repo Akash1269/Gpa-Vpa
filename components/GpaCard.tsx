@@ -14,8 +14,6 @@ type GpaCardProps = {
 export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardProps) {
   const { colors } = useTheme();
 
-  const progressWidth = (gpa / 4) * 100;
-
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.primary,
@@ -50,7 +48,6 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
     gpaRow: {
       flexDirection: 'row',
       alignItems: 'baseline',
-      marginBottom: 20,
     },
     gpaValue: {
       fontFamily: 'Inter-Bold',
@@ -63,17 +60,6 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
       fontSize: 18,
       color: 'rgba(255,255,255,0.6)',
       marginLeft: 8,
-    },
-    progressTrack: {
-      height: 6,
-      backgroundColor: 'rgba(255,255,255,0.2)',
-      borderRadius: 3,
-      overflow: 'hidden',
-    },
-    progressFill: {
-      height: '100%',
-      borderRadius: 3,
-      backgroundColor: '#FFFFFF',
     },
     // Decorative circles
     decorCircle1: {
@@ -110,9 +96,6 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
         <View style={styles.gpaRow}>
           <Text style={styles.gpaValue}>{gpa.toFixed(2)}</Text>
           <Text style={styles.gpaScale}>/ 4.0</Text>
-        </View>
-        <View style={styles.progressTrack}>
-          <Animated.View style={[styles.progressFill, { width: `${progressWidth}%` }]} />
         </View>
       </View>
     </Animated.View>

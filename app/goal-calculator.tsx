@@ -1,35 +1,18 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Platform } from 'react-native';
-import { router } from 'expo-router';
-import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { gradePoints } from '@/utils/gpaCalculator';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import ScreenHeader from '@/components/ScreenHeader';
+import SegmentedControl from '@/components/SegmentedControl';
 
-type PlannedCourse = {
-  id: string;
-  name: string;
-  credits: number;
-};
-
-type Tab = 'semester' | 'cumulative' | 'graduation';
+type Tab = 'cumulative' | 'graduation';
 
 export default function GoalCalculatorScreen() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, courses, semesters, targetCgpa, targetSemesterGpa, setTargetCgpa, setTargetSemesterGpa } = useGpa();
-  const insets = useSafeAreaInsets();
-
-  const [activeTab, setActiveTab] = useState<Tab>('semester');
-
-  // Semester goal state
-  const [semesterTargetGpaInput, setSemesterTargetGpaInput] = useState(targetSemesterGpa?.toString() ?? '3.5');
-  const [plannedCourses, setPlannedCourses] = useState<PlannedCourse[]>([
-    { id: '1', name: 'Course 1', credits: 3 },
-    { id: '2', name: 'Course 2', credits: 3 },
-  ]);
+  const { cumulativeGpa, totalCredits, courses, semesters, targetCgpa, setTargetCgpa, targetCredits, setTargetCredits } = useGpa();
+  const [activeTab, setActiveTab] = useState<Tab>('cumulative');
 
   // Cumulative goal state
   const [cumulativeTargetGpaInput, setCumulativeTargetGpaInput] = useState(targetCgpa?.toString() ?? '3.5');
@@ -37,7 +20,7 @@ export default function GoalCalculatorScreen() {
   const [futureSemesterCredits, setFutureSemesterCredits] = useState('15');
 
   // Graduation state
-  const [graduationCredits, setGraduationCredits] = useState('120');
+  const [graduationCredits, setGraduationCredits] = useState(targetCredits?.toString() ?? '120');
   const [creditsPerSemester, setCreditsPerSemester] = useState('15');
 
   // Compute average credits per semester from past data
@@ -45,32 +28,6 @@ export default function GoalCalculatorScreen() {
     if (semesters.length === 0) return 15;
     return Math.round(totalCredits / semesters.length);
   }, [totalCredits, semesters]);
-
-  // Semester goal calculation
-  const semesterResult = useMemo(() => {
-    const target = parseFloat(semesterTargetGpaInput);
-    if (isNaN(target) || target < 0 || target > 4.0) return null;
-
-    const totalPlannedCredits = plannedCourses.reduce((sum, c) => sum + c.credits, 0);
-    if (totalPlannedCredits === 0) return null;
-
-    const requiredPoints = target * totalPlannedCredits;
-    const avgGradeNeeded = requiredPoints / totalPlannedCredits;
-
-    // Find closest grade
-    const grades = Object.entries(gradePoints).sort((a, b) => b[1] - a[1]);
-    const closestGrade = grades.find(([_, val]) => val <= avgGradeNeeded) || grades[grades.length - 1];
-
-    // Persist semester goal
-    setTargetSemesterGpa(target);
-
-    return {
-      avgGradeNeeded,
-      closestGrade: closestGrade[0],
-      totalCredits: totalPlannedCredits,
-      feasible: avgGradeNeeded <= 4.0,
-    };
-  }, [semesterTargetGpaInput, plannedCourses]);
 
   // Cumulative goal calculation (multi-semester)
   const cumulativeResult = useMemo(() => {
@@ -87,10 +44,8 @@ export default function GoalCalculatorScreen() {
     const grades = Object.entries(gradePoints).sort((a, b) => b[1] - a[1]);
     const closestGrade = grades.find(([_, val]) => val <= requiredGpaPerSemester) || grades[grades.length - 1];
 
-    // Persist cumulative goal
-    setTargetCgpa(target);
-
     return {
+      target,
       requiredGpa: requiredGpaPerSemester,
       closestGrade: closestGrade[0],
       feasible: requiredGpaPerSemester <= 4.0 && requiredGpaPerSemester >= 0,
@@ -101,6 +56,11 @@ export default function GoalCalculatorScreen() {
       totalFutureCredits,
     };
   }, [cumulativeTargetGpaInput, remainingSemesters, futureSemesterCredits, cumulativeGpa, totalCredits]);
+
+  // Persist cumulative goal after render
+  useEffect(() => {
+    if (cumulativeResult) setTargetCgpa(cumulativeResult.target);
+  }, [cumulativeResult]);
 
   // Graduation progress
   const graduationResult = useMemo(() => {
@@ -125,27 +85,10 @@ export default function GoalCalculatorScreen() {
     };
   }, [graduationCredits, creditsPerSemester, totalCredits, semesters.length, avgCreditsPerSemester]);
 
-  const addPlannedCourse = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setPlannedCourses(prev => [
-      ...prev,
-      { id: Date.now().toString(), name: `Course ${prev.length + 1}`, credits: 3 },
-    ]);
-  };
-
-  const removePlannedCourse = (id: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setPlannedCourses(prev => prev.filter(c => c.id !== id));
-  };
-
-  const updateCourseCredits = (id: string, credits: string) => {
-    const num = parseInt(credits) || 0;
-    setPlannedCourses(prev => prev.map(c => c.id === id ? { ...c, credits: num } : c));
-  };
-
-  const updateCourseName = (id: string, name: string) => {
-    setPlannedCourses(prev => prev.map(c => c.id === id ? { ...c, name } : c));
-  };
+  // Persist credits goal after render
+  useEffect(() => {
+    if (graduationResult) setTargetCredits(graduationResult.target);
+  }, [graduationResult]);
 
   const styles = StyleSheet.create({
     container: {
@@ -153,56 +96,9 @@ export default function GoalCalculatorScreen() {
       backgroundColor: colors.background,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 16,
-      paddingTop: insets.top + 8,
-      paddingBottom: 12,
-      backgroundColor: colors.background,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    backButton: {
-      width: 36,
-      height: 36,
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    headerTitle: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 18,
-      color: colors.text,
-      marginLeft: 12,
-    },
     content: {
       padding: 20,
       paddingBottom: 40,
-    },
-    tabRow: {
-      flexDirection: 'row',
-      backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 4,
-      marginBottom: 20,
-    },
-    tab: {
-      flex: 1,
-      paddingVertical: 10,
-      alignItems: 'center',
-      borderRadius: 10,
-    },
-    tabActive: {
-      backgroundColor: colors.primary,
-    },
-    tabText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 12,
-      color: colors.textSecondary,
-    },
-    tabTextActive: {
-      color: '#FFFFFF',
     },
     card: {
       backgroundColor: colors.card,
@@ -312,62 +208,6 @@ export default function GoalCalculatorScreen() {
       marginTop: 10,
       textAlign: 'center',
     },
-    courseRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 8,
-    },
-    courseNameInput: {
-      flex: 1,
-      height: 44,
-      backgroundColor: colors.background,
-      borderRadius: 12,
-      paddingHorizontal: 14,
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
-      color: colors.text,
-      borderWidth: 1,
-      borderColor: colors.border,
-      marginRight: 8,
-    },
-    courseCreditInput: {
-      width: 54,
-      height: 44,
-      backgroundColor: colors.background,
-      borderRadius: 12,
-      paddingHorizontal: 8,
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
-      color: colors.text,
-      borderWidth: 1,
-      borderColor: colors.border,
-      textAlign: 'center',
-      marginRight: 8,
-    },
-    removeButton: {
-      width: 32,
-      height: 32,
-      borderRadius: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    addButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: 10,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: colors.primary + '40',
-      borderStyle: 'dashed',
-      marginTop: 4,
-    },
-    addButtonText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 13,
-      color: colors.primary,
-      marginLeft: 6,
-    },
     progressBarTrack: {
       height: 10,
       backgroundColor: colors.border,
@@ -407,95 +247,6 @@ export default function GoalCalculatorScreen() {
       fontStyle: 'italic',
     },
   });
-
-  const renderSemesterGoal = () => (
-    <Animated.View entering={FadeInDown.delay(100).duration(400)}>
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Target Semester GPA</Text>
-        <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>Target GPA</Text>
-          <TextInput
-            style={styles.input}
-            value={semesterTargetGpaInput}
-            onChangeText={setSemesterTargetGpaInput}
-            keyboardType="decimal-pad"
-            placeholder="3.5"
-            placeholderTextColor={colors.textSecondary}
-          />
-        </View>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Planned Courses</Text>
-        {plannedCourses.map(course => (
-          <View key={course.id} style={styles.courseRow}>
-            <TextInput
-              style={styles.courseNameInput}
-              value={course.name}
-              onChangeText={(text) => updateCourseName(course.id, text)}
-              placeholder="Course name"
-              placeholderTextColor={colors.textSecondary}
-            />
-            <TextInput
-              style={styles.courseCreditInput}
-              value={course.credits > 0 ? course.credits.toString() : ''}
-              onChangeText={(text) => updateCourseCredits(course.id, text)}
-              keyboardType="number-pad"
-              placeholder="CR"
-              placeholderTextColor={colors.textSecondary}
-            />
-            <TouchableOpacity
-              style={styles.removeButton}
-              onPress={() => removePlannedCourse(course.id)}
-              accessibilityRole="button"
-              accessibilityLabel="Remove course"
-            >
-              <Trash2 size={16} color={colors.error} />
-            </TouchableOpacity>
-          </View>
-        ))}
-        <TouchableOpacity style={styles.addButton} onPress={addPlannedCourse} accessibilityRole="button" accessibilityLabel="Add planned course">
-          <Plus size={14} color={colors.primary} />
-          <Text style={styles.addButtonText}>Add Course</Text>
-        </TouchableOpacity>
-      </View>
-
-      {semesterResult && (
-        <View style={styles.resultCard}>
-          <Text style={styles.resultTitle}>Result</Text>
-          <Text style={styles.resultValue}>{semesterResult.avgGradeNeeded.toFixed(2)}</Text>
-          <Text style={styles.resultGradeHint}>
-            Average {semesterResult.closestGrade} or higher per course
-          </Text>
-
-          <View style={styles.resultDivider} />
-          <Text style={styles.breakdownTitle}>Breakdown</Text>
-          <View style={styles.breakdownRow}>
-            <Text style={styles.breakdownLabel}>Target semester GPA</Text>
-            <Text style={styles.breakdownValue}>{semesterTargetGpaInput}</Text>
-          </View>
-          <View style={styles.breakdownRow}>
-            <Text style={styles.breakdownLabel}>Total planned credits</Text>
-            <Text style={styles.breakdownValue}>{semesterResult.totalCredits} CR</Text>
-          </View>
-          <View style={styles.breakdownRow}>
-            <Text style={styles.breakdownLabel}>Quality points needed</Text>
-            <Text style={styles.breakdownValue}>{(semesterResult.avgGradeNeeded * semesterResult.totalCredits).toFixed(1)}</Text>
-          </View>
-          <View style={styles.breakdownRow}>
-            <Text style={styles.breakdownLabel}>Required avg grade point</Text>
-            <Text style={styles.breakdownValue}>{semesterResult.avgGradeNeeded.toFixed(2)} / 4.0</Text>
-          </View>
-
-          {!semesterResult.feasible && (
-            <Text style={styles.resultWarning}>
-              ⚠️ Not achievable — maximum possible GPA is 4.0
-            </Text>
-          )}
-        </View>
-      )}
-    </Animated.View>
-  );
 
   const renderCumulativeGoal = () => (
     <Animated.View entering={FadeInDown.delay(100).duration(400)}>
@@ -675,45 +426,15 @@ export default function GoalCalculatorScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
-          <ArrowLeft size={20} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Goal Calculator</Text>
-      </View>
+      <ScreenHeader title="GPA Planner" />
 
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.tabRow} accessibilityRole="tablist">
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'semester' && styles.tabActive]}
-            onPress={() => setActiveTab('semester')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'semester' }}
-            accessibilityLabel="Semester goal"
-          >
-            <Text style={[styles.tabText, activeTab === 'semester' && styles.tabTextActive]}>Semester</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'cumulative' && styles.tabActive]}
-            onPress={() => setActiveTab('cumulative')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'cumulative' }}
-            accessibilityLabel="Cumulative goal"
-          >
-            <Text style={[styles.tabText, activeTab === 'cumulative' && styles.tabTextActive]}>Cumulative</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'graduation' && styles.tabActive]}
-            onPress={() => setActiveTab('graduation')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'graduation' }}
-            accessibilityLabel="Graduation progress"
-          >
-            <Text style={[styles.tabText, activeTab === 'graduation' && styles.tabTextActive]}>Graduation</Text>
-          </TouchableOpacity>
-        </View>
+        <SegmentedControl
+          options={['Cumulative', 'Graduation']}
+          selected={activeTab === 'cumulative' ? 'Cumulative' : 'Graduation'}
+          onChange={(val) => setActiveTab(val === 'Cumulative' ? 'cumulative' : 'graduation')}
+        />
 
-        {activeTab === 'semester' && renderSemesterGoal()}
         {activeTab === 'cumulative' && renderCumulativeGoal()}
         {activeTab === 'graduation' && renderGraduation()}
       </ScrollView>

@@ -127,20 +127,21 @@ export default function CourseScreen() {
   };
 
   const screenHeight = Dimensions.get('window').height;
-  const isWeb = Platform.OS === 'web';
+  const screenWidth = Dimensions.get('window').width;
+  const isDesktopWeb = Platform.OS === 'web' && screenWidth >= 768;
   const drawerHeight = screenHeight * 0.8;
 
   const styles = StyleSheet.create({
     overlay: {
       flex: 1,
       backgroundColor: 'rgba(0,0,0,0.4)',
-      justifyContent: isWeb ? 'center' : 'flex-end',
-      alignItems: isWeb ? 'center' : 'stretch',
+      justifyContent: isDesktopWeb ? 'center' : 'flex-end',
+      alignItems: isDesktopWeb ? 'center' : 'stretch',
     },
     drawer: {
       backgroundColor: colors.background,
       overflow: 'hidden' as const,
-      ...(isWeb
+      ...(isDesktopWeb
         ? { width: 500, maxHeight: '85%' as unknown as number, borderRadius: 20 }
         : { height: drawerHeight, borderTopLeftRadius: 24, borderTopRightRadius: 24 }),
     },
@@ -152,7 +153,7 @@ export default function CourseScreen() {
       alignSelf: 'center',
       marginTop: 10,
       marginBottom: 6,
-      ...(isWeb ? { display: 'none' as const } : {}),
+      ...(isDesktopWeb ? { display: 'none' as const } : {}),
     },
     header: {
       flexDirection: 'row',
@@ -263,7 +264,7 @@ export default function CourseScreen() {
 
   return (
     <Pressable style={styles.overlay} onPress={() => router.back()}>
-      {!isWeb && <View style={{ flex: 1 }} />}
+      {!isDesktopWeb && <View style={{ flex: 1 }} />}
       <Pressable style={styles.drawer} onPress={(e) => e.stopPropagation()}>
         <View style={styles.handle} />
         <View style={styles.header}>

@@ -41,15 +41,15 @@ export default function SemesterScreen() {
       width: 36,
       height: 36,
       borderRadius: 10,
-      backgroundColor: colors.card,
       justifyContent: 'center',
       alignItems: 'center',
-      marginRight: 12,
     },
     headerTitle: {
       fontFamily: 'Inter-Bold',
       fontSize: 18,
       color: colors.text,
+      flex: 1,
+      marginLeft: 12,
     },
     content: {
       flex: 1,
@@ -103,17 +103,14 @@ export default function SemesterScreen() {
       justifyContent: 'center',
       alignItems: 'center',
     },
-    fab: {
-      position: 'absolute',
-      right: 16,
-      bottom: 16,
-      width: 56,
-      height: 56,
-      borderRadius: 28,
+    addButton: {
+      width: 36,
+      height: 36,
+      borderRadius: 10,
       backgroundColor: colors.primary,
       justifyContent: 'center',
       alignItems: 'center',
-      elevation: 4,
+      marginLeft: 'auto',
     },
   });
 
@@ -146,6 +143,9 @@ export default function SemesterScreen() {
             <ArrowLeft size={18} color={colors.text} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Semester Details</Text>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddCourse} accessibilityLabel="Add course">
+            <Plus size={18} color="#FFFFFF" strokeWidth={2.5} />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.content}>
@@ -179,7 +179,7 @@ export default function SemesterScreen() {
             data={semester.courses}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <CourseCard course={item} />}
-            contentContainerStyle={{ paddingBottom: 88 }}
+            contentContainerStyle={{ paddingBottom: 20 }}
             showsVerticalScrollIndicator={false}
           />
         ) : (
@@ -190,10 +190,6 @@ export default function SemesterScreen() {
           />
         )}
       </View>
-
-      <TouchableOpacity style={styles.fab} onPress={handleAddCourse}>
-        <Plus size={24} color="#FFF" />
-      </TouchableOpacity>
     </View>
   );
 }

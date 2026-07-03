@@ -16,8 +16,12 @@ type GpaContextType = {
   lastCompletedSemester: Semester | null;
   targetCgpa: number | null;
   targetSemesterGpa: number | null;
+  targetCredits: number | null;
+  courseGoals: Record<string, string>;
   setTargetCgpa: (value: number | null) => void;
   setTargetSemesterGpa: (value: number | null) => void;
+  setTargetCredits: (value: number | null) => void;
+  setCourseGoals: (goals: Record<string, string>) => void;
   addCourse: (course: Course) => void;
   updateCourse: (course: Course) => void;
   deleteCourse: (id: string) => void;
@@ -41,8 +45,12 @@ export const GpaContext = createContext<GpaContextType>({
   lastCompletedSemester: null,
   targetCgpa: null,
   targetSemesterGpa: null,
+  targetCredits: null,
+  courseGoals: {},
   setTargetCgpa: () => {},
   setTargetSemesterGpa: () => {},
+  setTargetCredits: () => {},
+  setCourseGoals: () => {},
   addCourse: () => {},
   updateCourse: () => {},
   deleteCourse: () => {},
@@ -83,6 +91,8 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [lastCompletedSemester, setLastCompletedSemester] = useState<Semester | null>(null);
   const [targetCgpa, setTargetCgpaState] = useState<number | null>(null);
   const [targetSemesterGpa, setTargetSemesterGpaState] = useState<number | null>(null);
+  const [targetCredits, setTargetCreditsState] = useState<number | null>(null);
+  const [courseGoals, setCourseGoalsState] = useState<Record<string, string>>({});
 
   // Load data from storage
   useEffect(() => {
@@ -115,8 +125,12 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const storedTargetCgpa = await AsyncStorage.getItem('@targetCgpa');
         const storedTargetSemGpa = await AsyncStorage.getItem('@targetSemesterGpa');
+        const storedTargetCredits = await AsyncStorage.getItem('@targetCredits');
+        const storedCourseGoals = await AsyncStorage.getItem('@courseGoals');
         if (storedTargetCgpa) setTargetCgpaState(parseFloat(storedTargetCgpa));
         if (storedTargetSemGpa) setTargetSemesterGpaState(parseFloat(storedTargetSemGpa));
+        if (storedTargetCredits) setTargetCreditsState(parseInt(storedTargetCredits));
+        if (storedCourseGoals) setCourseGoalsState(JSON.parse(storedCourseGoals));
       } catch (error) {
         console.error('Error loading goals:', error);
       }
@@ -267,6 +281,20 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
+  const setTargetCredits = useCallback(async (value: number | null) => {
+    setTargetCreditsState(value);
+    if (value !== null) {
+      await AsyncStorage.setItem('@targetCredits', value.toString());
+    } else {
+      await AsyncStorage.removeItem('@targetCredits');
+    }
+  }, []);
+
+  const setCourseGoals = useCallback(async (goals: Record<string, string>) => {
+    setCourseGoalsState(goals);
+    await AsyncStorage.setItem('@courseGoals', JSON.stringify(goals));
+  }, []);
+
   const getCourse = useCallback((id: string) => {
     return courses.find(course => course.id === id);
   }, [courses]);
@@ -309,8 +337,12 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         lastCompletedSemester,
         targetCgpa,
         targetSemesterGpa,
+        targetCredits,
+        courseGoals,
         setTargetCgpa,
         setTargetSemesterGpa,
+        setTargetCredits,
+        setCourseGoals,
         addCourse,
         updateCourse,
         deleteCourse,

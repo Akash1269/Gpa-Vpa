@@ -82,6 +82,9 @@ export default function SettingsScreen() {
       borderBottomColor: colors.border,
       justifyContent: 'space-between',
     },
+    lastSettingRow: {
+      borderBottomWidth: 0,
+    },
     settingLabelContainer: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -207,7 +210,7 @@ export default function SettingsScreen() {
               </View>
               <Switch value={isDark} onValueChange={toggleTheme} accessibilityLabel="Dark theme toggle" />
             </View>
-            <View style={styles.settingRow}>
+            <View style={[styles.settingRow, styles.lastSettingRow]}>
               <View style={styles.settingLabelContainer}>
                 {hideGrades ? (
                   <EyeOff
@@ -254,7 +257,7 @@ export default function SettingsScreen() {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.settingRow} onPress={() => Linking.openURL('https://github.com/Akash1269/Gpa-Vpa/blob/main/docs/PRIVACY_POLICY.md')}>
+            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]} onPress={() => Linking.openURL('https://github.com/Akash1269/Gpa-Vpa/blob/main/docs/PRIVACY_POLICY.md')}>
               <View style={styles.settingLabelContainer}>
                 <Shield
                   size={Platform.OS === 'ios' ? 18 : 20}
@@ -281,7 +284,7 @@ export default function SettingsScreen() {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.settingRow} onPress={exportAsJSON}>
+            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]} onPress={exportAsJSON}>
               <View style={styles.settingLabelContainer}>
                 <Upload
                   size={Platform.OS === 'ios' ? 18 : 20}
@@ -328,7 +331,7 @@ export default function SettingsScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.settingRow, { justifyContent: 'center' }]}
+              style={[styles.settingRow, styles.lastSettingRow, { justifyContent: 'center' }]}
               onPress={confirmClearData}
             >
               <Text style={{ fontFamily: 'Inter-Medium', color: colors.error }}>
