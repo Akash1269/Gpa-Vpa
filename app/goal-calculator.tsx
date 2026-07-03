@@ -538,7 +538,7 @@ export default function GoalCalculatorScreen() {
           </Text>
 
           <View style={styles.resultDivider} />
-          <Text style={styles.breakdownTitle}>How it's calculated</Text>
+          <Text style={styles.breakdownTitle}>How it&apos;s calculated</Text>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Current GPA</Text>
             <Text style={styles.breakdownValue}>{cumulativeResult.currentGpa.toFixed(2)}</Text>

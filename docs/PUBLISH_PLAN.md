@@ -33,23 +33,49 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 Repeatable steps to create a GitHub Release with an APK attached.
 
 **Prerequisites:**
-- `eas-cli` installed and authenticated (`npm install -g eas-cli && eas login`)
-- `gh` CLI installed and authenticated (`winget install GitHub.cli && gh auth login`)
+- `EXPO_TOKEN` secret added to GitHub repo settings (Settings → Secrets → Actions)
+- Generate token at: https://expo.dev/accounts/akash1269/settings/access-tokens
+
+### Automated Flow (Tag-Based)
+
+Push a version tag and the workflow handles everything:
+
+```bash
+# 1. Bump version in app.json
+# 2. Commit
+git add -A && git commit -m "release: vX.Y.Z"
+git push
+
+# 3. Create and push tag — this triggers the release workflow
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+The `release.yml` workflow will automatically:
+1. Run lint + type check + tests
+2. Build APK via EAS (preview profile)
+3. Download the built APK
+4. Create a GitHub Release with the APK attached and auto-generated notes
+
+**Releases appear at:** https://github.com/Akash1269/Gpa-Vpa/releases
+
+### Manual Flow (Without Automation)
+
+If you prefer to do it manually or the workflow isn't set up:
 
 | # | Step | Command |
 |---|------|---------|
 | 1 | Bump version in `app.json` | Edit `version` field (e.g. `"0.1.3"`) |
 | 2 | Commit and push | `git add -A && git commit -m "release: vX.Y.Z" && git push` |
-| 3 | Build APK via EAS (waits for completion) | `eas build --profile preview --platform android` |
+| 3 | Build APK via EAS | `eas build --profile preview --platform android` |
 | 4 | Download the APK | `eas build:download --platform android --latest --output ./gpa-vpa-vX.Y.Z.apk` |
-| 5 | Create GitHub Release with APK | `gh release create vX.Y.Z ./gpa-vpa-vX.Y.Z.apk --title "vX.Y.Z" --notes "Release notes"` |
+| 5 | Create GitHub Release | `gh release create vX.Y.Z ./gpa-vpa-vX.Y.Z.apk --title "vX.Y.Z" --generate-notes` |
 | 6 | Clean up local APK | `del gpa-vpa-vX.Y.Z.apk` |
 
 **Notes:**
 - Replace `X.Y.Z` with your actual version number
 - The `preview` profile produces an APK (not AAB) suitable for direct install
-- Use `--generate-notes` flag in step 5 to auto-generate notes from commits
-- Releases appear at: https://github.com/Akash1269/Gpa-Vpa/releases
+- Install `gh` CLI: `winget install GitHub.cli && gh auth login`
 
 ---
 
