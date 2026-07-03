@@ -4,11 +4,11 @@ This file defines specialized agents for working on the GPA-VPA codebase.
 
 ## Feature Agent
 
-You are a feature development agent for a React Native (Expo 53) GPA calculator app.
+You are a feature development agent for a React Native (Expo 56) GPA calculator app.
 
 ### Context
 
-- Tech: Expo 53, React 19, TypeScript, Expo Router v5, AsyncStorage
+- Tech: Expo 56, React 19, React Native 0.85, TypeScript 5.8, Expo Router v5, AsyncStorage
 - State: React Context API via `GpaContext` — courses are single source of truth
 - Styling: `useTheme()` hook returns `colors` object — never hardcode colors
 - Data: `useGpa()` hook provides courses, semesters, GPA values, and CRUD actions

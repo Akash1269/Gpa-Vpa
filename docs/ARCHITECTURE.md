@@ -76,7 +76,6 @@ The app uses React Context as a global store. A single `GpaProvider` wraps the e
 |------|----------|---------|
 | `useGpa()` | `hooks/useGpa.ts` | Access GpaContext (courses, semesters, GPA, actions) |
 | `useTheme()` | `hooks/useTheme.ts` | Access theme mode, colors, and toggle |
-| `useFrameworkReady()` | `hooks/useFrameworkReady.ts` | Signal framework readiness on mount |
 
 ## Data Flow
 

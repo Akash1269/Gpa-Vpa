@@ -33,7 +33,7 @@ app/              → Screens (file-based routing)
   semester/[id]   → Semester detail screen
 components/       → Reusable UI (CourseCard, GpaChart, SemesterCard, etc.)
 context/          → GpaContext (global state + persistence)
-hooks/            → useGpa, useTheme, useFrameworkReady
+hooks/            → useGpa, useTheme
 types/            → Course, Semester TypeScript types
 utils/            → GPA calculation logic
 assets/images/    → App icons and images

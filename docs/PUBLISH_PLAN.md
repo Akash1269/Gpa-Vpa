@@ -18,11 +18,6 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 | 8 | Test responsive layout on desktop/tablet/mobile viewports | ✅ |
 | 9 | Set homepage URL in GitHub repo settings | ✅ |
 | 10 | Add web demo link to README | ✅ |
-| 6 | Test localStorage persistence (add course → refresh → data stays) | ✅ |
-| 7 | Add favicon and meta tags (title, description, OG image) | ✅ |
-| 8 | Test responsive layout on desktop/tablet/mobile viewports | ✅ |
-| 9 | Set homepage URL in GitHub repo settings | ✅ |
-| 10 | Add web demo link to README | ✅ |
 
 **Deploy URL:** `https://akash1269.github.io/Gpa-Vpa/`
 
