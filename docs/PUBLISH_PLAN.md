@@ -28,7 +28,32 @@ Prioritized roadmap to make GPA-VPA ready for deployment.
 
 ---
 
-## 📱 Mobile Deployment Checklist (App Store + Google Play)
+## � GitHub Release Checklist (APK Distribution)
+
+Repeatable steps to create a GitHub Release with an APK attached.
+
+**Prerequisites:**
+- `eas-cli` installed and authenticated (`npm install -g eas-cli && eas login`)
+- `gh` CLI installed and authenticated (`winget install GitHub.cli && gh auth login`)
+
+| # | Step | Command |
+|---|------|---------|
+| 1 | Bump version in `app.json` | Edit `version` field (e.g. `"0.1.3"`) |
+| 2 | Commit and push | `git add -A && git commit -m "release: vX.Y.Z" && git push` |
+| 3 | Build APK via EAS (waits for completion) | `eas build --profile preview --platform android` |
+| 4 | Download the APK | `eas build:download --platform android --latest --output ./gpa-vpa-vX.Y.Z.apk` |
+| 5 | Create GitHub Release with APK | `gh release create vX.Y.Z ./gpa-vpa-vX.Y.Z.apk --title "vX.Y.Z" --notes "Release notes"` |
+| 6 | Clean up local APK | `del gpa-vpa-vX.Y.Z.apk` |
+
+**Notes:**
+- Replace `X.Y.Z` with your actual version number
+- The `preview` profile produces an APK (not AAB) suitable for direct install
+- Use `--generate-notes` flag in step 5 to auto-generate notes from commits
+- Releases appear at: https://github.com/Akash1269/Gpa-Vpa/releases
+
+---
+
+## �📱 Mobile Deployment Checklist (App Store + Google Play)
 
 ### Prerequisites
 
