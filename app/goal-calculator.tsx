@@ -19,20 +19,20 @@ type Tab = 'semester' | 'cumulative' | 'graduation';
 
 export default function GoalCalculatorScreen() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, courses, semesters } = useGpa();
+  const { cumulativeGpa, totalCredits, courses, semesters, targetCgpa, targetSemesterGpa, setTargetCgpa, setTargetSemesterGpa } = useGpa();
   const insets = useSafeAreaInsets();
 
   const [activeTab, setActiveTab] = useState<Tab>('semester');
 
   // Semester goal state
-  const [semesterTargetGpa, setSemesterTargetGpa] = useState('3.5');
+  const [semesterTargetGpaInput, setSemesterTargetGpaInput] = useState(targetSemesterGpa?.toString() ?? '3.5');
   const [plannedCourses, setPlannedCourses] = useState<PlannedCourse[]>([
     { id: '1', name: 'Course 1', credits: 3 },
     { id: '2', name: 'Course 2', credits: 3 },
   ]);
 
   // Cumulative goal state
-  const [cumulativeTargetGpa, setCumulativeTargetGpa] = useState('3.5');
+  const [cumulativeTargetGpaInput, setCumulativeTargetGpaInput] = useState(targetCgpa?.toString() ?? '3.5');
   const [remainingSemesters, setRemainingSemesters] = useState('2');
   const [futureSemesterCredits, setFutureSemesterCredits] = useState('15');
 
@@ -48,7 +48,7 @@ export default function GoalCalculatorScreen() {
 
   // Semester goal calculation
   const semesterResult = useMemo(() => {
-    const target = parseFloat(semesterTargetGpa);
+    const target = parseFloat(semesterTargetGpaInput);
     if (isNaN(target) || target < 0 || target > 4.0) return null;
 
     const totalPlannedCredits = plannedCourses.reduce((sum, c) => sum + c.credits, 0);
@@ -61,17 +61,20 @@ export default function GoalCalculatorScreen() {
     const grades = Object.entries(gradePoints).sort((a, b) => b[1] - a[1]);
     const closestGrade = grades.find(([_, val]) => val <= avgGradeNeeded) || grades[grades.length - 1];
 
+    // Persist semester goal
+    setTargetSemesterGpa(target);
+
     return {
       avgGradeNeeded,
       closestGrade: closestGrade[0],
       totalCredits: totalPlannedCredits,
       feasible: avgGradeNeeded <= 4.0,
     };
-  }, [semesterTargetGpa, plannedCourses]);
+  }, [semesterTargetGpaInput, plannedCourses]);
 
   // Cumulative goal calculation (multi-semester)
   const cumulativeResult = useMemo(() => {
-    const target = parseFloat(cumulativeTargetGpa);
+    const target = parseFloat(cumulativeTargetGpaInput);
     const numSemesters = parseInt(remainingSemesters);
     const creditsPerSem = parseInt(futureSemesterCredits);
     if (isNaN(target) || isNaN(numSemesters) || isNaN(creditsPerSem) || target < 0 || target > 4.0 || numSemesters <= 0 || creditsPerSem <= 0) return null;
@@ -84,6 +87,9 @@ export default function GoalCalculatorScreen() {
     const grades = Object.entries(gradePoints).sort((a, b) => b[1] - a[1]);
     const closestGrade = grades.find(([_, val]) => val <= requiredGpaPerSemester) || grades[grades.length - 1];
 
+    // Persist cumulative goal
+    setTargetCgpa(target);
+
     return {
       requiredGpa: requiredGpaPerSemester,
       closestGrade: closestGrade[0],
@@ -94,7 +100,7 @@ export default function GoalCalculatorScreen() {
       creditsPerSem,
       totalFutureCredits,
     };
-  }, [cumulativeTargetGpa, remainingSemesters, futureSemesterCredits, cumulativeGpa, totalCredits]);
+  }, [cumulativeTargetGpaInput, remainingSemesters, futureSemesterCredits, cumulativeGpa, totalCredits]);
 
   // Graduation progress
   const graduationResult = useMemo(() => {
@@ -410,8 +416,8 @@ export default function GoalCalculatorScreen() {
           <Text style={styles.inputLabel}>Target GPA</Text>
           <TextInput
             style={styles.input}
-            value={semesterTargetGpa}
-            onChangeText={setSemesterTargetGpa}
+            value={semesterTargetGpaInput}
+            onChangeText={setSemesterTargetGpaInput}
             keyboardType="decimal-pad"
             placeholder="3.5"
             placeholderTextColor={colors.textSecondary}
@@ -466,7 +472,7 @@ export default function GoalCalculatorScreen() {
           <Text style={styles.breakdownTitle}>Breakdown</Text>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Target semester GPA</Text>
-            <Text style={styles.breakdownValue}>{semesterTargetGpa}</Text>
+            <Text style={styles.breakdownValue}>{semesterTargetGpaInput}</Text>
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Total planned credits</Text>
@@ -502,8 +508,8 @@ export default function GoalCalculatorScreen() {
           <Text style={styles.inputLabel}>Target GPA</Text>
           <TextInput
             style={styles.input}
-            value={cumulativeTargetGpa}
-            onChangeText={setCumulativeTargetGpa}
+            value={cumulativeTargetGpaInput}
+            onChangeText={setCumulativeTargetGpaInput}
             keyboardType="decimal-pad"
             placeholder="3.5"
             placeholderTextColor={colors.textSecondary}
@@ -559,7 +565,7 @@ export default function GoalCalculatorScreen() {
           <View style={[styles.resultDivider, { marginVertical: 10 }]} />
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Target cumulative GPA</Text>
-            <Text style={styles.breakdownValue}>{cumulativeTargetGpa}</Text>
+            <Text style={styles.breakdownValue}>{cumulativeTargetGpaInput}</Text>
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Semesters remaining</Text>
@@ -571,7 +577,7 @@ export default function GoalCalculatorScreen() {
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Total points needed</Text>
-            <Text style={styles.breakdownValue}>{(parseFloat(cumulativeTargetGpa) * (cumulativeResult.currentCredits + cumulativeResult.totalFutureCredits)).toFixed(1)}</Text>
+            <Text style={styles.breakdownValue}>{(parseFloat(cumulativeTargetGpaInput) * (cumulativeResult.currentCredits + cumulativeResult.totalFutureCredits)).toFixed(1)}</Text>
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Points still needed</Text>

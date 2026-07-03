@@ -2,8 +2,8 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { useTheme } from '@/hooks/useTheme';
 
 type GradePickerProps = {
-  value: string;
-  onChange: (value: string) => void;
+  value: string | null;
+  onChange: (value: string | null) => void;
 };
 
 export default function GradePicker({ value, onChange }: GradePickerProps) {

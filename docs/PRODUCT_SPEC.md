@@ -50,7 +50,8 @@ Cumulative GPA = Σ(all grade_value × credits) / Σ(all credits)
 
 | Feature | Description |
 |---------|-------------|
-| Add/Edit Course | Name, code, grade, credits (1–4), semester, year |
+| Add/Edit Course | Name, code, grade (optional), credits (1–4), semester, year |
+| Not Yet Graded | Toggle to save course without a grade (marks as in-progress) |
 | Delete Course | Swipe-to-delete with undo toast (4s window) |
 | Search | Real-time filter by name or code |
 | Grouping | Courses organized by semester (SectionList) |
@@ -94,9 +95,17 @@ Each result shows a step-by-step breakdown of the calculation.
 - Cumulative GPA display with progress bar
 - Academic standing badge (color-coded)
 - Quick stat cards: Credits, Semesters, Courses (tappable → navigate)
-- Current semester overview (top 3 courses + "+N more" indicator)
+- **This Semester** section: in-progress semester with grading progress bar (X/Y graded), courses showing "Pending" for ungraded
+- **Last Semester** section: most recent fully-graded semester with final GPA
 - Goal Calculator entry card
 - Recent courses list (last 5)
+
+### 3.8 Semester Status
+
+| Status | Determined By | Display |
+|--------|---------------|--------|
+| **In-Progress** | Has any course with no grade (null) | "This Semester" with progress bar, orange badge |
+| **Completed** | All courses have grades assigned | "Last Semester" with final GPA |
 
 ---
 

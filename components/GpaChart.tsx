@@ -14,12 +14,14 @@ export default function GpaChart({ semesters }: GpaChartProps) {
   const [expanded, setExpanded] = useState(false);
   const [chartWidth, setChartWidth] = useState(0);
 
-  const sortedSemesters = [...semesters].sort((a, b) => {
-    if (a.year !== b.year) return a.year - b.year;
-    const semesterOrder = { 'Spring': 0, 'Summer': 1, 'Fall': 2 };
-    return semesterOrder[a.semester as keyof typeof semesterOrder] - 
-           semesterOrder[b.semester as keyof typeof semesterOrder];
-  });
+  const sortedSemesters = [...semesters]
+    .filter(s => s.status === 'completed')
+    .sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      const semesterOrder = { 'Spring': 0, 'Summer': 1, 'Fall': 2 };
+      return semesterOrder[a.semester as keyof typeof semesterOrder] - 
+             semesterOrder[b.semester as keyof typeof semesterOrder];
+    });
 
   const maxGpa = 4.0;
   const chartHeight = 120;

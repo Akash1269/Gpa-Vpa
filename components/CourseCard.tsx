@@ -17,7 +17,7 @@ type CourseCardProps = {
 export default React.memo(function CourseCard({ course, showSemester = false }: CourseCardProps) {
   const { colors } = useTheme();
   const { deleteCourse } = useGpa();
-  const gradeColor = getGradeColor(course.grade);
+  const gradeColor = course.grade ? getGradeColor(course.grade) : { background: colors.border, text: colors.textSecondary };
 
   const styles = StyleSheet.create({
     container: {
@@ -124,12 +124,12 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
         style={styles.container}
         onPress={handlePress}
         accessibilityRole="button"
-        accessibilityLabel={`${course.name}, ${course.code}, grade ${course.grade}, ${course.credits} credits`}
+        accessibilityLabel={`${course.name}, ${course.code}, grade ${course.grade ?? 'pending'}, ${course.credits} credits`}
         accessibilityHint="Double tap to edit this course"
       >
         <View style={styles.cardContent}>
           <View style={styles.gradePill}>
-            <Text style={styles.gradeText}>{course.grade}</Text>
+            <Text style={styles.gradeText}>{course.grade ?? '—'}</Text>
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.topRow}>

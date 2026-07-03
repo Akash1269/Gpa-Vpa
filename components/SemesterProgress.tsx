@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { Semester } from '@/types/semester';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
+import { useGpa } from '@/hooks/useGpa';
 
 type SemesterProgressProps = {
   semester: Semester;
@@ -10,9 +11,13 @@ type SemesterProgressProps = {
 
 export default function SemesterProgress({ semester }: SemesterProgressProps) {
   const { colors } = useTheme();
+  const { targetSemesterGpa } = useGpa();
   const gpaColor = getGradeColor(semester.gpa);
   
   const totalCredits = semester.courses.reduce((sum, course) => sum + course.credits, 0);
+  const gradedCourses = semester.courses.filter(c => c.grade !== null);
+  const ungradedCourses = semester.courses.filter(c => c.grade === null);
+  const isInProgress = semester.status === 'in-progress';
   
   const handlePress = () => {
     router.push(`/semester/${semester.semester}-${semester.year}`);
@@ -39,13 +44,13 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
     },
     gpaContainer: {
       backgroundColor: gpaColor.background,
-      paddingHorizontal: 12,
-      paddingVertical: 6,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
       borderRadius: 16,
     },
     gpaText: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 14,
+      fontFamily: 'Inter-Bold',
+      fontSize: 18,
       color: gpaColor.text,
     },
     coursesTitle: {
@@ -129,19 +134,29 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
         <Text style={styles.semesterTitle}>
           {semester.semester} {semester.year}
         </Text>
-        <View style={styles.gpaContainer}>
-          <Text style={styles.gpaText}>{semester.gpa.toFixed(2)}</Text>
-        </View>
+        {semester.gpa > 0 && (
+          <View style={styles.gpaContainer}>
+            <Text style={styles.gpaText}>{semester.gpa.toFixed(2)}</Text>
+          </View>
+        )}
       </View>
 
-      <Text style={styles.coursesTitle}>Current Courses</Text>
+      {isInProgress && targetSemesterGpa !== null && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#F3E5F5', borderRadius: 8, padding: 10, marginBottom: 12 }}>
+          <Text style={{ fontFamily: 'Inter-Medium', fontSize: 13, color: '#9C27B0' }}>
+            🎯 Semester Goal: {targetSemesterGpa.toFixed(2)}
+          </Text>
+        </View>
+      )}
+
+      <Text style={styles.coursesTitle}>Courses</Text>
       
-      {semester.courses.slice(0, 3).map((course, index, array) => (
+      {semester.courses.map((course, index) => (
         <View 
           key={course.id} 
           style={[
             styles.courseRow, 
-            index === array.length - 1 && styles.lastCourseRow
+            index === semester.courses.length - 1 && styles.lastCourseRow
           ]}
         >
           <View style={styles.courseInfo}>
@@ -149,18 +164,12 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
             <Text style={styles.courseCode}>{course.code} • {course.credits} CR</Text>
           </View>
           <Text 
-            style={[styles.courseGrade, { color: getGradeColor(course.grade).text }]}
+            style={[styles.courseGrade, { color: course.grade ? getGradeColor(course.grade).text : colors.textSecondary }]}
           >
-            {course.grade}
+            {course.grade ?? '—'}
           </Text>
         </View>
       ))}
-      
-      {semester.courses.length > 3 && (
-        <Text style={[styles.courseCode, { textAlign: 'center', marginTop: 8 }]}>
-          +{semester.courses.length - 3} more courses
-        </Text>
-      )}
 
       <View style={styles.summaryContainer}>
         <View style={styles.summaryItem}>
@@ -171,10 +180,12 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
           <Text style={styles.summaryValue}>{totalCredits}</Text>
           <Text style={styles.summaryLabel}>Credits</Text>
         </View>
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{semester.gpa.toFixed(2)}</Text>
-          <Text style={styles.summaryLabel}>GPA</Text>
-        </View>
+        {semester.gpa > 0 && (
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryValue}>{semester.gpa.toFixed(2)}</Text>
+            <Text style={styles.summaryLabel}>{isInProgress ? 'GPA so far' : 'GPA'}</Text>
+          </View>
+        )}
       </View>
 
       <TouchableOpacity style={styles.viewAllButton} onPress={handlePress}>

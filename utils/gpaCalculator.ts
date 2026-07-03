@@ -20,15 +20,16 @@ export const calculateGradeValue = (grade: string): number => {
   return gradePoints[grade] || 0;
 };
 
-// Calculate GPA for a semester
+// Calculate GPA for a semester (only graded courses)
 export const calculateSemesterGpa = (courses: Course[]): number => {
-  if (courses.length === 0) return 0;
+  const gradedCourses = courses.filter(course => course.grade !== null);
+  if (gradedCourses.length === 0) return 0;
   
   let totalPoints = 0;
   let totalCredits = 0;
   
-  courses.forEach(course => {
-    const gradeValue = calculateGradeValue(course.grade);
+  gradedCourses.forEach(course => {
+    const gradeValue = calculateGradeValue(course.grade!);
     totalPoints += gradeValue * course.credits;
     totalCredits += course.credits;
   });
@@ -36,15 +37,16 @@ export const calculateSemesterGpa = (courses: Course[]): number => {
   return totalCredits > 0 ? totalPoints / totalCredits : 0;
 };
 
-// Calculate cumulative GPA
+// Calculate cumulative GPA (only graded courses)
 export const calculateCumulativeGpa = (courses: Course[]): number => {
-  if (courses.length === 0) return 0;
+  const gradedCourses = courses.filter(course => course.grade !== null);
+  if (gradedCourses.length === 0) return 0;
   
   let totalPoints = 0;
   let totalCredits = 0;
   
-  courses.forEach(course => {
-    const gradeValue = calculateGradeValue(course.grade);
+  gradedCourses.forEach(course => {
+    const gradeValue = calculateGradeValue(course.grade!);
     totalPoints += gradeValue * course.credits;
     totalCredits += course.credits;
   });

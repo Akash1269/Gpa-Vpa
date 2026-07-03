@@ -1,8 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { StyleSheet, View, Text, SectionList, TouchableOpacity, TextInput, Platform } from 'react-native';
-import { Plus, Search } from 'lucide-react-native';
-import { router } from 'expo-router';
-import * as Haptics from 'expo-haptics';
+import { Search } from 'lucide-react-native';
 import { useGpa } from '@/hooks/useGpa';
 import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
@@ -58,10 +56,6 @@ export default function CoursesScreen() {
       });
   }, [courses, searchQuery]);
 
-  const handleAddCourse = () => {
-    router.push('/course/new');
-  };
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -94,18 +88,6 @@ export default function CoursesScreen() {
       fontSize: 15,
       color: colors.text,
       marginLeft: 10,
-    },
-    fab: {
-      position: 'absolute',
-      right: 24,
-      bottom: 24,
-      width: 56,
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: colors.primary,
-      justifyContent: 'center',
-      alignItems: 'center',
-      elevation: 4,
     },
     sectionHeader: {
       flexDirection: 'row',
@@ -152,12 +134,20 @@ export default function CoursesScreen() {
             sections={sections}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <CourseCard course={item} />}
-            renderSectionHeader={({ section }) => (
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>{section.title}</Text>
-                <Text style={styles.sectionCount}>{section.data.length} course{section.data.length !== 1 ? 's' : ''}</Text>
-              </View>
-            )}
+            renderSectionHeader={({ section }) => {
+              const hasUngraded = section.data.some((c: Course) => c.grade === null);
+              return (
+                <View style={styles.sectionHeader}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <Text style={styles.sectionTitle}>{section.title}</Text>
+                    {hasUngraded && (
+                      <Text style={{ fontFamily: 'Inter-Medium', fontSize: 11, color: '#F57C00', backgroundColor: '#FFF3E0', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, overflow: 'hidden' }}>In Progress</Text>
+                    )}
+                  </View>
+                  <Text style={styles.sectionCount}>{section.data.length} course{section.data.length !== 1 ? 's' : ''}</Text>
+                </View>
+              );
+            }}
             contentContainerStyle={{ paddingBottom: 88 }}
             showsVerticalScrollIndicator={false}
             stickySectionHeadersEnabled={false}
@@ -170,10 +160,6 @@ export default function CoursesScreen() {
           />
         )}
       </View>
-
-      <TouchableOpacity style={styles.fab} onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); handleAddCourse(); }} accessibilityRole="button" accessibilityLabel="Add new course">
-        <Plus size={24} color="#FFF" />
-      </TouchableOpacity>
 
       <Toast
         message="Course deleted"

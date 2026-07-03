@@ -2,7 +2,6 @@ import { StyleSheet, View, Text, ScrollView, Platform, TouchableOpacity } from '
 import { router } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
 import GpaCard from '@/components/GpaCard';
-import RecentCoursesList from '@/components/RecentCoursesList';
 import SemesterProgress from '@/components/SemesterProgress';
 import { getAcademicStanding } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
@@ -11,7 +10,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function Dashboard() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, recentCourses, currentSemester, semesters, courses } = useGpa();
+  const { cumulativeGpa, totalCredits, inProgressSemester, lastCompletedSemester, semesters, courses, targetCgpa, targetSemesterGpa } = useGpa();
   const academicStanding = getAcademicStanding(cumulativeGpa);
 
   const styles = StyleSheet.create({
@@ -145,42 +144,79 @@ export default function Dashboard() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(150).duration(500)}>
-          <TouchableOpacity
-            style={styles.goalCard}
-            onPress={() => router.push('/goal-calculator')}
-            accessibilityLabel="Open GPA Goal Calculator"
-          >
-            <View style={[styles.statIconBg, { backgroundColor: '#F3E5F5' }]}>
-              <Target size={18} color="#9C27B0" />
-            </View>
-            <View style={{ flex: 1, marginLeft: 12 }}>
-              <Text style={styles.goalCardTitle}>GPA Goal Calculator</Text>
-              <Text style={styles.goalCardSubtitle}>Plan grades needed to reach your target</Text>
-            </View>
-          </TouchableOpacity>
+          {(targetCgpa !== null || targetSemesterGpa !== null) ? (
+            <TouchableOpacity
+              style={{ backgroundColor: colors.card, borderRadius: 14, padding: 16, marginTop: 12, borderWidth: 1, borderColor: colors.border }}
+              onPress={() => router.push('/goal-calculator')}
+              accessibilityLabel="View GPA goals"
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+                <View style={[styles.statIconBg, { backgroundColor: '#F3E5F5' }]}>
+                  <Target size={18} color="#9C27B0" />
+                </View>
+                <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 16, color: colors.text, marginLeft: 10 }}>My Goals</Text>
+              </View>
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                {targetCgpa !== null && (
+                  <View style={{ flex: 1, backgroundColor: colors.background, borderRadius: 10, padding: 12 }}>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.textSecondary }}>Target CGPA</Text>
+                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: cumulativeGpa >= targetCgpa ? '#34A853' : colors.text, marginTop: 4 }}>{targetCgpa.toFixed(2)}</Text>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: 11, color: colors.textSecondary, marginTop: 2 }}>
+                      Current: {cumulativeGpa.toFixed(2)} {cumulativeGpa >= targetCgpa ? '✓' : `(${(targetCgpa - cumulativeGpa).toFixed(2)} to go)`}
+                    </Text>
+                  </View>
+                )}
+                {targetSemesterGpa !== null && (
+                  <View style={{ flex: 1, backgroundColor: colors.background, borderRadius: 10, padding: 12 }}>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.textSecondary }}>Semester Goal</Text>
+                    <Text style={{ fontFamily: 'Inter-Bold', fontSize: 20, color: colors.text, marginTop: 4 }}>{targetSemesterGpa.toFixed(2)}</Text>
+                    <Text style={{ fontFamily: 'Inter-Regular', fontSize: 11, color: colors.textSecondary, marginTop: 2 }}>
+                      {inProgressSemester ? `${inProgressSemester.semester} ${inProgressSemester.year}` : 'This semester'}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.goalCard}
+              onPress={() => router.push('/goal-calculator')}
+              accessibilityLabel="Open GPA Goal Calculator"
+            >
+              <View style={[styles.statIconBg, { backgroundColor: '#F3E5F5' }]}>
+                <Target size={18} color="#9C27B0" />
+              </View>
+              <View style={{ flex: 1, marginLeft: 12 }}>
+                <Text style={styles.goalCardTitle}>Set GPA Goals</Text>
+                <Text style={styles.goalCardSubtitle}>Set your target CGPA and semester goals</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </Animated.View>
 
-        {currentSemester && (
+        {inProgressSemester && (
           <Animated.View entering={FadeInDown.delay(200).duration(500)}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Last Semester</Text>
-              <View style={styles.sectionBadge}>
-                <Text style={styles.sectionBadgeText}>{currentSemester.semester} {currentSemester.year}</Text>
+              <Text style={styles.sectionTitle}>This Semester</Text>
+              <View style={[styles.sectionBadge, { backgroundColor: '#FFF3E0' }]}>
+                <Text style={[styles.sectionBadgeText, { color: '#F57C00' }]}>{inProgressSemester.semester} {inProgressSemester.year} • In Progress</Text>
               </View>
             </View>
-            <SemesterProgress semester={currentSemester} />
+            <SemesterProgress semester={inProgressSemester} />
           </Animated.View>
         )}
 
-        <Animated.View entering={FadeInDown.delay(300).duration(500)}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recent Courses</Text>
-            <View style={styles.sectionBadge}>
-              <Text style={styles.sectionBadgeText}>{recentCourses.length} latest</Text>
+        {lastCompletedSemester && (
+          <Animated.View entering={FadeInDown.delay(250).duration(500)}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Last Semester</Text>
+              <View style={styles.sectionBadge}>
+                <Text style={styles.sectionBadgeText}>{lastCompletedSemester.semester} {lastCompletedSemester.year}</Text>
+              </View>
             </View>
-          </View>
-          <RecentCoursesList courses={recentCourses} />
-        </Animated.View>
+            <SemesterProgress semester={lastCompletedSemester} />
+          </Animated.View>
+        )}
       </ScrollView>
     </View>
   );

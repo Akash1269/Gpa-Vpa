@@ -13,10 +13,10 @@ type SemesterCardProps = {
 export default React.memo(function SemesterCard({ semester }: SemesterCardProps) {
   const { colors } = useTheme();
   const [expanded, setExpanded] = useState(false);
-  const gpaColor = getGradeColor(semester.gpa ?? 0) ?? {
-    background: '#FCE8E6',
-    text: '#EA4335',
-  };
+  const isInProgress = semester.status === 'in-progress';
+  const gpaColor = !isInProgress || semester.gpa > 0
+    ? getGradeColor(semester.gpa ?? 0) ?? { background: '#FCE8E6', text: '#EA4335' }
+    : { background: '#FFF3E0', text: '#F57C00' };
 
   const styles = StyleSheet.create({
     container: {
@@ -143,7 +143,9 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
               {semester.semester} {semester.year}
             </Text>
             <View style={styles.gpaContainer}>
-              <Text style={styles.gpaText}>GPA: {semester.gpa?.toFixed(2)}</Text>
+              <Text style={styles.gpaText}>
+                {isInProgress && semester.gpa === 0 ? 'In Progress' : `GPA: ${semester.gpa?.toFixed(2)}`}
+              </Text>
             </View>
           </View>
 
@@ -156,7 +158,7 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
               <Text style={styles.statValue}>
                 {semester.courses.reduce((sum, course) => sum + course.credits, 0)}
               </Text>
-              <Text style={styles.statLabel}>Credit Hours</Text>
+              <Text style={styles.statLabel}>Credits</Text>
             </View>
           </View>
 
@@ -174,12 +176,12 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
           {expanded && (
             <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(150)} style={styles.coursesContainer}>
               {semester.courses.map((course, index) => {
-                const courseGradeColor = getGradeColor(course.grade);
+                const courseGradeColor = course.grade ? getGradeColor(course.grade) : { background: colors.border, text: colors.textSecondary };
                 const isLast = index === semester.courses.length - 1;
                 return (
                   <View key={course.id} style={[styles.courseRow, isLast && styles.courseRowLast]}>
                     <View style={[styles.courseGradePill, { backgroundColor: courseGradeColor.background }]}>
-                      <Text style={[styles.courseGradeText, { color: courseGradeColor.text }]}>{course.grade}</Text>
+                      <Text style={[styles.courseGradeText, { color: courseGradeColor.text }]}>{course.grade ?? '—'}</Text>
                     </View>
                     <View style={styles.courseInfo}>
                       <Text style={styles.courseName}>{course.name}</Text>

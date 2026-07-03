@@ -3,7 +3,7 @@ export type Course = {
   name: string;
   code: string;
   credits: number;
-  grade: string;
+  grade: string | null;
   semester: string;
   year: number;
 };
