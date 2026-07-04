@@ -99,19 +99,7 @@ export default function SettingsScreen() {
       fontSize: fontSizes.lg,
       color: '#FFFFFF',
     },
-    appInfo: {
-      alignItems: 'center',
-      marginTop: spacing['3xl'],
-      paddingTop: spacing.lg,
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-    },
-    appVersion: {
-      fontFamily: fonts.regular,
-      fontSize: fontSizes.md,
-      color: colors.textSecondary,
-      marginTop: spacing.xs,
-    },
+
   });
 
   const exportAsCSV = async () => {
@@ -152,7 +140,7 @@ export default function SettingsScreen() {
   const showAbout = () => {
     Alert.alert(
       'About GPA Calculator',
-      'A comprehensive GPA Calculator and Course Management System to help students track their academic progress.\n\nVersion 0.1.2',
+      'A comprehensive GPA Calculator and Course Management System to help students track their academic progress.',
       [{ text: 'OK' }]
     );
   };
@@ -323,9 +311,6 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        <View style={styles.appInfo}>
-          <Text style={styles.appVersion}>GPA Calculator v0.1.2</Text>
-        </View>
       </ScrollView>
     </View>
   );
