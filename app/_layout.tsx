@@ -34,8 +34,9 @@ export default function RootLayout() {
   }  return (
     <ErrorBoundary>
       <Head>
+        <title>GPA-VPA | Academic Tracker and Calculator</title>
         <meta name="description" content="Track courses, compute semester & cumulative GPA, and monitor academic standing. Free, private, no sign-up required." />
-        <meta property="og:title" content="GPA Calculator — Academic Tracker" />
+        <meta property="og:title" content="GPA-VPA | Academic Tracker and Calculator" />
         <meta property="og:description" content="Track courses, compute GPA, and monitor academic standing. All data stored locally." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://akash1269.github.io/Gpa-Vpa/" />

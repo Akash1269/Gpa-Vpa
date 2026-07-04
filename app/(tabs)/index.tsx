@@ -144,7 +144,7 @@ export default function Dashboard() {
                   </View>
                   <Text style={{ fontFamily: fonts.semiBold, fontSize: 15, color: colors.text, marginLeft: 10 }}>My Goals</Text>
                 </View>
-                <TouchableOpacity onPress={() => router.push('/goal-calculator')} accessibilityLabel="Edit goals">
+                <TouchableOpacity onPress={() => router.push('/(tabs)/goals')} accessibilityLabel="Edit goals">
                   <Text style={{ fontFamily: fonts.medium, fontSize: 13, color: colors.primary }}>Edit</Text>
                 </TouchableOpacity>
               </View>
@@ -178,7 +178,7 @@ export default function Dashboard() {
           ) : (
             <TouchableOpacity
               style={styles.goalCard}
-              onPress={() => router.push('/goal-calculator')}
+              onPress={() => router.push('/(tabs)/goals')}
               accessibilityLabel="Open GPA Planner"
             >
               <View style={[styles.statIconBg, { backgroundColor: statusColors.goal.bg }]}>

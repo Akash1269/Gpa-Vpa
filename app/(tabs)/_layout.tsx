@@ -6,9 +6,9 @@ import {
   LayoutDashboard, 
   GraduationCap, 
   BarChart3, 
-  Settings2,
+  Target,
   Plus,
-  Search,
+  Settings2,
 } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
@@ -55,24 +55,43 @@ function CustomHeader() {
             color: colors.text,
             marginLeft: spacing.md - 2,
           }}>
-            GPA Tracker
+            GPA-VPA
           </Text>
         </View>
-        <TouchableOpacity
-          onPress={() => router.push('/course/new')}
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            backgroundColor: colors.primary,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          accessibilityLabel="Add new course"
-          accessibilityHint="Navigate to add a new course"
-        >
-          <Plus size={18} color="#FFFFFF" strokeWidth={2.5} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <TouchableOpacity
+            onPress={() => router.push('/settings')}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              backgroundColor: colors.card,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: colors.border,
+            }}
+            accessibilityLabel="Settings"
+            accessibilityHint="Navigate to settings"
+          >
+            <Settings2 size={18} color={colors.textSecondary} strokeWidth={2} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push('/course/new')}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              backgroundColor: colors.primary,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            accessibilityLabel="Add new course"
+            accessibilityHint="Navigate to add a new course"
+          >
+            <Plus size={18} color="#FFFFFF" strokeWidth={2.5} />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -178,10 +197,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="goals"
         options={{
-          title: 'Settings',
-          tabBarIcon: ({ color, size }) => <Settings2 size={size-2} strokeWidth={1.5} color={color} />,
+          title: 'Goals',
+          tabBarIcon: ({ color, size }) => <Target size={size-2} strokeWidth={1.5} color={color} />,
         }}
       />
     </Tabs>

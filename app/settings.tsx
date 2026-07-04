@@ -13,6 +13,7 @@ import {
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
+import ScreenHeader from '@/components/ScreenHeader';
 import {
   Info,
   CircleHelp as HelpCircle,
@@ -40,21 +41,6 @@ export default function SettingsScreen() {
       padding: spacing.lg,
       paddingBottom: spacing['3xl'],
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
-    },
-    header: {
-      marginBottom: spacing['2xl'],
-      paddingHorizontal: spacing.xs,
-    },
-    title: {
-      fontFamily: fonts.bold,
-      fontSize: 22,
-      color: colors.text,
-      marginBottom: spacing.sm,
-    },
-    subtitle: {
-      fontFamily: fonts.regular,
-      fontSize: fontSizes.md,
-      color: colors.textSecondary,
     },
     section: {
       marginBottom: spacing['2xl'],
@@ -181,13 +167,8 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
+      <ScreenHeader title="Settings" />
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Settings</Text>
-          <Text style={styles.subtitle}>
-            Customize your GPA Calculator experience
-          </Text>
-        </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Appearance</Text>
