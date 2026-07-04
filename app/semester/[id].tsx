@@ -7,6 +7,7 @@ import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';
 import { getGradeColor } from '@/utils/gpaCalculator';
+import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
 import { Plus, ArrowLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -35,33 +36,33 @@ export default function SemesterScreen() {
       flexDirection: 'row',
       alignItems: 'center',
       height: 56,
-      paddingHorizontal: 20,
+      paddingHorizontal: spacing.xl,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     backButton: {
       width: 36,
       height: 36,
-      borderRadius: 10,
+      borderRadius: radii.md,
       justifyContent: 'center',
       alignItems: 'center',
     },
     headerTitle: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 18,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.xl,
       color: colors.text,
       flex: 1,
-      marginLeft: 12,
+      marginLeft: spacing.md,
     },
     content: {
       flex: 1,
-      padding: 20,
+      padding: spacing.xl,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     summaryContainer: {
       backgroundColor: colors.card,
-      borderRadius: 16,
-      padding: 20,
-      marginBottom: 24,
+      borderRadius: radii.xl,
+      padding: spacing.xl,
+      marginBottom: spacing['2xl'],
       borderWidth: 1,
       borderColor: colors.border,
     },
@@ -69,40 +70,40 @@ export default function SemesterScreen() {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 16,
+      marginBottom: spacing.lg,
     },
     semesterTitle: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 20,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes['2xl'],
       color: colors.text,
     },
     statusBadge: {
-      paddingHorizontal: 10,
-      paddingVertical: 4,
-      borderRadius: 12,
+      paddingHorizontal: spacing.md - 2,
+      paddingVertical: spacing.xs,
+      borderRadius: radii.lg,
     },
     statusText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 11,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.xs,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
     gpaSection: {
       alignItems: 'center',
-      marginBottom: 16,
+      marginBottom: spacing.lg,
     },
     gpaValue: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 40,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.hero,
     },
     gpaLabel: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
       marginTop: 2,
     },
     progressSection: {
-      marginBottom: 16,
+      marginBottom: spacing.lg,
     },
     progressBar: {
       height: 6,
@@ -116,29 +117,29 @@ export default function SemesterScreen() {
       borderRadius: 3,
     },
     progressText: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
     },
     statsRow: {
       flexDirection: 'row',
-      gap: 10,
+      gap: spacing.md - 2,
     },
     statPill: {
       flex: 1,
       backgroundColor: colors.background,
-      borderRadius: 10,
-      paddingVertical: 10,
+      borderRadius: radii.md,
+      paddingVertical: spacing.md - 2,
       alignItems: 'center',
     },
     statPillValue: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 16,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.lg,
       color: colors.text,
     },
     statPillLabel: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 11,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.xs,
       color: colors.textSecondary,
       marginTop: 2,
     },
@@ -146,10 +147,10 @@ export default function SemesterScreen() {
       flex: 1,
     },
     sectionTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.lg,
       color: colors.text,
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     emptyContainer: {
       flex: 1,
@@ -159,7 +160,7 @@ export default function SemesterScreen() {
     addButton: {
       width: 36,
       height: 36,
-      borderRadius: 10,
+      borderRadius: radii.md,
       backgroundColor: colors.primary,
       justifyContent: 'center',
       alignItems: 'center',
@@ -181,7 +182,7 @@ export default function SemesterScreen() {
   if (!semester) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text style={{ fontFamily: 'Inter-Medium', color: colors.textSecondary }}>
+        <Text style={{ fontFamily: fonts.medium, color: colors.textSecondary }}>
           Semester not found
         </Text>
       </View>
@@ -207,8 +208,8 @@ export default function SemesterScreen() {
             <Text style={styles.semesterTitle}>
               {semester.semester} {semester.year}
             </Text>
-            <View style={[styles.statusBadge, { backgroundColor: semester.status === 'in-progress' ? '#FFF3E0' : '#E8F5E9' }]}>
-              <Text style={[styles.statusText, { color: semester.status === 'in-progress' ? '#F57C00' : '#34A853' }]}>
+            <View style={[styles.statusBadge, { backgroundColor: semester.status === 'in-progress' ? statusColors.warning.bg : statusColors.completed.bg }]}>
+              <Text style={[styles.statusText, { color: semester.status === 'in-progress' ? statusColors.warning.text : statusColors.completed.text }]}>
                 {semester.status === 'in-progress' ? 'In Progress' : 'Completed'}
               </Text>
             </View>
@@ -250,7 +251,7 @@ export default function SemesterScreen() {
             </View>
             {semester.status === 'in-progress' && targetSemesterGpa !== null && (
               <View style={styles.statPill}>
-                <Text style={[styles.statPillValue, { color: '#9C27B0' }]}>🎯 {targetSemesterGpa.toFixed(2)}</Text>
+                <Text style={[styles.statPillValue, { color: statusColors.goal.text }]}>🎯 {targetSemesterGpa.toFixed(2)}</Text>
                 <Text style={styles.statPillLabel}>Goal</Text>
               </View>
             )}

@@ -9,6 +9,7 @@ import GradePicker from '@/components/GradePicker';
 import CreditPicker from '@/components/CreditPicker';
 import SemesterYearPicker from '@/components/SemesterYearPicker';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { X, Save, Trash2, PlusCircle, Pencil } from 'lucide-react-native';
 
 function generateId(): string {
@@ -151,22 +152,22 @@ export default function CourseScreen() {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingHorizontal: 20,
+      paddingHorizontal: spacing.xl,
       paddingVertical: 14,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
       backgroundColor: colors.card,
     },
     headerTitle: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 18,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.xl,
       color: colors.text,
-      marginLeft: 10,
+      marginLeft: spacing.md - 2,
     },
     closeButton: {
       width: 36,
       height: 36,
-      borderRadius: 10,
+      borderRadius: radii.md,
       backgroundColor: colors.card,
       justifyContent: 'center',
       alignItems: 'center',
@@ -174,26 +175,26 @@ export default function CourseScreen() {
       borderColor: colors.border,
     },
     content: {
-      paddingHorizontal: 20,
-      paddingTop: 16,
-      paddingBottom: 20,
+      paddingHorizontal: spacing.xl,
+      paddingTop: spacing.lg,
+      paddingBottom: spacing.xl,
     },
     formGroup: {
-      marginBottom: 20,
+      marginBottom: spacing.xl,
     },
     label: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 16,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.lg,
       color: colors.text,
-      marginBottom: 8,
+      marginBottom: spacing.sm,
     },
     input: {
       height: 48,
       backgroundColor: colors.card,
-      borderRadius: 12,
-      paddingHorizontal: 16,
-      fontFamily: 'Inter-Regular',
-      fontSize: 16,
+      borderRadius: radii.lg,
+      paddingHorizontal: spacing.lg,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.lg,
       color: colors.text,
       borderWidth: 1,
       borderColor: colors.border,
@@ -202,28 +203,28 @@ export default function CourseScreen() {
       borderColor: colors.error,
     },
     errorText: {
-      fontFamily: 'Inter-Regular',
+      fontFamily: fonts.regular,
       fontSize: 13,
       color: colors.error,
-      marginTop: 4,
+      marginTop: spacing.xs,
     },
     pickerContainer: {
-      borderRadius: 8,
+      borderRadius: radii.sm,
     },
     gradeInfo: {
-      marginTop: 8,
+      marginTop: spacing.sm,
       flexDirection: 'row',
       alignItems: 'center',
     },
     gradeValue: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
     },
     footer: {
       flexDirection: 'row',
-      paddingHorizontal: 20,
-      paddingVertical: 16,
+      paddingHorizontal: spacing.xl,
+      paddingVertical: spacing.lg,
       borderTopWidth: 1,
       borderTopColor: colors.border,
       backgroundColor: colors.background,
@@ -238,10 +239,10 @@ export default function CourseScreen() {
       flexDirection: 'row',
     },
     saveButtonText: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.lg,
       color: '#FFFFFF',
-      marginLeft: 8,
+      marginLeft: spacing.sm,
     },
     deleteButton: {
       width: 54,
@@ -250,7 +251,7 @@ export default function CourseScreen() {
       borderRadius: 14,
       justifyContent: 'center',
       alignItems: 'center',
-      marginLeft: 12,
+      marginLeft: spacing.md,
     },
   });
 

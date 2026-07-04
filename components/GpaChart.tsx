@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Semester } from '@/types/semester';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing } from '@/constants/theme';
 import { ChevronDown, ChevronUp, TrendingUp } from 'lucide-react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
@@ -40,14 +41,14 @@ export default function GpaChart({ semesters }: GpaChartProps) {
       alignItems: 'center',
     },
     toggleTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 14,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.md,
       color: colors.text,
-      marginLeft: 8,
+      marginLeft: spacing.sm,
     },
     chartArea: {
-      marginTop: 8,
-      marginBottom: 4,
+      marginTop: spacing.sm,
+      marginBottom: spacing.xs,
     },
     chartCanvas: {
       height: chartHeight,
@@ -69,7 +70,7 @@ export default function GpaChart({ semesters }: GpaChartProps) {
     },
     gpaLabel: {
       position: 'absolute',
-      fontFamily: 'Inter-Bold',
+      fontFamily: fonts.bold,
       fontSize: 10,
       color: colors.primary,
       width: 40,
@@ -78,21 +79,21 @@ export default function GpaChart({ semesters }: GpaChartProps) {
     xLabelsRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginTop: 8,
+      marginTop: spacing.sm,
       paddingHorizontal: dotPadding,
     },
     xLabel: {
-      fontFamily: 'Inter-Regular',
+      fontFamily: fonts.regular,
       fontSize: 10,
       color: colors.textSecondary,
       textAlign: 'center',
     },
     noDataText: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
       textAlign: 'center',
-      marginTop: 12,
+      marginTop: spacing.md,
     },
   });
 

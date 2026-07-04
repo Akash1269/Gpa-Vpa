@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import {
   Info,
   CircleHelp as HelpCircle,
@@ -36,48 +37,48 @@ export default function SettingsScreen() {
       backgroundColor: colors.background,
     },
     content: {
-      padding: 16,
-      paddingBottom: 32,
+      padding: spacing.lg,
+      paddingBottom: spacing['3xl'],
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
-      marginBottom: 24,
-      paddingHorizontal: 4,
+      marginBottom: spacing['2xl'],
+      paddingHorizontal: spacing.xs,
     },
     title: {
-      fontFamily: 'Inter-Bold',
+      fontFamily: fonts.bold,
       fontSize: 22,
       color: colors.text,
-      marginBottom: 8,
+      marginBottom: spacing.sm,
     },
     subtitle: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
     },
     section: {
-      marginBottom: 24,
+      marginBottom: spacing['2xl'],
     },
     sectionTitle: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
       fontSize: 13,
       color: colors.textSecondary,
-      marginBottom: 8,
-      marginLeft: 16,
+      marginBottom: spacing.sm,
+      marginLeft: spacing.lg,
       textTransform: 'uppercase',
     },
     sectionContainer: {
       backgroundColor: colors.card,
-      borderRadius: Platform.OS === 'ios' ? 8 : 10,
+      borderRadius: Platform.OS === 'ios' ? radii.sm : radii.md,
       overflow: 'hidden',
       marginHorizontal: 0,
-      marginBottom: 8,
+      marginBottom: spacing.sm,
     },
     settingRow: {
       flexDirection: 'row',
       alignItems: 'center',
       minHeight: Platform.OS === 'ios' ? 44 : 48,
-      paddingHorizontal: Platform.OS === 'ios' ? 16 : 16,
+      paddingHorizontal: spacing.lg,
       borderBottomWidth: Platform.OS === 'ios' ? 0.3 : 1,
       borderBottomColor: colors.border,
       justifyContent: 'space-between',
@@ -89,41 +90,41 @@ export default function SettingsScreen() {
       flexDirection: 'row',
       alignItems: 'center',
       flex: 1,
-      marginRight: 8,
+      marginRight: spacing.sm,
     },
     settingLabel: {
-      fontFamily: Platform.OS === 'ios' ? '-apple-system' : 'Inter-Regular',
-      fontSize: Platform.OS === 'ios' ? 17 : 16,
+      fontFamily: Platform.OS === 'ios' ? '-apple-system' : fonts.regular,
+      fontSize: Platform.OS === 'ios' ? 17 : fontSizes.lg,
       color: colors.text,
     },
     settingIcon: {
-      marginRight: 12,
+      marginRight: spacing.md,
       opacity: Platform.OS === 'ios' ? 0.6 : 1,
     },
     dangerButton: {
       backgroundColor: colors.error,
-      borderRadius: 8,
-      padding: 16,
+      borderRadius: radii.sm,
+      padding: spacing.lg,
       alignItems: 'center',
-      marginTop: 16,
+      marginTop: spacing.lg,
     },
     dangerButtonText: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.lg,
       color: '#FFFFFF',
     },
     appInfo: {
       alignItems: 'center',
-      marginTop: 32,
-      paddingTop: 16,
+      marginTop: spacing['3xl'],
+      paddingTop: spacing.lg,
       borderTopWidth: 1,
       borderTopColor: colors.border,
     },
     appVersion: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
-      marginTop: 4,
+      marginTop: spacing.xs,
     },
   });
 
@@ -334,7 +335,7 @@ export default function SettingsScreen() {
               style={[styles.settingRow, styles.lastSettingRow, { justifyContent: 'center' }]}
               onPress={confirmClearData}
             >
-              <Text style={{ fontFamily: 'Inter-Medium', color: colors.error }}>
+              <Text style={{ fontFamily: fonts.medium, color: colors.error }}>
                 Clear All Data
               </Text>
             </TouchableOpacity>

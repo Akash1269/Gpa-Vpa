@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { gradePoints } from '@/utils/gpaCalculator';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import ScreenHeader from '@/components/ScreenHeader';
@@ -97,30 +98,30 @@ export default function GoalCalculatorScreen() {
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     content: {
-      padding: 20,
+      padding: spacing.xl,
       paddingBottom: 40,
     },
     card: {
       backgroundColor: colors.card,
       borderRadius: 14,
-      padding: 16,
-      marginBottom: 16,
+      padding: spacing.lg,
+      marginBottom: spacing.lg,
       borderWidth: 1,
       borderColor: colors.border,
     },
     cardTitle: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
       fontSize: 15,
       color: colors.text,
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     inputRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     inputLabel: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: fonts.medium,
       fontSize: 13,
       color: colors.textSecondary,
       width: 110,
@@ -129,10 +130,10 @@ export default function GoalCalculatorScreen() {
       flex: 1,
       height: 48,
       backgroundColor: colors.background,
-      borderRadius: 12,
-      paddingHorizontal: 16,
-      fontFamily: 'Inter-Regular',
-      fontSize: 16,
+      borderRadius: radii.lg,
+      paddingHorizontal: spacing.lg,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.lg,
       color: colors.text,
       borderWidth: 1,
       borderColor: colors.border,
@@ -140,31 +141,31 @@ export default function GoalCalculatorScreen() {
     resultCard: {
       backgroundColor: colors.primary + '08',
       borderRadius: 14,
-      padding: 16,
-      marginTop: 8,
+      padding: spacing.lg,
+      marginTop: spacing.sm,
       borderWidth: 1,
       borderColor: colors.primary + '20',
     },
     resultTitle: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
       fontSize: 13,
       color: colors.primary,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     resultValue: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 32,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes['4xl'],
       color: colors.primary,
       textAlign: 'center',
     },
     resultGradeHint: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.text,
       textAlign: 'center',
-      marginTop: 4,
+      marginTop: spacing.xs,
     },
     resultDivider: {
       height: 1,
@@ -172,12 +173,12 @@ export default function GoalCalculatorScreen() {
       marginVertical: 14,
     },
     breakdownTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 12,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
-      marginBottom: 8,
+      marginBottom: spacing.sm,
     },
     breakdownRow: {
       flexDirection: 'row',
@@ -186,26 +187,26 @@ export default function GoalCalculatorScreen() {
       paddingVertical: 6,
     },
     breakdownLabel: {
-      fontFamily: 'Inter-Regular',
+      fontFamily: fonts.regular,
       fontSize: 13,
       color: colors.textSecondary,
     },
     breakdownValue: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
       fontSize: 13,
       color: colors.text,
     },
     resultSubtext: {
-      fontFamily: 'Inter-Regular',
+      fontFamily: fonts.regular,
       fontSize: 13,
       color: colors.textSecondary,
-      marginTop: 4,
+      marginTop: spacing.xs,
     },
     resultWarning: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: fonts.medium,
       fontSize: 13,
       color: colors.error,
-      marginTop: 10,
+      marginTop: spacing.md - 2,
       textAlign: 'center',
     },
     progressBarTrack: {
@@ -213,7 +214,7 @@ export default function GoalCalculatorScreen() {
       backgroundColor: colors.border,
       borderRadius: 5,
       overflow: 'hidden',
-      marginTop: 12,
+      marginTop: spacing.md,
     },
     progressBarFill: {
       height: '100%',
@@ -223,27 +224,27 @@ export default function GoalCalculatorScreen() {
     progressStats: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginTop: 8,
+      marginTop: spacing.sm,
     },
     progressStat: {
       alignItems: 'center',
     },
     progressStatValue: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 18,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.xl,
       color: colors.text,
     },
     progressStatLabel: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 11,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.xs,
       color: colors.textSecondary,
       marginTop: 2,
     },
     currentGpaNote: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
-      marginBottom: 12,
+      marginBottom: spacing.md,
       fontStyle: 'italic',
     },
   });

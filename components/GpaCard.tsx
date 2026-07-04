@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 type GpaCardProps = {
@@ -17,18 +18,18 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.primary,
-      borderRadius: 20,
-      padding: 24,
+      borderRadius: radii.xl + 4,
+      padding: spacing['2xl'],
       overflow: 'hidden',
     },
     topRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      marginBottom: 20,
+      marginBottom: spacing.xl,
     },
     label: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: fonts.medium,
       fontSize: 13,
       color: 'rgba(255,255,255,0.75)',
       textTransform: 'uppercase',
@@ -36,13 +37,13 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
     },
     standingBadge: {
       backgroundColor: 'rgba(255,255,255,0.2)',
-      paddingHorizontal: 12,
+      paddingHorizontal: spacing.md,
       paddingVertical: 5,
-      borderRadius: 20,
+      borderRadius: radii.xl + 4,
     },
     standingText: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 12,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.sm,
       color: '#FFFFFF',
     },
     gpaRow: {
@@ -50,18 +51,17 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
       alignItems: 'baseline',
     },
     gpaValue: {
-      fontFamily: 'Inter-Bold',
+      fontFamily: fonts.bold,
       fontSize: 56,
       color: '#FFFFFF',
       lineHeight: 60,
     },
     gpaScale: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 18,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.xl,
       color: 'rgba(255,255,255,0.6)',
-      marginLeft: 8,
+      marginLeft: spacing.sm,
     },
-    // Decorative circles
     decorCircle1: {
       position: 'absolute',
       width: 120,

@@ -8,6 +8,7 @@ import { Course } from '@/types/course';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
 import { useGpa } from '@/hooks/useGpa';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type CourseCardProps = {
   course: Course;
@@ -22,14 +23,14 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.card,
-      borderRadius: 12,
-      marginBottom: 8,
+      borderRadius: radii.lg,
+      marginBottom: spacing.sm,
       borderWidth: 1,
       borderColor: colors.border,
       overflow: 'hidden',
     },
     cardContent: {
-      paddingVertical: 12,
+      paddingVertical: spacing.md,
       paddingHorizontal: 14,
       flexDirection: 'row',
       alignItems: 'center',
@@ -37,20 +38,20 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
     gradePill: {
       width: 40,
       height: 40,
-      borderRadius: 10,
+      borderRadius: radii.md,
       backgroundColor: gradeColor.background,
       justifyContent: 'center',
       alignItems: 'center',
-      marginRight: 12,
+      marginRight: spacing.md,
     },
     gradeText: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 14,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.md,
       color: gradeColor.text,
     },
     infoContainer: {
       flex: 1,
-      marginRight: 8,
+      marginRight: spacing.sm,
     },
     topRow: {
       flexDirection: 'row',
@@ -58,33 +59,33 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
       marginBottom: 2,
     },
     courseName: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 14,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.md,
       color: colors.text,
       flex: 1,
     },
     courseCode: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 12,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
     },
     semesterText: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 11,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.xs,
       color: colors.textSecondary,
       marginTop: 2,
     },
     creditBadge: {
       backgroundColor: colors.background,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
       borderRadius: 6,
       borderWidth: 1,
       borderColor: colors.border,
     },
     creditText: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 12,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
     },
     deleteAction: {
@@ -92,9 +93,9 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
       justifyContent: 'center',
       alignItems: 'center',
       width: 64,
-      borderRadius: 12,
-      marginBottom: 8,
-      marginLeft: 8,
+      borderRadius: radii.lg,
+      marginBottom: spacing.sm,
+      marginLeft: spacing.sm,
     },
   });
 

@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Semester } from '@/types/semester';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type SemesterFilterProps = {
   semesters: Semester[];
@@ -17,18 +18,18 @@ export default function SemesterFilter({
 
   const styles = StyleSheet.create({
     container: {
-      marginBottom: 8,
+      marginBottom: spacing.sm,
     },
     optionsContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
     },
     option: {
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      borderRadius: 16,
-      marginRight: 8,
-      marginBottom: 8,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: radii.xl,
+      marginRight: spacing.sm,
+      marginBottom: spacing.sm,
       backgroundColor: colors.background,
       borderWidth: 1,
       borderColor: colors.border,
@@ -38,8 +39,8 @@ export default function SemesterFilter({
       borderColor: colors.primary,
     },
     optionText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.text,
     },
     selectedOptionText: {

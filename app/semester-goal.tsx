@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { gradePoints, calculateGradeValue } from '@/utils/gpaCalculator';
 import { Check } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -87,28 +88,28 @@ export default function SemesterGoalScreen() {
     projectedCard: {
       backgroundColor: colors.card,
       borderRadius: 14,
-      padding: 16,
-      marginBottom: 20,
+      padding: spacing.lg,
+      marginBottom: spacing.xl,
       borderWidth: 1,
       borderColor: colors.border,
       alignItems: 'center',
     },
     projectedLabel: {
-      fontFamily: 'Inter-Regular',
+      fontFamily: fonts.regular,
       fontSize: 13,
       color: colors.textSecondary,
     },
     projectedValue: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 32,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes['4xl'],
       color: colors.primary,
-      marginTop: 4,
+      marginTop: spacing.xs,
     },
     courseCard: {
       backgroundColor: colors.card,
-      borderRadius: 12,
+      borderRadius: radii.lg,
       padding: 14,
-      marginBottom: 10,
+      marginBottom: spacing.md - 2,
       borderWidth: 1,
       borderColor: colors.border,
     },
@@ -116,17 +117,17 @@ export default function SemesterGoalScreen() {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 10,
+      marginBottom: spacing.md - 2,
     },
     courseName: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.text,
       flex: 1,
     },
     courseCredits: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
     },
     gradeRow: {
@@ -135,9 +136,9 @@ export default function SemesterGoalScreen() {
       gap: 6,
     },
     gradeChip: {
-      paddingHorizontal: 10,
+      paddingHorizontal: spacing.md - 2,
       paddingVertical: 6,
-      borderRadius: 8,
+      borderRadius: radii.sm,
       borderWidth: 1.5,
       borderColor: colors.border,
       backgroundColor: colors.background,
@@ -147,27 +148,27 @@ export default function SemesterGoalScreen() {
       borderColor: colors.primary,
     },
     gradeChipText: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: fonts.medium,
       fontSize: 13,
       color: colors.text,
     },
     gradeChipTextActive: {
       color: colors.primary,
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
     },
     totalGpaSection: {
       backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 16,
-      marginBottom: 20,
+      borderRadius: radii.lg,
+      padding: spacing.lg,
+      marginBottom: spacing.xl,
       borderWidth: 1,
       borderColor: colors.border,
     },
     totalGpaLabel: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.text,
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     saveButton: {
       backgroundColor: colors.primary,
@@ -176,13 +177,13 @@ export default function SemesterGoalScreen() {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      marginTop: 8,
+      marginTop: spacing.sm,
     },
     saveButtonText: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.lg,
       color: '#FFFFFF',
-      marginLeft: 8,
+      marginLeft: spacing.sm,
     },
   });
 
@@ -191,7 +192,7 @@ export default function SemesterGoalScreen() {
       <View style={styles.container}>
         <ScreenHeader title="Semester Goal" showBorder={false} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 }}>
-          <Text style={{ fontFamily: 'Inter-Regular', fontSize: 15, color: colors.textSecondary, textAlign: 'center' }}>
+          <Text style={{ fontFamily: fonts.regular, fontSize: 15, color: colors.textSecondary, textAlign: 'center' }}>
             No in-progress semester found. Add courses without grades to set semester goals.
           </Text>
         </View>
@@ -262,7 +263,7 @@ export default function SemesterGoalScreen() {
                   </TouchableOpacity>
                 ))}
               </View>
-              <Text style={{ fontFamily: 'Inter-Regular', fontSize: 12, color: colors.textSecondary, marginTop: 12 }}>
+              <Text style={{ fontFamily: fonts.regular, fontSize: fontSizes.sm, color: colors.textSecondary, marginTop: spacing.md }}>
                 This will set {selectedGpaGrade} ({calculateGradeValue(selectedGpaGrade).toFixed(1)}) as the target for all {courses.length} courses
               </Text>
             </View>

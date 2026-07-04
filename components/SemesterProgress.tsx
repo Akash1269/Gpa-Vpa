@@ -4,6 +4,7 @@ import { Semester } from '@/types/semester';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
 import { useGpa } from '@/hooks/useGpa';
+import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
 
 type SemesterProgressProps = {
   semester: Semester;
@@ -35,9 +36,9 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.card,
-      borderRadius: 16,
-      padding: 18,
-      marginBottom: 16,
+      borderRadius: radii.xl,
+      padding: spacing.xl - 2,
+      marginBottom: spacing.lg,
       elevation: 2,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
@@ -48,22 +49,22 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     semesterTitle: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 18,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.xl,
       color: colors.text,
     },
     gpaContainer: {
       backgroundColor: gpaColor.background,
-      paddingHorizontal: 12,
+      paddingHorizontal: spacing.md,
       paddingVertical: 6,
-      borderRadius: 12,
+      borderRadius: radii.lg,
     },
     gpaText: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 16,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.lg,
       color: gpaColor.text,
     },
     progressSection: {
@@ -86,20 +87,20 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
       alignItems: 'center',
     },
     metaText: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
     },
     metaDot: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
       marginHorizontal: 6,
     },
     goalText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 12,
-      color: '#9C27B0',
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.sm,
+      color: statusColors.goal.text,
     },
     courseList: {
       marginBottom: 14,
@@ -107,8 +108,8 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
     courseRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: 10,
-      paddingLeft: 12,
+      paddingVertical: spacing.md - 2,
+      paddingLeft: spacing.md,
       borderLeftWidth: 3,
       marginBottom: 2,
     },
@@ -116,38 +117,38 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
       flex: 1,
     },
     courseName: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.text,
     },
     courseCode: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 11,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.xs,
       color: colors.textSecondary,
       marginTop: 1,
     },
     gradeSection: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8,
+      gap: spacing.sm,
     },
     gradeBadge: {
-      paddingHorizontal: 10,
-      paddingVertical: 4,
-      borderRadius: 8,
+      paddingHorizontal: spacing.md - 2,
+      paddingVertical: spacing.xs,
+      borderRadius: radii.sm,
       minWidth: 32,
       alignItems: 'center',
     },
     gradeBadgeText: {
-      fontFamily: 'Inter-Bold',
+      fontFamily: fonts.bold,
       fontSize: 13,
     },
     goalBadge: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-      borderRadius: 8,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: radii.sm,
       borderWidth: 1.5,
       borderColor: '#CE93D8',
       borderStyle: 'dashed',
@@ -157,28 +158,28 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
       fontSize: 10,
     },
     goalBadgeText: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 12,
-      color: '#9C27B0',
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.sm,
+      color: statusColors.goal.text,
     },
     editGoalButton: {
       alignSelf: 'flex-start',
       marginBottom: 14,
     },
     editGoalText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 12,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.sm,
       color: colors.primary,
     },
     viewButton: {
       alignItems: 'center',
-      paddingVertical: 12,
+      paddingVertical: spacing.md,
       backgroundColor: colors.background,
-      borderRadius: 10,
+      borderRadius: radii.md,
     },
     viewButtonText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.primary,
     },
   });
@@ -195,7 +196,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
             <Text style={styles.gpaText}>{semester.gpa.toFixed(2)}</Text>
           </View>
         ) : isInProgress ? (
-          <Text style={{ fontFamily: 'Inter-Medium', fontSize: 13, color: colors.textSecondary }}>In Progress</Text>
+          <Text style={{ fontFamily: fonts.medium, fontSize: 13, color: colors.textSecondary }}>In Progress</Text>
         ) : null}
       </View>
 

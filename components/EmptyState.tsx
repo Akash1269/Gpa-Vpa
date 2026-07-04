@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text } from 'react-native';
 import { BookOpen, ChartBar as BarChart3, BookPlus } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing } from '@/constants/theme';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 type EmptyStateProps = {
@@ -17,7 +18,7 @@ export default function EmptyState({ icon, title, message }: EmptyStateProps) {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      padding: 24,
+      padding: spacing['2xl'],
     },
     iconContainer: {
       width: 80,
@@ -26,18 +27,18 @@ export default function EmptyState({ icon, title, message }: EmptyStateProps) {
       backgroundColor: colors.primaryLight,
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 24,
+      marginBottom: spacing['2xl'],
     },
     title: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 20,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes['2xl'],
       color: colors.text,
-      marginBottom: 8,
+      marginBottom: spacing.sm,
       textAlign: 'center',
     },
     message: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 16,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.lg,
       color: colors.textSecondary,
       textAlign: 'center',
       maxWidth: 300,

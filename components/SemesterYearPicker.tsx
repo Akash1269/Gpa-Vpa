@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, Modal, FlatList, Pressable } from 'react-native';
 import { ChevronDown } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type SemesterYearPickerProps = {
   semester: string;
@@ -45,7 +46,7 @@ function DropdownSelect<T extends string | number>({
         onPress={() => setOpen(!open)}
         accessibilityLabel={`${label}: ${value}`}
       >
-        <Text style={{ fontFamily: 'Inter-Medium', fontSize: 15, color: colors.text }}>
+        <Text style={{ fontFamily: fonts.medium, fontSize: 15, color: colors.text }}>
           {String(value)}
         </Text>
         <ChevronDown size={16} color={colors.textSecondary} />
@@ -86,7 +87,7 @@ function DropdownSelect<T extends string | number>({
               }}
             >
               <Text style={{
-                fontFamily: option === value ? 'Inter-SemiBold' : 'Inter-Regular',
+                fontFamily: option === value ? fonts.semiBold : fonts.regular,
                 fontSize: 15,
                 color: option === value ? colors.primary : colors.text,
               }}>

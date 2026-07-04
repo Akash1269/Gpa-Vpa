@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, radii } from '@/constants/theme';
 
 type SegmentedControlProps = {
   options: string[];
@@ -33,7 +34,7 @@ export default function SegmentedControl({ options, selected, onChange }: Segmen
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderRadius: 12,
+    borderRadius: radii.lg,
     padding: 4,
     marginBottom: 20,
     borderWidth: 1,
@@ -41,11 +42,11 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: radii.md,
     alignItems: 'center',
   },
   text: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: fonts.medium,
     fontSize: 13,
   },
   textActive: {

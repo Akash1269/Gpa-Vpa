@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
 
 type GradePickerProps = {
   value: string | null;
@@ -14,7 +15,7 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
 
   const styles = StyleSheet.create({
     container: {
-      padding: 8,
+      padding: spacing.sm,
     },
     scrollView: {
       flexDirection: 'row',
@@ -24,8 +25,8 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
       height: 48,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 10,
-      marginRight: 8,
+      borderRadius: radii.md,
+      marginRight: spacing.sm,
       borderWidth: 1.5,
       borderColor: colors.border,
       backgroundColor: colors.card,
@@ -35,13 +36,13 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
       borderColor: colors.primary,
     },
     optionText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 16,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.lg,
       color: colors.text,
     },
     selectedOptionText: {
       color: colors.primary,
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
     },
   });
 
@@ -57,7 +58,7 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
             key={grade ?? 'na'}
             style={[
               styles.option,
-              grade === null && { backgroundColor: value === null ? '#FFF3E0' : colors.card, borderColor: value === null ? '#F57C00' : colors.border },
+              grade === null && { backgroundColor: value === null ? statusColors.na.bg : colors.card, borderColor: value === null ? statusColors.na.text : colors.border },
               grade !== null && value === grade && styles.selectedOption,
             ]}
             onPress={() => onChange(grade)}
@@ -65,7 +66,7 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
             <Text
               style={[
                 styles.optionText,
-                grade === null && { fontSize: 12, color: value === null ? '#F57C00' : colors.textSecondary },
+                grade === null && { fontSize: fontSizes.sm, color: value === null ? statusColors.na.text : colors.textSecondary },
                 grade !== null && value === grade && styles.selectedOptionText,
               ]}
             >

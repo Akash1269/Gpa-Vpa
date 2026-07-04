@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { ChevronDown, ChevronRight } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import ScreenHeader from '@/components/ScreenHeader';
@@ -21,45 +22,45 @@ export default function CreditsScreen() {
       backgroundColor: colors.background,
     },
     content: {
-      padding: 20,
+      padding: spacing.xl,
       paddingBottom: 40,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     totalCard: {
       backgroundColor: colors.primary,
-      borderRadius: 16,
-      padding: 20,
-      marginBottom: 24,
+      borderRadius: radii.xl,
+      padding: spacing.xl,
+      marginBottom: spacing['2xl'],
     },
     totalLabel: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: fonts.medium,
       fontSize: 13,
       color: 'rgba(255,255,255,0.75)',
       textTransform: 'uppercase',
       letterSpacing: 1,
     },
     totalValue: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 40,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.hero,
       color: '#FFFFFF',
-      marginTop: 4,
+      marginTop: spacing.xs,
     },
     totalSubtext: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: 'rgba(255,255,255,0.7)',
-      marginTop: 4,
+      marginTop: spacing.xs,
     },
     sectionTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.lg,
       color: colors.text,
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     semesterRow: {
       backgroundColor: colors.card,
-      borderRadius: 12,
-      marginBottom: 8,
+      borderRadius: radii.lg,
+      marginBottom: spacing.sm,
       borderWidth: 1,
       borderColor: colors.border,
       overflow: 'hidden',
@@ -71,41 +72,41 @@ export default function CreditsScreen() {
       padding: 14,
     },
     semesterName: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
       fontSize: 15,
       color: colors.text,
       flex: 1,
     },
     semesterCredits: {
-      fontFamily: 'Inter-Bold',
+      fontFamily: fonts.bold,
       fontSize: 15,
       color: colors.primary,
-      marginRight: 8,
+      marginRight: spacing.sm,
     },
     courseRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 14,
-      paddingVertical: 10,
+      paddingVertical: spacing.md - 2,
       borderTopWidth: 1,
       borderTopColor: colors.border,
     },
     courseName: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: colors.text,
       flex: 1,
     },
     courseCode: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 12,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
-      marginRight: 12,
+      marginRight: spacing.md,
     },
     courseCredits: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
     },
   });

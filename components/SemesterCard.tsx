@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Semester } from '@/types/semester';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
 import { ChevronDown, ChevronUp } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn, FadeOut } from 'react-native-reanimated';
 
@@ -16,85 +17,85 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
   const isInProgress = semester.status === 'in-progress';
   const gpaColor = !isInProgress || semester.gpa > 0
     ? getGradeColor(semester.gpa ?? 0) ?? { background: '#FCE8E6', text: '#EA4335' }
-    : { background: '#FFF3E0', text: '#F57C00' };
+    : { background: statusColors.warning.bg, text: statusColors.warning.text };
 
   const styles = StyleSheet.create({
     container: {
       backgroundColor: colors.card,
-      borderRadius: 16,
+      borderRadius: radii.xl,
       marginBottom: 14,
       borderWidth: 1,
       borderColor: colors.border,
       overflow: 'hidden',
     },
     cardContent: {
-      padding: 16,
+      padding: spacing.lg,
     },
     headerContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 12,
+      marginBottom: spacing.md,
     },
     semesterTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 18,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.xl,
       color: colors.text,
     },
     gpaContainer: {
       backgroundColor: gpaColor.background,
-      paddingHorizontal: 12,
+      paddingHorizontal: spacing.md,
       paddingVertical: 6,
-      borderRadius: 16,
+      borderRadius: radii.xl,
     },
     gpaText: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 14,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.md,
       color: gpaColor.text,
     },
     statsContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 8,
+      marginBottom: spacing.sm,
     },
     statItem: {
       flex: 1,
     },
     statValue: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 16,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.lg,
       color: colors.text,
     },
     statLabel: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
       marginTop: 2,
     },
     footer: {
       borderTopWidth: 1,
       borderTopColor: colors.border,
-      paddingTop: 12,
-      marginTop: 12,
+      paddingTop: spacing.md,
+      marginTop: spacing.md,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
     },
     viewDetailsText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 14,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
       color: colors.primary,
     },
     coursesContainer: {
       borderTopWidth: 1,
       borderTopColor: colors.border,
-      marginTop: 12,
-      paddingTop: 12,
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
     },
     courseRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: 8,
+      paddingVertical: spacing.sm,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
     },
@@ -104,32 +105,32 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
     courseGradePill: {
       width: 32,
       height: 32,
-      borderRadius: 8,
+      borderRadius: radii.sm,
       justifyContent: 'center',
       alignItems: 'center',
-      marginRight: 10,
+      marginRight: spacing.md - 2,
     },
     courseGradeText: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 12,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes.sm,
     },
     courseInfo: {
       flex: 1,
     },
     courseName: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: fonts.medium,
       fontSize: 13,
       color: colors.text,
     },
     courseCode: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 11,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.xs,
       color: colors.textSecondary,
       marginTop: 1,
     },
     courseCredits: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 12,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
     },
   });

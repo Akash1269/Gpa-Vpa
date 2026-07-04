@@ -6,6 +6,7 @@ import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import Toast from '@/components/Toast';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
 import { Course } from '@/types/course';
 
 export default function CoursesScreen() {
@@ -63,20 +64,20 @@ export default function CoursesScreen() {
     },
     content: {
       flex: 1,
-      padding: 20,
+      padding: spacing.xl,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 16,
+      marginBottom: spacing.lg,
     },
     searchContainer: {
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.card,
-      borderRadius: 12,
+      borderRadius: radii.lg,
       paddingHorizontal: 14,
       height: 46,
       borderWidth: 1,
@@ -84,32 +85,32 @@ export default function CoursesScreen() {
     },
     searchInput: {
       flex: 1,
-      fontFamily: 'Inter-Regular',
+      fontFamily: fonts.regular,
       fontSize: 15,
       color: colors.text,
-      marginLeft: 10,
+      marginLeft: spacing.md - 2,
     },
     sectionHeader: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingVertical: 10,
-      paddingHorizontal: 4,
-      marginTop: 8,
+      paddingVertical: spacing.md - 2,
+      paddingHorizontal: spacing.xs,
+      marginTop: spacing.sm,
     },
     sectionTitle: {
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
       fontSize: 15,
       color: colors.text,
     },
     sectionCount: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 12,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.sm,
       color: colors.textSecondary,
       backgroundColor: colors.card,
-      paddingHorizontal: 8,
+      paddingHorizontal: spacing.sm,
       paddingVertical: 3,
-      borderRadius: 8,
+      borderRadius: radii.sm,
     },
   });
 
@@ -141,7 +142,7 @@ export default function CoursesScreen() {
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                     <Text style={styles.sectionTitle}>{section.title}</Text>
                     {hasUngraded && (
-                      <Text style={{ fontFamily: 'Inter-Medium', fontSize: 11, color: '#F57C00', backgroundColor: '#FFF3E0', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, overflow: 'hidden' }}>In Progress</Text>
+                      <Text style={{ fontFamily: fonts.medium, fontSize: fontSizes.xs, color: statusColors.warning.text, backgroundColor: statusColors.warning.bg, paddingHorizontal: spacing.sm, paddingVertical: 2, borderRadius: 6, overflow: 'hidden' }}>In Progress</Text>
                     )}
                   </View>
                   <Text style={styles.sectionCount}>{section.data.length} course{section.data.length !== 1 ? 's' : ''}</Text>

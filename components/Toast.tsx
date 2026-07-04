@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 
 type ToastProps = {
@@ -48,12 +49,12 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: 100,
-    left: 16,
-    right: 16,
+    left: spacing.lg,
+    right: spacing.lg,
     backgroundColor: '#323232',
-    borderRadius: 8,
+    borderRadius: radii.sm,
     paddingVertical: 14,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -65,19 +66,19 @@ const styles = StyleSheet.create({
   },
   message: {
     color: '#FFFFFF',
-    fontSize: 14,
-    fontFamily: 'Inter-Medium',
+    fontSize: fontSizes.md,
+    fontFamily: fonts.medium,
     flex: 1,
   },
   actionButton: {
-    marginLeft: 12,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    marginLeft: spacing.md,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
   },
   actionText: {
     color: '#8AB4F8',
-    fontSize: 14,
-    fontFamily: 'Inter-SemiBold',
+    fontSize: fontSizes.md,
+    fontFamily: fonts.semiBold,
     textTransform: 'uppercase',
   },
 });

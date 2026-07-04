@@ -11,6 +11,7 @@ import {
   Search,
 } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 const WEB_MAX_WIDTH = 1200;
 
@@ -49,10 +50,10 @@ function CustomHeader() {
             <GraduationCap size={18} color={colors.primary} strokeWidth={2.5} />
           </View>
           <Text style={{
-            fontFamily: 'Inter-Bold',
-            fontSize: 18,
+            fontFamily: fonts.bold,
+            fontSize: fontSizes.xl,
             color: colors.text,
-            marginLeft: 10,
+            marginLeft: spacing.md - 2,
           }}>
             GPA Tracker
           </Text>
@@ -124,8 +125,8 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             >
               {icon}
               <Text style={{
-                fontFamily: isFocused ? 'Inter-SemiBold' : 'Inter-Medium',
-                fontSize: 11,
+                fontFamily: isFocused ? fonts.semiBold : fonts.medium,
+                fontSize: fontSizes.xs,
                 color,
                 marginTop: 3,
               }}>
@@ -149,8 +150,8 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
         tabBarLabelStyle: {
-          fontFamily: 'Inter-Medium',
-          fontSize: 11,
+          fontFamily: fonts.medium,
+          fontSize: fontSizes.xs,
           marginTop: -2,
         },
         header: () => <CustomHeader />,

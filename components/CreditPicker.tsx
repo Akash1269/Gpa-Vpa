@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type CreditPickerProps = {
   value: number;
@@ -13,7 +14,7 @@ export default function CreditPicker({ value, onChange }: CreditPickerProps) {
 
   const styles = StyleSheet.create({
     container: {
-      padding: 8,
+      padding: spacing.sm,
     },
     optionsContainer: {
       flexDirection: 'row',
@@ -24,8 +25,8 @@ export default function CreditPicker({ value, onChange }: CreditPickerProps) {
       height: 48,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 10,
-      marginHorizontal: 4,
+      borderRadius: radii.md,
+      marginHorizontal: spacing.xs,
       borderWidth: 1.5,
       borderColor: colors.border,
       backgroundColor: colors.card,
@@ -35,13 +36,13 @@ export default function CreditPicker({ value, onChange }: CreditPickerProps) {
       borderColor: colors.primary,
     },
     optionText: {
-      fontFamily: 'Inter-Medium',
-      fontSize: 16,
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.lg,
       color: colors.text,
     },
     selectedOptionText: {
       color: colors.primary,
-      fontFamily: 'Inter-SemiBold',
+      fontFamily: fonts.semiBold,
     },
   });
 

@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type ScreenHeaderProps = {
   title: string;
@@ -29,21 +30,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.md,
   },
   backButton: {
     width: 36,
     height: 36,
-    borderRadius: 10,
+    borderRadius: radii.md,
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
     flex: 1,
-    fontFamily: 'Inter-Bold',
-    fontSize: 18,
-    marginLeft: 12,
+    fontFamily: fonts.bold,
+    fontSize: fontSizes.xl,
+    marginLeft: spacing.md,
   },
   placeholder: {
     width: 36,

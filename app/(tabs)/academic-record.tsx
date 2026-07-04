@@ -4,6 +4,7 @@ import SemesterCard from '@/components/SemesterCard';
 import GpaChart from '@/components/GpaChart';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 export default function AcademicRecord() {
   const { colors } = useTheme();
@@ -15,60 +16,60 @@ export default function AcademicRecord() {
       backgroundColor: colors.background,
     },
     content: {
-      padding: 20,
+      padding: spacing.xl,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {
-      marginBottom: 24,
+      marginBottom: spacing['2xl'],
     },
     title: {
-      fontFamily: 'Inter-Bold',
+      fontFamily: fonts.bold,
       fontSize: 22,
       color: colors.text,
-      marginBottom: 8,
+      marginBottom: spacing.sm,
     },
     subtitle: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
-      marginBottom: 16,
+      marginBottom: spacing.lg,
     },
     summaryContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 24,
+      marginBottom: spacing['2xl'],
     },
     summaryItem: {
       backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 16,
+      borderRadius: radii.lg,
+      padding: spacing.lg,
       width: '48%',
       elevation: 1,
     },
     summaryValue: {
-      fontFamily: 'Inter-Bold',
-      fontSize: 24,
+      fontFamily: fonts.bold,
+      fontSize: fontSizes['3xl'],
       color: colors.text,
-      marginBottom: 4,
+      marginBottom: spacing.xs,
     },
     summaryLabel: {
-      fontFamily: 'Inter-Regular',
-      fontSize: 14,
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
       color: colors.textSecondary,
     },
     sectionTitle: {
-      fontFamily: 'Inter-SemiBold',
-      fontSize: 18,
+      fontFamily: fonts.semiBold,
+      fontSize: fontSizes.xl,
       color: colors.text,
-      marginBottom: 16,
-      marginTop: 24,
+      marginBottom: spacing.lg,
+      marginTop: spacing['2xl'],
     },
     chartContainer: {
       backgroundColor: colors.card,
-      borderRadius: 12,
+      borderRadius: radii.lg,
       paddingHorizontal: 14,
-      paddingVertical: 4,
-      marginBottom: 8,
+      paddingVertical: spacing.xs,
+      marginBottom: spacing.sm,
       elevation: 1,
     },
   });
