@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, Platform } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
-import { Semester } from '@/types/semester';
 import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';

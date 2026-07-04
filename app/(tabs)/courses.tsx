@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { StyleSheet, View, Text, SectionList, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { StyleSheet, View, Text, SectionList, TextInput, Platform } from 'react-native';
 import { Search } from 'lucide-react-native';
 import { useGpa } from '@/hooks/useGpa';
 import CourseCard from '@/components/CourseCard';

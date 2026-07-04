@@ -1,5 +1,4 @@
-import { Tabs } from 'expo-router';
-import { router } from 'expo-router';
+import { Tabs, router } from 'expo-router';
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { 
@@ -11,7 +10,7 @@ import {
   Settings2,
 } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
-import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
+import { fonts, fontSizes, spacing } from '@/constants/theme';
 
 const WEB_MAX_WIDTH = 1200;
 

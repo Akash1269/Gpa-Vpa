@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, Modal, FlatList, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { ChevronDown } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
-import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
+import { fonts } from '@/constants/theme';
 
 type SemesterYearPickerProps = {
   semester: string;

@@ -17,7 +17,6 @@ import ScreenHeader from '@/components/ScreenHeader';
 import {
   Info,
   CircleHelp as HelpCircle,
-  Trash2,
   Sun,
   Moon,
   Eye,

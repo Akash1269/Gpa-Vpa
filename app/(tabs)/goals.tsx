@@ -12,7 +12,7 @@ type Tab = 'gpa' | 'graduation';
 
 export default function GoalsScreen() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, courses, semesters, targetCgpa, setTargetCgpa, targetCredits, setTargetCredits, inProgressSemester } = useGpa();
+  const { cumulativeGpa, totalCredits, semesters, targetCgpa, setTargetCgpa, targetCredits, setTargetCredits, inProgressSemester } = useGpa();
   const [activeTab, setActiveTab] = useState<Tab>('gpa');
 
   // Cumulative goal state
@@ -61,7 +61,7 @@ export default function GoalsScreen() {
   // Persist cumulative goal after render
   useEffect(() => {
     if (cumulativeResult) setTargetCgpa(cumulativeResult.target);
-  }, [cumulativeResult]);
+  }, [cumulativeResult, setTargetCgpa]);
 
   // Graduation progress
   const graduationResult = useMemo(() => {
@@ -89,7 +89,7 @@ export default function GoalsScreen() {
   // Persist credits goal after render
   useEffect(() => {
     if (graduationResult) setTargetCredits(graduationResult.target);
-  }, [graduationResult]);
+  }, [graduationResult, setTargetCredits]);
 
   const gpaProgress = useMemo(() => {
     const target = parseFloat(cumulativeTargetGpaInput);

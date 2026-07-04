@@ -5,7 +5,7 @@ import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
-import { gradePoints, calculateGradeValue } from '@/utils/gpaCalculator';
+import { calculateGradeValue } from '@/utils/gpaCalculator';
 import { Check } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import ScreenHeader from '@/components/ScreenHeader';
@@ -37,7 +37,7 @@ export default function SemesterGoalScreen() {
     return 'A';
   });
 
-  const courses = inProgressSemester?.courses ?? [];
+  const courses = useMemo(() => inProgressSemester?.courses ?? [], [inProgressSemester]);
 
   // Calculate projected GPA from per-course goals
   const projectedGpa = useMemo(() => {

@@ -1,16 +1,13 @@
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import { Course } from '@/types/course';
 import CourseCard from './CourseCard';
 import EmptyState from './EmptyState';
-import { useTheme } from '@/hooks/useTheme';
 
 type RecentCoursesListProps = {
   courses: Course[];
 };
 
 export default function RecentCoursesList({ courses }: RecentCoursesListProps) {
-  const { colors } = useTheme();
-
   const styles = StyleSheet.create({
     container: {
       marginBottom: 16,

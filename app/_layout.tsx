@@ -9,6 +9,7 @@ import { GpaProvider } from '@/context/GpaContext';
 import StackNavigator from '@/components/StackNavigator';
 import ErrorBoundary from '@/components/ErrorBoundary';
 if (Platform.OS === 'web') {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('../global.css');
 }
 

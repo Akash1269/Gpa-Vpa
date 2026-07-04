@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 

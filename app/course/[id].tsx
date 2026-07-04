@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
 import { Course } from '@/types/course';
-import { gradePoints, calculateGradeValue } from '@/utils/gpaCalculator';
+import { calculateGradeValue } from '@/utils/gpaCalculator';
 import GradePicker from '@/components/GradePicker';
 import CreditPicker from '@/components/CreditPicker';
 import SemesterYearPicker from '@/components/SemesterYearPicker';

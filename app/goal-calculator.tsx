@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TextInput, Platform } from 'react-native';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
@@ -12,7 +12,7 @@ type Tab = 'cumulative' | 'graduation';
 
 export default function GoalCalculatorScreen() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, courses, semesters, targetCgpa, setTargetCgpa, targetCredits, setTargetCredits } = useGpa();
+  const { cumulativeGpa, totalCredits, semesters, targetCgpa, setTargetCgpa, targetCredits, setTargetCredits } = useGpa();
   const [activeTab, setActiveTab] = useState<Tab>('cumulative');
 
   // Cumulative goal state
@@ -61,7 +61,7 @@ export default function GoalCalculatorScreen() {
   // Persist cumulative goal after render
   useEffect(() => {
     if (cumulativeResult) setTargetCgpa(cumulativeResult.target);
-  }, [cumulativeResult]);
+  }, [cumulativeResult, setTargetCgpa]);
 
   // Graduation progress
   const graduationResult = useMemo(() => {
@@ -89,7 +89,7 @@ export default function GoalCalculatorScreen() {
   // Persist credits goal after render
   useEffect(() => {
     if (graduationResult) setTargetCredits(graduationResult.target);
-  }, [graduationResult]);
+  }, [graduationResult, setTargetCredits]);
 
   const styles = StyleSheet.create({
     container: {

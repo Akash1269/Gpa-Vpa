@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
-import { fonts, fontSizes, radii } from '@/constants/theme';
+import { fonts, radii } from '@/constants/theme';
 
 type SegmentedControlProps = {
   options: string[];
