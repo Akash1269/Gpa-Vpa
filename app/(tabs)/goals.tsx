@@ -393,13 +393,17 @@ export default function GoalsScreen() {
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Target GPA</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, cumulativeTargetGpaInput !== '' && (parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0) ? { borderColor: colors.error } : {}]}
                 value={cumulativeTargetGpaInput}
                 onChangeText={setCumulativeTargetGpaInput}
                 keyboardType="decimal-pad"
                 placeholder="3.5"
                 placeholderTextColor={colors.textSecondary}
+                maxLength={4}
               />
+              {cumulativeTargetGpaInput !== '' && (parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0) && (
+                <Text style={{ fontFamily: fonts.medium, fontSize: 12, color: colors.error, marginTop: 4 }}>GPA must be between 0.0 and 4.0</Text>
+              )}
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Semesters Remaining</Text>

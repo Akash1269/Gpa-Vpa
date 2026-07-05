@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Course } from '@/types/course';
 import { Semester } from '@/types/semester';
@@ -227,7 +228,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         await AsyncStorage.setItem('courses', JSON.stringify(courses));
       } catch (error) {
-        console.error('Error saving data:', error);
+        Alert.alert('Save Failed', 'Your changes could not be saved. Please make sure your device has enough storage.');
       }
     };
     
@@ -265,34 +266,50 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const setTargetCgpa = useCallback(async (value: number | null) => {
     setTargetCgpaState(value);
-    if (value !== null) {
-      await AsyncStorage.setItem('@targetCgpa', value.toString());
-    } else {
-      await AsyncStorage.removeItem('@targetCgpa');
+    try {
+      if (value !== null) {
+        await AsyncStorage.setItem('@targetCgpa', value.toString());
+      } else {
+        await AsyncStorage.removeItem('@targetCgpa');
+      }
+    } catch (error) {
+      Alert.alert('Save Failed', 'Could not save your goal. Please try again.');
     }
   }, []);
 
   const setTargetSemesterGpa = useCallback(async (value: number | null) => {
     setTargetSemesterGpaState(value);
-    if (value !== null) {
-      await AsyncStorage.setItem('@targetSemesterGpa', value.toString());
-    } else {
-      await AsyncStorage.removeItem('@targetSemesterGpa');
+    try {
+      if (value !== null) {
+        await AsyncStorage.setItem('@targetSemesterGpa', value.toString());
+      } else {
+        await AsyncStorage.removeItem('@targetSemesterGpa');
+      }
+    } catch (error) {
+      Alert.alert('Save Failed', 'Could not save your goal. Please try again.');
     }
   }, []);
 
   const setTargetCredits = useCallback(async (value: number | null) => {
     setTargetCreditsState(value);
-    if (value !== null) {
-      await AsyncStorage.setItem('@targetCredits', value.toString());
-    } else {
-      await AsyncStorage.removeItem('@targetCredits');
+    try {
+      if (value !== null) {
+        await AsyncStorage.setItem('@targetCredits', value.toString());
+      } else {
+        await AsyncStorage.removeItem('@targetCredits');
+      }
+    } catch (error) {
+      Alert.alert('Save Failed', 'Could not save your goal. Please try again.');
     }
   }, []);
 
   const setCourseGoals = useCallback(async (goals: Record<string, string>) => {
     setCourseGoalsState(goals);
-    await AsyncStorage.setItem('@courseGoals', JSON.stringify(goals));
+    try {
+      await AsyncStorage.setItem('@courseGoals', JSON.stringify(goals));
+    } catch (error) {
+      Alert.alert('Save Failed', 'Could not save your goals. Please try again.');
+    }
   }, []);
 
   const getCourse = useCallback((id: string) => {
@@ -308,7 +325,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       await AsyncStorage.removeItem('courses');
       setCourses([]);
     } catch (error) {
-      console.error('Error clearing data:', error);
+      Alert.alert('Error', 'Could not clear data. Please try again.');
     }
   }, []);
 

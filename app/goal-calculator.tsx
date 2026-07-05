@@ -259,14 +259,18 @@ export default function GoalCalculatorScreen() {
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>Target GPA</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0 ? { borderColor: colors.error } : {}]}
             value={cumulativeTargetGpaInput}
             onChangeText={setCumulativeTargetGpaInput}
             keyboardType="decimal-pad"
             placeholder="3.5"
             placeholderTextColor={colors.textSecondary}
+            maxLength={4}
           />
         </View>
+        {cumulativeTargetGpaInput !== '' && (parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0) && (
+          <Text style={styles.resultWarning}>GPA must be between 0.0 and 4.0</Text>
+        )}
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>Semesters Left</Text>
           <TextInput
