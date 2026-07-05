@@ -17,6 +17,7 @@ export default function AcademicRecord() {
     },
     content: {
       padding: spacing.xl,
+      paddingBottom: 100,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     header: {

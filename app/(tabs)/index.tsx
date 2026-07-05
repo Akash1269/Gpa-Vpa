@@ -24,7 +24,7 @@ export default function Dashboard() {
     },
     content: {
       padding: spacing.xl,
-      paddingBottom: 40,
+      paddingBottom: 100,
       ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
     },
     statsRow: {

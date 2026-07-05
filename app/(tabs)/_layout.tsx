@@ -1,13 +1,14 @@
 import { Tabs, router } from 'expo-router';
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { 
-  LayoutDashboard, 
-  GraduationCap, 
-  BarChart3, 
-  Target,
+import {
+  House,
+  BookOpen,
+  Layers,
+  Crosshair,
   Plus,
   Settings2,
+  GraduationCap,
 } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing } from '@/constants/theme';
@@ -97,25 +98,30 @@ function CustomHeader() {
 }
 
 function CustomTabBar({ state, descriptors, navigation }: any) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const insets = useSafeAreaInsets();
+  const bottomSpacing = Math.max(insets.bottom, 16);
 
   return (
     <View style={{
-      backgroundColor: colors.background,
+      position: 'absolute',
+      bottom: bottomSpacing,
+      left: 36,
+      right: 36,
+      backgroundColor: isDark ? 'rgba(28,28,30,0.4)' : 'rgba(255,255,255,0.4)',
+      borderRadius: 28,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: -1 },
-      shadowOpacity: 0.05,
-      shadowRadius: 3,
-      elevation: 2,
-      paddingBottom: insets.bottom,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: isDark ? 0.3 : 0.12,
+      shadowRadius: 16,
+      elevation: 8,
+      ...(Platform.OS === 'web' ? { maxWidth: 400, marginLeft: 'auto' as unknown as number, marginRight: 'auto' as unknown as number, left: 0, right: 0, backdropFilter: 'blur(4px) saturate(200%)', WebkitBackdropFilter: 'blur(4px) saturate(200%)', boxShadow: isDark ? '0 0px 24px rgba(0,0,0,0.2)' : '0 0px 24px rgba(164, 164, 164, 0.1)', overflow: 'hidden' } as any : {}),
     }}>
       <View style={{
         flexDirection: 'row',
-        height: 54,
+        height: 62,
         alignItems: 'center',
-        paddingHorizontal: 8,
-        ...(Platform.OS === 'web' ? { maxWidth: WEB_MAX_WIDTH, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+        paddingHorizontal: 12,
       }}>
         {state.routes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
@@ -139,12 +145,26 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
               accessibilityRole="tab"
               accessibilityState={{ selected: isFocused }}
               accessibilityLabel={options.tabBarAccessibilityLabel}
-              style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 6 }}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 8,
+              }}
             >
-              {icon}
+              <View style={{
+                width: 40,
+                height: 32,
+                borderRadius: 10,
+                backgroundColor: isFocused ? colors.primary + '15' : 'transparent',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                {icon}
+              </View>
               <Text style={{
                 fontFamily: isFocused ? fonts.semiBold : fonts.medium,
-                fontSize: fontSizes.xs,
+                fontSize: 10,
                 color,
                 marginTop: 3,
               }}>
@@ -177,31 +197,35 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => <LayoutDashboard size={size-2} strokeWidth={1.5} color={color} />,
+          title: 'Home',
+          tabBarIcon: ({ color, size }) => <House size={size - 2} strokeWidth={isFocusedStroke(color, colors.primary)} color={color} />,
         }}
       />
       <Tabs.Screen
         name="courses"
         options={{
           title: 'Courses',
-          tabBarIcon: ({ color, size }) => <GraduationCap size={size-2} strokeWidth={1.5} color={color} />,
+          tabBarIcon: ({ color, size }) => <BookOpen size={size - 2} strokeWidth={isFocusedStroke(color, colors.primary)} color={color} />,
         }}
       />
       <Tabs.Screen
         name="academic-record"
         options={{
           title: 'Semesters',
-          tabBarIcon: ({ color, size }) => <BarChart3 size={size-2} strokeWidth={1.5} color={color} />,
+          tabBarIcon: ({ color, size }) => <Layers size={size - 2} strokeWidth={isFocusedStroke(color, colors.primary)} color={color} />,
         }}
       />
       <Tabs.Screen
         name="goals"
         options={{
           title: 'Goals',
-          tabBarIcon: ({ color, size }) => <Target size={size-2} strokeWidth={1.5} color={color} />,
+          tabBarIcon: ({ color, size }) => <Crosshair size={size - 2} strokeWidth={isFocusedStroke(color, colors.primary)} color={color} />,
         }}
       />
     </Tabs>
   );
+}
+
+function isFocusedStroke(color: any, primary: string) {
+  return color === primary ? 2 : 1.5;
 }

@@ -149,7 +149,7 @@ export default function CoursesScreen() {
                 </View>
               );
             }}
-            contentContainerStyle={{ paddingBottom: 88 }}
+            contentContainerStyle={{ paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}
             stickySectionHeadersEnabled={false}
           />
