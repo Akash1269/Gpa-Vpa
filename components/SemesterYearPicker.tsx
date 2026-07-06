@@ -53,24 +53,26 @@ function DropdownSelect<T extends string | number>({
       </TouchableOpacity>
 
       {open && (
-        <View style={{
-          position: 'absolute',
-          top: 52,
-          left: 0,
-          right: 0,
-          backgroundColor: colors.card,
-          borderRadius: 12,
-          borderWidth: 1,
-          borderColor: colors.border,
-          zIndex: 100,
-          elevation: 8,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.12,
-          shadowRadius: 12,
-          maxHeight: 200,
-          overflow: 'hidden',
-        }}>
+        <View
+          style={{
+            position: 'absolute',
+            top: 52,
+            left: 0,
+            right: 0,
+            backgroundColor: colors.card,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: colors.border,
+            zIndex: 100,
+            elevation: 8,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.12,
+            shadowRadius: 12,
+            maxHeight: 200,
+            overflow: 'hidden',
+          }}
+        >
           {options.map((option, idx) => (
             <TouchableOpacity
               key={String(option)}
@@ -86,11 +88,13 @@ function DropdownSelect<T extends string | number>({
                 setOpen(false);
               }}
             >
-              <Text style={{
-                fontFamily: option === value ? fonts.semiBold : fonts.regular,
-                fontSize: 15,
-                color: option === value ? colors.primary : colors.text,
-              }}>
+              <Text
+                style={{
+                  fontFamily: option === value ? fonts.semiBold : fonts.regular,
+                  fontSize: 15,
+                  color: option === value ? colors.primary : colors.text,
+                }}
+              >
                 {String(option)}
               </Text>
             </TouchableOpacity>
@@ -115,12 +119,7 @@ const SemesterYearPicker: React.FC<SemesterYearPickerProps> = ({
         onSelect={onChangeSemester}
         label="Semester"
       />
-      <DropdownSelect
-        value={year}
-        options={years}
-        onSelect={onChangeYear}
-        label="Year"
-      />
+      <DropdownSelect value={year} options={years} onSelect={onChangeYear} label="Year" />
     </View>
   );
 };

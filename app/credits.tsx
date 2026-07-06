@@ -13,7 +13,7 @@ export default function CreditsScreen() {
   const [expandedSemester, setExpandedSemester] = useState<string | null>(null);
 
   const toggleSemester = (id: string) => {
-    setExpandedSemester(prev => prev === id ? null : id);
+    setExpandedSemester((prev) => (prev === id ? null : id));
   };
 
   const styles = StyleSheet.create({
@@ -24,7 +24,9 @@ export default function CreditsScreen() {
     content: {
       padding: spacing.xl,
       paddingBottom: 40,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     totalCard: {
       backgroundColor: colors.primary,
@@ -153,13 +155,14 @@ export default function CreditsScreen() {
                   )}
                 </TouchableOpacity>
 
-                {isExpanded && semester.courses.map(course => (
-                  <View key={course.id} style={styles.courseRow}>
-                    <Text style={styles.courseName}>{course.name}</Text>
-                    <Text style={styles.courseCode}>{course.code}</Text>
-                    <Text style={styles.courseCredits}>{course.credits} CR</Text>
-                  </View>
-                ))}
+                {isExpanded &&
+                  semester.courses.map((course) => (
+                    <View key={course.id} style={styles.courseRow}>
+                      <Text style={styles.courseName}>{course.name}</Text>
+                      <Text style={styles.courseCode}>{course.code}</Text>
+                      <Text style={styles.courseCredits}>{course.credits} CR</Text>
+                    </View>
+                  ))}
               </View>
             </Animated.View>
           );

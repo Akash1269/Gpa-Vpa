@@ -9,10 +9,10 @@ type SemesterFilterProps = {
   onSelectSemester: (semesterId: string | null) => void;
 };
 
-export default function SemesterFilter({ 
-  semesters, 
-  selectedSemester, 
-  onSelectSemester 
+export default function SemesterFilter({
+  semesters,
+  selectedSemester,
+  onSelectSemester,
 }: SemesterFilterProps) {
   const { colors } = useTheme();
 
@@ -58,9 +58,11 @@ export default function SemesterFilter({
   // Sort semesters by most recent first
   const sortedSemesters = [...semesters].sort((a, b) => {
     if (a.year !== b.year) return b.year - a.year;
-    const semesterOrder = { 'Fall': 2, 'Summer': 1, 'Spring': 0 };
-    return semesterOrder[b.semester as keyof typeof semesterOrder] - 
-           semesterOrder[a.semester as keyof typeof semesterOrder];
+    const semesterOrder = { Fall: 2, Summer: 1, Spring: 0 };
+    return (
+      semesterOrder[b.semester as keyof typeof semesterOrder] -
+      semesterOrder[a.semester as keyof typeof semesterOrder]
+    );
   });
 
   return (
@@ -73,26 +75,18 @@ export default function SemesterFilter({
           >
             <Text style={[styles.optionText, styles.allOptionText]}>All Semesters</Text>
           </TouchableOpacity>
-          
+
           {sortedSemesters.map((semester) => {
             const semesterId = `${semester.semester}-${semester.year}`;
             const isSelected = selectedSemester === semesterId;
-            
+
             return (
               <TouchableOpacity
                 key={semesterId}
-                style={[
-                  styles.option,
-                  isSelected && styles.selectedOption,
-                ]}
+                style={[styles.option, isSelected && styles.selectedOption]}
                 onPress={() => onSelectSemester(semesterId)}
               >
-                <Text
-                  style={[
-                    styles.optionText,
-                    isSelected && styles.selectedOptionText,
-                  ]}
-                >
+                <Text style={[styles.optionText, isSelected && styles.selectedOptionText]}>
                   {semester.semester} {semester.year}
                 </Text>
               </TouchableOpacity>

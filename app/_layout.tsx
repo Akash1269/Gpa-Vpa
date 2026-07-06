@@ -1,7 +1,13 @@
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import Head from 'expo-router/head';
@@ -32,13 +38,20 @@ export default function RootLayout() {
 
   if (!fontsLoaded && !fontError) {
     return null;
-  }  return (
+  }
+  return (
     <ErrorBoundary>
       <Head>
         <title>GPA-VPA | Academic Tracker and Calculator</title>
-        <meta name="description" content="Track courses, compute semester & cumulative GPA, and monitor academic standing. Free, private, no sign-up required." />
+        <meta
+          name="description"
+          content="Track courses, compute semester & cumulative GPA, and monitor academic standing. Free, private, no sign-up required."
+        />
         <meta property="og:title" content="GPA-VPA | Academic Tracker and Calculator" />
-        <meta property="og:description" content="Track courses, compute GPA, and monitor academic standing. All data stored locally." />
+        <meta
+          property="og:description"
+          content="Track courses, compute GPA, and monitor academic standing. All data stored locally."
+        />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://akash1269.github.io/Gpa-Vpa/" />
         <meta name="twitter:card" content="summary_large_image" />

@@ -7,9 +7,10 @@ import {
   Alert,
   ScrollView,
   Platform,
-  Share,
   Linking,
 } from 'react-native';
+import { File, Paths } from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
@@ -39,7 +40,9 @@ export default function SettingsScreen() {
     content: {
       padding: spacing.lg,
       paddingBottom: spacing['3xl'],
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     section: {
       marginBottom: spacing['2xl'],
@@ -98,7 +101,6 @@ export default function SettingsScreen() {
       fontSize: fontSizes.lg,
       color: '#FFFFFF',
     },
-
   });
 
   const exportAsCSV = async () => {
@@ -107,9 +109,18 @@ export default function SettingsScreen() {
       return;
     }
     const header = 'Name,Code,Credits,Grade,Semester,Year';
-    const rows = courses.map(c => `"${c.name}","${c.code}",${c.credits},${c.grade},${c.semester},${c.year}`);
+    const rows = courses.map(
+      (c) => `"${c.name}","${c.code}",${c.credits},${c.grade},${c.semester},${c.year}`
+    );
     const csv = [header, ...rows].join('\n');
-    await Share.share({ message: csv, title: 'GPA Calculator - Courses.csv' });
+
+    if (Platform.OS === 'web') {
+      downloadFileWeb(csv, 'gpa-calculator-courses.csv', 'text/csv');
+    } else {
+      const file = new File(Paths.cache, 'gpa-calculator-courses.csv');
+      file.write(csv);
+      await Sharing.shareAsync(file.uri, { mimeType: 'text/csv', dialogTitle: 'Save CSV' });
+    }
   };
 
   const exportAsJSON = async () => {
@@ -118,22 +129,49 @@ export default function SettingsScreen() {
       return;
     }
     const json = JSON.stringify({ courses, exportedAt: new Date().toISOString() }, null, 2);
-    await Share.share({ message: json, title: 'GPA Calculator - Backup.json' });
+
+    if (Platform.OS === 'web') {
+      downloadFileWeb(json, 'gpa-calculator-backup.json', 'application/json');
+    } else {
+      const file = new File(Paths.cache, 'gpa-calculator-backup.json');
+      file.write(json);
+      await Sharing.shareAsync(file.uri, {
+        mimeType: 'application/json',
+        dialogTitle: 'Save Backup',
+      });
+    }
+  };
+
+  const downloadFileWeb = (content: string, filename: string, mimeType: string) => {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const confirmClearData = () => {
-    Alert.alert(
-      'Clear All Data',
-      'Are you sure you want to delete all your academic records? This action cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Clear All Data',
-          style: 'destructive',
-          onPress: clearAllData,
-        },
-      ]
-    );
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm(
+        'Are you sure you want to delete all your academic records? This action cannot be undone.'
+      );
+      if (confirmed) clearAllData();
+    } else {
+      Alert.alert(
+        'Clear All Data',
+        'Are you sure you want to delete all your academic records? This action cannot be undone.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Clear All Data',
+            style: 'destructive',
+            onPress: clearAllData,
+          },
+        ]
+      );
+    }
   };
 
   const showAbout = () => {
@@ -156,7 +194,6 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <ScreenHeader title="Settings" />
       <ScrollView contentContainerStyle={styles.content}>
-
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Appearance</Text>
           <View style={styles.sectionContainer}>
@@ -177,7 +214,11 @@ export default function SettingsScreen() {
                 )}
                 <Text style={styles.settingLabel}>Dark Theme</Text>
               </View>
-              <Switch value={isDark} onValueChange={toggleTheme} accessibilityLabel="Dark theme toggle" />
+              <Switch
+                value={isDark}
+                onValueChange={toggleTheme}
+                accessibilityLabel="Dark theme toggle"
+              />
             </View>
             <View style={[styles.settingRow, styles.lastSettingRow]}>
               <View style={styles.settingLabelContainer}>
@@ -196,7 +237,11 @@ export default function SettingsScreen() {
                 )}
                 <Text style={styles.settingLabel}>Hide Grades</Text>
               </View>
-              <Switch value={hideGrades} onValueChange={toggleHideGrades} accessibilityLabel="Hide grades toggle" />
+              <Switch
+                value={hideGrades}
+                onValueChange={toggleHideGrades}
+                accessibilityLabel="Hide grades toggle"
+              />
             </View>
           </View>
         </View>
@@ -226,7 +271,14 @@ export default function SettingsScreen() {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]} onPress={() => Linking.openURL('https://github.com/Akash1269/Gpa-Vpa/blob/main/docs/PRIVACY_POLICY.md')}>
+            <TouchableOpacity
+              style={[styles.settingRow, styles.lastSettingRow]}
+              onPress={() =>
+                Linking.openURL(
+                  'https://github.com/Akash1269/Gpa-Vpa/blob/main/docs/PRIVACY_POLICY.md'
+                )
+              }
+            >
               <View style={styles.settingLabelContainer}>
                 <Shield
                   size={Platform.OS === 'ios' ? 18 : 20}
@@ -253,7 +305,10 @@ export default function SettingsScreen() {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.settingRow, styles.lastSettingRow]} onPress={exportAsJSON}>
+            <TouchableOpacity
+              style={[styles.settingRow, styles.lastSettingRow]}
+              onPress={exportAsJSON}
+            >
               <View style={styles.settingLabelContainer}>
                 <Upload
                   size={Platform.OS === 'ios' ? 18 : 20}
@@ -274,14 +329,21 @@ export default function SettingsScreen() {
               style={styles.settingRow}
               onPress={() => {
                 if (courses.length > 0) {
-                  Alert.alert(
-                    'Load Demo Data',
-                    'This will replace your current courses with sample data. Continue?',
-                    [
-                      { text: 'Cancel', style: 'cancel' },
-                      { text: 'Load Demo', onPress: loadDemoData },
-                    ]
-                  );
+                  if (Platform.OS === 'web') {
+                    const confirmed = window.confirm(
+                      'This will replace your current courses with sample data. Continue?'
+                    );
+                    if (confirmed) loadDemoData();
+                  } else {
+                    Alert.alert(
+                      'Load Demo Data',
+                      'This will replace your current courses with sample data. Continue?',
+                      [
+                        { text: 'Cancel', style: 'cancel' },
+                        { text: 'Load Demo', onPress: loadDemoData },
+                      ]
+                    );
+                  }
                 } else {
                   loadDemoData();
                 }
@@ -303,13 +365,10 @@ export default function SettingsScreen() {
               style={[styles.settingRow, styles.lastSettingRow, { justifyContent: 'center' }]}
               onPress={confirmClearData}
             >
-              <Text style={{ fontFamily: fonts.medium, color: colors.error }}>
-                Clear All Data
-              </Text>
+              <Text style={{ fontFamily: fonts.medium, color: colors.error }}>Clear All Data</Text>
             </TouchableOpacity>
           </View>
         </View>
-
       </ScrollView>
     </View>
   );

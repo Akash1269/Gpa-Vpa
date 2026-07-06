@@ -138,7 +138,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       setIsLoaded(true);
     };
-    
+
     loadData();
   }, []);
 
@@ -146,24 +146,24 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     // Group courses by semester and year
     const semesterMap = new Map<string, Course[]>();
-    
-    courses.forEach(course => {
+
+    courses.forEach((course) => {
       const key = `${course.semester}-${course.year}`;
       if (!semesterMap.has(key)) {
         semesterMap.set(key, []);
       }
       semesterMap.get(key)!.push(course);
     });
-    
+
     // Create semester objects with calculated GPAs and status
     const semestersArray: Semester[] = [];
-    
+
     semesterMap.forEach((semesterCourses, key) => {
       const [semester, yearStr] = key.split('-');
       const year = parseInt(yearStr);
       const gpa = calculateSemesterGpa(semesterCourses);
-      const hasUngraded = semesterCourses.some(c => c.grade === null);
-      
+      const hasUngraded = semesterCourses.some((c) => c.grade === null);
+
       semestersArray.push({
         semester,
         year,
@@ -172,39 +172,43 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         status: hasUngraded ? 'in-progress' : 'completed',
       });
     });
-    
+
     // Sort semesters by year and semester
     semestersArray.sort((a, b) => {
       if (a.year !== b.year) return b.year - a.year; // Most recent year first
-      
-      const semesterOrder = { 'Fall': 2, 'Summer': 1, 'Spring': 0 };
-      return semesterOrder[b.semester as keyof typeof semesterOrder] - 
-             semesterOrder[a.semester as keyof typeof semesterOrder];
+
+      const semesterOrder = { Fall: 2, Summer: 1, Spring: 0 };
+      return (
+        semesterOrder[b.semester as keyof typeof semesterOrder] -
+        semesterOrder[a.semester as keyof typeof semesterOrder]
+      );
     });
-    
+
     setSemesters(semestersArray);
-    
+
     // Calculate cumulative GPA
     const cumGpa = calculateCumulativeGpa(courses);
     setCumulativeGpa(cumGpa);
-    
+
     // Calculate total credits
     const credits = courses.reduce((sum, course) => sum + course.credits, 0);
     setTotalCredits(credits);
-    
+
     // Get recent courses (up to 5)
-    const recent = [...courses].sort((a, b) => {
-      if (a.year !== b.year) return b.year - a.year;
-      
-      const semesterOrder = { 'Fall': 2, 'Summer': 1, 'Spring': 0 };
-      const aSemValue = semesterOrder[a.semester as keyof typeof semesterOrder];
-      const bSemValue = semesterOrder[b.semester as keyof typeof semesterOrder];
-      
-      return bSemValue - aSemValue;
-    }).slice(0, 5);
-    
+    const recent = [...courses]
+      .sort((a, b) => {
+        if (a.year !== b.year) return b.year - a.year;
+
+        const semesterOrder = { Fall: 2, Summer: 1, Spring: 0 };
+        const aSemValue = semesterOrder[a.semester as keyof typeof semesterOrder];
+        const bSemValue = semesterOrder[b.semester as keyof typeof semesterOrder];
+
+        return bSemValue - aSemValue;
+      })
+      .slice(0, 5);
+
     setRecentCourses(recent);
-    
+
     // Set current semester (most recent)
     if (semestersArray.length > 0) {
       setCurrentSemester(semestersArray[0]);
@@ -213,11 +217,11 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     // Set in-progress semester (first one with ungraded courses)
-    const inProgress = semestersArray.find(s => s.status === 'in-progress') || null;
+    const inProgress = semestersArray.find((s) => s.status === 'in-progress') || null;
     setInProgressSemester(inProgress);
 
     // Set last completed semester (most recent fully graded)
-    const completed = semestersArray.find(s => s.status === 'completed') || null;
+    const completed = semestersArray.find((s) => s.status === 'completed') || null;
     setLastCompletedSemester(completed);
   }, [courses]);
 
@@ -228,34 +232,35 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         await AsyncStorage.setItem('courses', JSON.stringify(courses));
       } catch (error) {
-        Alert.alert('Save Failed', 'Your changes could not be saved. Please make sure your device has enough storage.');
+        Alert.alert(
+          'Save Failed',
+          'Your changes could not be saved. Please make sure your device has enough storage.'
+        );
       }
     };
-    
+
     saveData();
   }, [courses, isLoaded]);
 
   const addCourse = useCallback((course: Course) => {
-    setCourses(prevCourses => [...prevCourses, course]);
+    setCourses((prevCourses) => [...prevCourses, course]);
   }, []);
 
   const updateCourse = useCallback((course: Course) => {
-    setCourses(prevCourses => 
-      prevCourses.map(c => c.id === course.id ? course : c)
-    );
+    setCourses((prevCourses) => prevCourses.map((c) => (c.id === course.id ? course : c)));
   }, []);
 
   const deleteCourse = useCallback((id: string) => {
-    setCourses(prevCourses => {
-      const courseToDelete = prevCourses.find(c => c.id === id);
+    setCourses((prevCourses) => {
+      const courseToDelete = prevCourses.find((c) => c.id === id);
       if (courseToDelete) setLastDeletedCourse(courseToDelete);
-      return prevCourses.filter(c => c.id !== id);
+      return prevCourses.filter((c) => c.id !== id);
     });
   }, []);
 
   const undoDelete = useCallback(() => {
     if (lastDeletedCourse) {
-      setCourses(prev => [...prev, lastDeletedCourse]);
+      setCourses((prev) => [...prev, lastDeletedCourse]);
       setLastDeletedCourse(null);
     }
   }, [lastDeletedCourse]);
@@ -312,13 +317,19 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-  const getCourse = useCallback((id: string) => {
-    return courses.find(course => course.id === id);
-  }, [courses]);
+  const getCourse = useCallback(
+    (id: string) => {
+      return courses.find((course) => course.id === id);
+    },
+    [courses]
+  );
 
-  const getSemester = useCallback((id: string) => {
-    return semesters.find(semester => `${semester.semester}-${semester.year}` === id);
-  }, [semesters]);
+  const getSemester = useCallback(
+    (id: string) => {
+      return semesters.find((semester) => `${semester.semester}-${semester.year}` === id);
+    },
+    [semesters]
+  );
 
   const clearAllData = useCallback(async () => {
     try {

@@ -12,11 +12,21 @@ type Tab = 'cumulative' | 'graduation';
 
 export default function GoalCalculatorScreen() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, semesters, targetCgpa, setTargetCgpa, targetCredits, setTargetCredits } = useGpa();
+  const {
+    cumulativeGpa,
+    totalCredits,
+    semesters,
+    targetCgpa,
+    setTargetCgpa,
+    targetCredits,
+    setTargetCredits,
+  } = useGpa();
   const [activeTab, setActiveTab] = useState<Tab>('cumulative');
 
   // Cumulative goal state
-  const [cumulativeTargetGpaInput, setCumulativeTargetGpaInput] = useState(targetCgpa?.toString() ?? '3.5');
+  const [cumulativeTargetGpaInput, setCumulativeTargetGpaInput] = useState(
+    targetCgpa?.toString() ?? '3.5'
+  );
   const [remainingSemesters, setRemainingSemesters] = useState('2');
   const [futureSemesterCredits, setFutureSemesterCredits] = useState('15');
 
@@ -35,7 +45,16 @@ export default function GoalCalculatorScreen() {
     const target = parseFloat(cumulativeTargetGpaInput);
     const numSemesters = parseInt(remainingSemesters);
     const creditsPerSem = parseInt(futureSemesterCredits);
-    if (isNaN(target) || isNaN(numSemesters) || isNaN(creditsPerSem) || target < 0 || target > 4.0 || numSemesters <= 0 || creditsPerSem <= 0) return null;
+    if (
+      isNaN(target) ||
+      isNaN(numSemesters) ||
+      isNaN(creditsPerSem) ||
+      target < 0 ||
+      target > 4.0 ||
+      numSemesters <= 0 ||
+      creditsPerSem <= 0
+    )
+      return null;
 
     const totalFutureCredits = numSemesters * creditsPerSem;
     const currentPoints = cumulativeGpa * totalCredits;
@@ -43,7 +62,8 @@ export default function GoalCalculatorScreen() {
     const requiredGpaPerSemester = (totalNeeded - currentPoints) / totalFutureCredits;
 
     const grades = Object.entries(gradePoints).sort((a, b) => b[1] - a[1]);
-    const closestGrade = grades.find(([_, val]) => val <= requiredGpaPerSemester) || grades[grades.length - 1];
+    const closestGrade =
+      grades.find(([_, val]) => val <= requiredGpaPerSemester) || grades[grades.length - 1];
 
     return {
       target,
@@ -56,7 +76,13 @@ export default function GoalCalculatorScreen() {
       creditsPerSem,
       totalFutureCredits,
     };
-  }, [cumulativeTargetGpaInput, remainingSemesters, futureSemesterCredits, cumulativeGpa, totalCredits]);
+  }, [
+    cumulativeTargetGpaInput,
+    remainingSemesters,
+    futureSemesterCredits,
+    cumulativeGpa,
+    totalCredits,
+  ]);
 
   // Persist cumulative goal after render
   useEffect(() => {
@@ -84,7 +110,13 @@ export default function GoalCalculatorScreen() {
       progress,
       avgCredits: avgCreditsPerSemester,
     };
-  }, [graduationCredits, creditsPerSemester, totalCredits, semesters.length, avgCreditsPerSemester]);
+  }, [
+    graduationCredits,
+    creditsPerSemester,
+    totalCredits,
+    semesters.length,
+    avgCreditsPerSemester,
+  ]);
 
   // Persist credits goal after render
   useEffect(() => {
@@ -95,7 +127,9 @@ export default function GoalCalculatorScreen() {
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     content: {
       padding: spacing.xl,
@@ -254,12 +288,18 @@ export default function GoalCalculatorScreen() {
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Cumulative GPA Goal</Text>
         <Text style={styles.currentGpaNote}>
-          Current: {cumulativeGpa.toFixed(2)} GPA • {totalCredits} credits • {semesters.length} semester{semesters.length !== 1 ? 's' : ''} completed
+          Current: {cumulativeGpa.toFixed(2)} GPA • {totalCredits} credits • {semesters.length}{' '}
+          semester{semesters.length !== 1 ? 's' : ''} completed
         </Text>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>Target GPA</Text>
           <TextInput
-            style={[styles.input, parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0 ? { borderColor: colors.error } : {}]}
+            style={[
+              styles.input,
+              parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0
+                ? { borderColor: colors.error }
+                : {},
+            ]}
             value={cumulativeTargetGpaInput}
             onChangeText={setCumulativeTargetGpaInput}
             keyboardType="decimal-pad"
@@ -268,9 +308,11 @@ export default function GoalCalculatorScreen() {
             maxLength={4}
           />
         </View>
-        {cumulativeTargetGpaInput !== '' && (parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0) && (
-          <Text style={styles.resultWarning}>GPA must be between 0.0 and 4.0</Text>
-        )}
+        {cumulativeTargetGpaInput !== '' &&
+          (parseFloat(cumulativeTargetGpaInput) > 4.0 ||
+            parseFloat(cumulativeTargetGpaInput) < 0) && (
+            <Text style={styles.resultWarning}>GPA must be between 0.0 and 4.0</Text>
+          )}
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>Semesters Left</Text>
           <TextInput
@@ -315,7 +357,9 @@ export default function GoalCalculatorScreen() {
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Quality points earned</Text>
-            <Text style={styles.breakdownValue}>{(cumulativeResult.currentGpa * cumulativeResult.currentCredits).toFixed(1)}</Text>
+            <Text style={styles.breakdownValue}>
+              {(cumulativeResult.currentGpa * cumulativeResult.currentCredits).toFixed(1)}
+            </Text>
           </View>
 
           <View style={[styles.resultDivider, { marginVertical: 10 }]} />
@@ -333,11 +377,18 @@ export default function GoalCalculatorScreen() {
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Total points needed</Text>
-            <Text style={styles.breakdownValue}>{(parseFloat(cumulativeTargetGpaInput) * (cumulativeResult.currentCredits + cumulativeResult.totalFutureCredits)).toFixed(1)}</Text>
+            <Text style={styles.breakdownValue}>
+              {(
+                parseFloat(cumulativeTargetGpaInput) *
+                (cumulativeResult.currentCredits + cumulativeResult.totalFutureCredits)
+              ).toFixed(1)}
+            </Text>
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Points still needed</Text>
-            <Text style={styles.breakdownValue}>{(cumulativeResult.requiredGpa * cumulativeResult.totalFutureCredits).toFixed(1)}</Text>
+            <Text style={styles.breakdownValue}>
+              {(cumulativeResult.requiredGpa * cumulativeResult.totalFutureCredits).toFixed(1)}
+            </Text>
           </View>
 
           {!cumulativeResult.feasible && (
@@ -357,7 +408,8 @@ export default function GoalCalculatorScreen() {
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Graduation Requirements</Text>
         <Text style={styles.currentGpaNote}>
-          Your avg: {avgCreditsPerSemester} credits/semester over {semesters.length} semester{semesters.length !== 1 ? 's' : ''}
+          Your avg: {avgCreditsPerSemester} credits/semester over {semesters.length} semester
+          {semesters.length !== 1 ? 's' : ''}
         </Text>
         <View style={styles.inputRow}>
           <Text style={styles.inputLabel}>Credits Required</Text>
@@ -395,7 +447,9 @@ export default function GoalCalculatorScreen() {
           </Text>
 
           <View style={styles.progressBarTrack}>
-            <View style={[styles.progressBarFill, { width: `${graduationResult.progress * 100}%` }]} />
+            <View
+              style={[styles.progressBarFill, { width: `${graduationResult.progress * 100}%` }]}
+            />
           </View>
 
           <View style={styles.resultDivider} />
@@ -422,7 +476,9 @@ export default function GoalCalculatorScreen() {
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Credits per semester</Text>
-            <Text style={styles.breakdownValue}>{creditsPerSemester || avgCreditsPerSemester} CR</Text>
+            <Text style={styles.breakdownValue}>
+              {creditsPerSemester || avgCreditsPerSemester} CR
+            </Text>
           </View>
         </View>
       )}

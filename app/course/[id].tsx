@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Platform, Dimensions, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Platform,
+  Dimensions,
+  Pressable,
+} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useGpa } from '@/hooks/useGpa';
@@ -28,7 +39,7 @@ export default function CourseScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const isNew = id === 'new';
   const { getCourse, addCourse, updateCourse, deleteCourse, courses } = useGpa();
-  
+
   const [course, setCourse] = useState<Course>(() => {
     if (!isNew) {
       const existingCourse = getCourse(id);
@@ -71,10 +82,11 @@ export default function CourseScreen() {
     // Duplicate detection
     if (!newErrors.code && trimmedCode) {
       const duplicate = courses.find(
-        c => c.code.toLowerCase() === trimmedCode.toLowerCase() &&
-             c.semester === course.semester &&
-             c.year === course.year &&
-             c.id !== course.id
+        (c) =>
+          c.code.toLowerCase() === trimmedCode.toLowerCase() &&
+          c.semester === course.semester &&
+          c.year === course.year &&
+          c.id !== course.id
       );
       if (duplicate) {
         newErrors.code = `A course with code "${trimmedCode}" already exists in ${course.semester} ${course.year}`;
@@ -95,28 +107,24 @@ export default function CourseScreen() {
     } else {
       updateCourse(courseToSave);
     }
-    
+
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     router.back();
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      "Delete Course",
-      "Are you sure you want to delete this course?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Delete", 
-          style: "destructive",
-          onPress: () => {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-            deleteCourse(course.id);
-            router.back();
-          }
-        }
-      ]
-    );
+    Alert.alert('Delete Course', 'Are you sure you want to delete this course?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+          deleteCourse(course.id);
+          router.back();
+        },
+      },
+    ]);
   };
 
   const screenHeight = Dimensions.get('window').height;
@@ -262,12 +270,19 @@ export default function CourseScreen() {
         <View style={styles.handle} />
         <View style={styles.header}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {isNew ? <PlusCircle size={20} color={colors.primary} /> : <Pencil size={18} color={colors.primary} />}
-            <Text style={styles.headerTitle}>
-              {isNew ? 'Add New Course' : 'Edit Course'}
-            </Text>
+            {isNew ? (
+              <PlusCircle size={20} color={colors.primary} />
+            ) : (
+              <Pencil size={18} color={colors.primary} />
+            )}
+            <Text style={styles.headerTitle}>{isNew ? 'Add New Course' : 'Edit Course'}</Text>
           </View>
-          <TouchableOpacity style={styles.closeButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Close">
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Close"
+          >
             <X size={18} color={colors.text} />
           </TouchableOpacity>
         </View>
@@ -278,7 +293,10 @@ export default function CourseScreen() {
             <TextInput
               style={[styles.input, errors.name ? styles.inputError : undefined]}
               value={course.name}
-              onChangeText={(text) => { setCourse({ ...course, name: text }); if (errors.name) setErrors(e => ({ ...e, name: undefined })); }}
+              onChangeText={(text) => {
+                setCourse({ ...course, name: text });
+                if (errors.name) setErrors((e) => ({ ...e, name: undefined }));
+              }}
               placeholder="Introduction to Computer Science"
               placeholderTextColor={colors.textSecondary}
               accessibilityLabel="Course name"
@@ -292,7 +310,10 @@ export default function CourseScreen() {
             <TextInput
               style={[styles.input, errors.code ? styles.inputError : undefined]}
               value={course.code}
-              onChangeText={(text) => { setCourse({ ...course, code: text }); if (errors.code) setErrors(e => ({ ...e, code: undefined })); }}
+              onChangeText={(text) => {
+                setCourse({ ...course, code: text });
+                if (errors.code) setErrors((e) => ({ ...e, code: undefined }));
+              }}
               placeholder="CS101"
               placeholderTextColor={colors.textSecondary}
               accessibilityLabel="Course code"
@@ -342,13 +363,23 @@ export default function CourseScreen() {
         </ScrollView>
 
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave} accessibilityRole="button" accessibilityLabel="Save course">
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSave}
+            accessibilityRole="button"
+            accessibilityLabel="Save course"
+          >
             <Save size={20} color="#FFFFFF" />
             <Text style={styles.saveButtonText}>Save Course</Text>
           </TouchableOpacity>
-          
+
           {!isNew && (
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete} accessibilityRole="button" accessibilityLabel="Delete course">
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={handleDelete}
+              accessibilityRole="button"
+              accessibilityLabel="Delete course"
+            >
               <Trash2 size={22} color="#FFFFFF" />
             </TouchableOpacity>
           )}

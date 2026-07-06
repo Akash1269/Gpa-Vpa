@@ -9,7 +9,7 @@ type GradePickerProps = {
 
 export default function GradePicker({ value, onChange }: GradePickerProps) {
   const { colors } = useTheme();
-  
+
   const gradeOptions = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
   const allOptions: (string | null)[] = [null, ...gradeOptions];
 
@@ -48,8 +48,8 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
 
   return (
     <View style={styles.container}>
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}
       >
@@ -58,7 +58,10 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
             key={grade ?? 'na'}
             style={[
               styles.option,
-              grade === null && { backgroundColor: value === null ? statusColors.na.bg : colors.card, borderColor: value === null ? statusColors.na.text : colors.border },
+              grade === null && {
+                backgroundColor: value === null ? statusColors.na.bg : colors.card,
+                borderColor: value === null ? statusColors.na.text : colors.border,
+              },
               grade !== null && value === grade && styles.selectedOption,
             ]}
             onPress={() => onChange(grade)}
@@ -66,7 +69,10 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
             <Text
               style={[
                 styles.optionText,
-                grade === null && { fontSize: fontSizes.sm, color: value === null ? statusColors.na.text : colors.textSecondary },
+                grade === null && {
+                  fontSize: fontSizes.sm,
+                  color: value === null ? statusColors.na.text : colors.textSecondary,
+                },
                 grade !== null && value === grade && styles.selectedOptionText,
               ]}
             >

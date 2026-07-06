@@ -14,7 +14,7 @@ export default function SemesterScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getSemester, targetSemesterGpa } = useGpa();
-  const semester = useMemo(() => id ? getSemester(id) ?? null : null, [id, getSemester]);
+  const semester = useMemo(() => (id ? (getSemester(id) ?? null) : null), [id, getSemester]);
   const insets = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
@@ -36,7 +36,9 @@ export default function SemesterScreen() {
       alignItems: 'center',
       height: 56,
       paddingHorizontal: spacing.xl,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     backButton: {
       width: 36,
@@ -55,7 +57,9 @@ export default function SemesterScreen() {
     content: {
       flex: 1,
       padding: spacing.xl,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     summaryContainer: {
       backgroundColor: colors.card,
@@ -169,12 +173,12 @@ export default function SemesterScreen() {
 
   const handleAddCourse = () => {
     router.push({
-      pathname: "/course/[id]",
-      params: { 
-        id: "new",
+      pathname: '/course/[id]',
+      params: {
+        id: 'new',
         semester: semester?.semester,
-        year: semester?.year.toString()
-      }
+        year: semester?.year.toString(),
+      },
     });
   };
 
@@ -192,11 +196,19 @@ export default function SemesterScreen() {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerInner}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityLabel="Go back">
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            accessibilityLabel="Go back"
+          >
             <ArrowLeft size={18} color={colors.text} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Semester Details</Text>
-          <TouchableOpacity style={styles.addButton} onPress={handleAddCourse} accessibilityLabel="Add course">
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={handleAddCourse}
+            accessibilityLabel="Add course"
+          >
             <Plus size={18} color="#FFFFFF" strokeWidth={2.5} />
           </TouchableOpacity>
         </View>
@@ -207,8 +219,28 @@ export default function SemesterScreen() {
             <Text style={styles.semesterTitle}>
               {semester.semester} {semester.year}
             </Text>
-            <View style={[styles.statusBadge, { backgroundColor: semester.status === 'in-progress' ? statusColors.warning.bg : statusColors.completed.bg }]}>
-              <Text style={[styles.statusText, { color: semester.status === 'in-progress' ? statusColors.warning.text : statusColors.completed.text }]}>
+            <View
+              style={[
+                styles.statusBadge,
+                {
+                  backgroundColor:
+                    semester.status === 'in-progress'
+                      ? statusColors.warning.bg
+                      : statusColors.completed.bg,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.statusText,
+                  {
+                    color:
+                      semester.status === 'in-progress'
+                        ? statusColors.warning.text
+                        : statusColors.completed.text,
+                  },
+                ]}
+              >
                 {semester.status === 'in-progress' ? 'In Progress' : 'Completed'}
               </Text>
             </View>
@@ -223,19 +255,27 @@ export default function SemesterScreen() {
             </View>
           )}
 
-          {semester.status === 'in-progress' && (() => {
-            const gradedCount = semester.courses.filter(c => c.grade !== null).length;
-            const totalCount = semester.courses.length;
-            const progress = totalCount > 0 ? gradedCount / totalCount : 0;
-            return (
-              <View style={styles.progressSection}>
-                <View style={styles.progressBar}>
-                  <View style={[styles.progressFill, { width: `${progress * 100}%`, backgroundColor: colors.primary }]} />
+          {semester.status === 'in-progress' &&
+            (() => {
+              const gradedCount = semester.courses.filter((c) => c.grade !== null).length;
+              const totalCount = semester.courses.length;
+              const progress = totalCount > 0 ? gradedCount / totalCount : 0;
+              return (
+                <View style={styles.progressSection}>
+                  <View style={styles.progressBar}>
+                    <View
+                      style={[
+                        styles.progressFill,
+                        { width: `${progress * 100}%`, backgroundColor: colors.primary },
+                      ]}
+                    />
+                  </View>
+                  <Text style={styles.progressText}>
+                    {gradedCount}/{totalCount} courses graded
+                  </Text>
                 </View>
-                <Text style={styles.progressText}>{gradedCount}/{totalCount} courses graded</Text>
-              </View>
-            );
-          })()}
+              );
+            })()}
 
           <View style={styles.statsRow}>
             <View style={styles.statPill}>
@@ -250,7 +290,9 @@ export default function SemesterScreen() {
             </View>
             {semester.status === 'in-progress' && targetSemesterGpa !== null && (
               <View style={styles.statPill}>
-                <Text style={[styles.statPillValue, { color: statusColors.goal.text }]}>🎯 {targetSemesterGpa.toFixed(2)}</Text>
+                <Text style={[styles.statPillValue, { color: statusColors.goal.text }]}>
+                  🎯 {targetSemesterGpa.toFixed(2)}
+                </Text>
                 <Text style={styles.statPillLabel}>Goal</Text>
               </View>
             )}

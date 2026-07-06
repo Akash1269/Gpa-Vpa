@@ -45,15 +45,39 @@ describe('gpaCalculator', () => {
 
     it('calculates GPA for single course', () => {
       const courses: Course[] = [
-        { id: '1', name: 'Math', code: 'MATH101', credits: 3, grade: 'A', semester: 'Fall', year: 2025 },
+        {
+          id: '1',
+          name: 'Math',
+          code: 'MATH101',
+          credits: 3,
+          grade: 'A',
+          semester: 'Fall',
+          year: 2025,
+        },
       ];
       expect(calculateSemesterGpa(courses)).toBe(4.0);
     });
 
     it('calculates weighted GPA for multiple courses', () => {
       const courses: Course[] = [
-        { id: '1', name: 'Math', code: 'MATH101', credits: 3, grade: 'A', semester: 'Fall', year: 2025 },
-        { id: '2', name: 'English', code: 'ENG101', credits: 3, grade: 'B', semester: 'Fall', year: 2025 },
+        {
+          id: '1',
+          name: 'Math',
+          code: 'MATH101',
+          credits: 3,
+          grade: 'A',
+          semester: 'Fall',
+          year: 2025,
+        },
+        {
+          id: '2',
+          name: 'English',
+          code: 'ENG101',
+          credits: 3,
+          grade: 'B',
+          semester: 'Fall',
+          year: 2025,
+        },
       ];
       // (4.0*3 + 3.0*3) / (3+3) = 21/6 = 3.5
       expect(calculateSemesterGpa(courses)).toBe(3.5);
@@ -61,8 +85,24 @@ describe('gpaCalculator', () => {
 
     it('weighs by credit hours correctly', () => {
       const courses: Course[] = [
-        { id: '1', name: 'Math', code: 'MATH101', credits: 4, grade: 'A', semester: 'Fall', year: 2025 },
-        { id: '2', name: 'Lab', code: 'LAB101', credits: 1, grade: 'C', semester: 'Fall', year: 2025 },
+        {
+          id: '1',
+          name: 'Math',
+          code: 'MATH101',
+          credits: 4,
+          grade: 'A',
+          semester: 'Fall',
+          year: 2025,
+        },
+        {
+          id: '2',
+          name: 'Lab',
+          code: 'LAB101',
+          credits: 1,
+          grade: 'C',
+          semester: 'Fall',
+          year: 2025,
+        },
       ];
       // (4.0*4 + 2.0*1) / (4+1) = 18/5 = 3.6
       expect(calculateSemesterGpa(courses)).toBe(3.6);
@@ -70,8 +110,24 @@ describe('gpaCalculator', () => {
 
     it('handles all F grades', () => {
       const courses: Course[] = [
-        { id: '1', name: 'Math', code: 'MATH101', credits: 3, grade: 'F', semester: 'Fall', year: 2025 },
-        { id: '2', name: 'English', code: 'ENG101', credits: 3, grade: 'F', semester: 'Fall', year: 2025 },
+        {
+          id: '1',
+          name: 'Math',
+          code: 'MATH101',
+          credits: 3,
+          grade: 'F',
+          semester: 'Fall',
+          year: 2025,
+        },
+        {
+          id: '2',
+          name: 'English',
+          code: 'ENG101',
+          credits: 3,
+          grade: 'F',
+          semester: 'Fall',
+          year: 2025,
+        },
       ];
       expect(calculateSemesterGpa(courses)).toBe(0);
     });
@@ -84,8 +140,24 @@ describe('gpaCalculator', () => {
 
     it('calculates across multiple semesters', () => {
       const courses: Course[] = [
-        { id: '1', name: 'Math', code: 'MATH101', credits: 3, grade: 'A', semester: 'Fall', year: 2025 },
-        { id: '2', name: 'English', code: 'ENG101', credits: 3, grade: 'B', semester: 'Spring', year: 2026 },
+        {
+          id: '1',
+          name: 'Math',
+          code: 'MATH101',
+          credits: 3,
+          grade: 'A',
+          semester: 'Fall',
+          year: 2025,
+        },
+        {
+          id: '2',
+          name: 'English',
+          code: 'ENG101',
+          credits: 3,
+          grade: 'B',
+          semester: 'Spring',
+          year: 2026,
+        },
       ];
       // (4.0*3 + 3.0*3) / (3+3) = 3.5
       expect(calculateCumulativeGpa(courses)).toBe(3.5);

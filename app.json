@@ -47,7 +47,8 @@
             "extraProguardRules": "-dontobfuscate"
           }
         }
-      ]
+      ],
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true,

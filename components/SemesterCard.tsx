@@ -15,9 +15,10 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
   const { colors } = useTheme();
   const [expanded, setExpanded] = useState(false);
   const isInProgress = semester.status === 'in-progress';
-  const gpaColor = !isInProgress || semester.gpa > 0
-    ? getGradeColor(semester.gpa ?? 0) ?? { background: '#FCE8E6', text: '#EA4335' }
-    : { background: statusColors.warning.bg, text: statusColors.warning.text };
+  const gpaColor =
+    !isInProgress || semester.gpa > 0
+      ? (getGradeColor(semester.gpa ?? 0) ?? { background: '#FCE8E6', text: '#EA4335' })
+      : { background: statusColors.warning.bg, text: statusColors.warning.text };
 
   const styles = StyleSheet.create({
     container: {
@@ -137,7 +138,11 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
 
   return (
     <Animated.View entering={FadeInDown.duration(300).delay(100)}>
-      <TouchableOpacity style={styles.container} onPress={() => setExpanded(!expanded)} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => setExpanded(!expanded)}
+        activeOpacity={0.7}
+      >
         <View style={styles.cardContent}>
           <View style={styles.headerContainer}>
             <Text style={styles.semesterTitle}>
@@ -145,7 +150,9 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
             </Text>
             <View style={styles.gpaContainer}>
               <Text style={styles.gpaText}>
-                {isInProgress && semester.gpa === 0 ? 'In Progress' : `GPA: ${semester.gpa?.toFixed(2)}`}
+                {isInProgress && semester.gpa === 0
+                  ? 'In Progress'
+                  : `GPA: ${semester.gpa?.toFixed(2)}`}
               </Text>
             </View>
           </View>
@@ -164,9 +171,7 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.viewDetailsText}>
-              {expanded ? 'Hide Courses' : 'View Courses'}
-            </Text>
+            <Text style={styles.viewDetailsText}>{expanded ? 'Hide Courses' : 'View Courses'}</Text>
             {expanded ? (
               <ChevronUp size={20} color={colors.primary} />
             ) : (
@@ -175,14 +180,27 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
           </View>
 
           {expanded && (
-            <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(150)} style={styles.coursesContainer}>
+            <Animated.View
+              entering={FadeIn.duration(250)}
+              exiting={FadeOut.duration(150)}
+              style={styles.coursesContainer}
+            >
               {semester.courses.map((course, index) => {
-                const courseGradeColor = course.grade ? getGradeColor(course.grade) : { background: colors.border, text: colors.textSecondary };
+                const courseGradeColor = course.grade
+                  ? getGradeColor(course.grade)
+                  : { background: colors.border, text: colors.textSecondary };
                 const isLast = index === semester.courses.length - 1;
                 return (
                   <View key={course.id} style={[styles.courseRow, isLast && styles.courseRowLast]}>
-                    <View style={[styles.courseGradePill, { backgroundColor: courseGradeColor.background }]}>
-                      <Text style={[styles.courseGradeText, { color: courseGradeColor.text }]}>{course.grade ?? '—'}</Text>
+                    <View
+                      style={[
+                        styles.courseGradePill,
+                        { backgroundColor: courseGradeColor.background },
+                      ]}
+                    >
+                      <Text style={[styles.courseGradeText, { color: courseGradeColor.text }]}>
+                        {course.grade ?? '—'}
+                      </Text>
                     </View>
                     <View style={styles.courseInfo}>
                       <Text style={styles.courseName}>{course.name}</Text>

@@ -14,11 +14,11 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
   const { colors } = useTheme();
   const { targetSemesterGpa, courseGoals } = useGpa();
   const gpaColor = getGradeColor(semester.gpa);
-  
+
   const totalCredits = semester.courses.reduce((sum, course) => sum + course.credits, 0);
-  const gradedCourses = semester.courses.filter(c => c.grade !== null);
+  const gradedCourses = semester.courses.filter((c) => c.grade !== null);
   const isInProgress = semester.status === 'in-progress';
-  const hasGoals = isInProgress && semester.courses.some(c => courseGoals[c.id]);
+  const hasGoals = isInProgress && semester.courses.some((c) => courseGoals[c.id]);
   const gradedCount = gradedCourses.length;
   const totalCount = semester.courses.length;
   const progress = totalCount > 0 ? gradedCount / totalCount : 0;
@@ -28,7 +28,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
     const value = getGradeColor(grade);
     return value.text;
   };
-  
+
   const handlePress = () => {
     router.push(`/semester/${semester.semester}-${semester.year}`);
   };
@@ -196,7 +196,9 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
             <Text style={styles.gpaText}>{semester.gpa.toFixed(2)}</Text>
           </View>
         ) : isInProgress ? (
-          <Text style={{ fontFamily: fonts.medium, fontSize: 13, color: colors.textSecondary }}>In Progress</Text>
+          <Text style={{ fontFamily: fonts.medium, fontSize: 13, color: colors.textSecondary }}>
+            In Progress
+          </Text>
         ) : null}
       </View>
 
@@ -207,7 +209,9 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
             <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
           </View>
           <View style={styles.metaRow}>
-            <Text style={styles.metaText}>{gradedCount}/{totalCount} graded</Text>
+            <Text style={styles.metaText}>
+              {gradedCount}/{totalCount} graded
+            </Text>
             <Text style={styles.metaDot}>•</Text>
             <Text style={styles.metaText}>{totalCredits} CR</Text>
             {targetSemesterGpa !== null && (
@@ -238,12 +242,34 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
           const rowContent = (
             <>
               <View style={styles.courseInfo}>
-                <Text style={styles.courseName} numberOfLines={1}>{course.name}</Text>
-                <Text style={styles.courseCode}>{course.code} • {course.credits} CR</Text>
+                <Text style={styles.courseName} numberOfLines={1}>
+                  {course.name}
+                </Text>
+                <Text style={styles.courseCode}>
+                  {course.code} • {course.credits} CR
+                </Text>
               </View>
               <View style={styles.gradeSection}>
-                <View style={[styles.gradeBadge, { backgroundColor: course.grade ? getGradeColor(course.grade).background : colors.background }]}>
-                  <Text style={[styles.gradeBadgeText, { color: course.grade ? getGradeColor(course.grade).text : colors.textSecondary }]}>
+                <View
+                  style={[
+                    styles.gradeBadge,
+                    {
+                      backgroundColor: course.grade
+                        ? getGradeColor(course.grade).background
+                        : colors.background,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.gradeBadgeText,
+                      {
+                        color: course.grade
+                          ? getGradeColor(course.grade).text
+                          : colors.textSecondary,
+                      },
+                    ]}
+                  >
                     {course.grade ?? '—'}
                   </Text>
                 </View>

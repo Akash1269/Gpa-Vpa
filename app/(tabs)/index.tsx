@@ -11,7 +11,16 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function Dashboard() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, inProgressSemester, lastCompletedSemester, semesters, courses, targetCgpa, targetCredits } = useGpa();
+  const {
+    cumulativeGpa,
+    totalCredits,
+    inProgressSemester,
+    lastCompletedSemester,
+    semesters,
+    courses,
+    targetCgpa,
+    targetCredits,
+  } = useGpa();
   const academicStanding = getAcademicStanding(cumulativeGpa);
 
   const styles = StyleSheet.create({
@@ -25,7 +34,9 @@ export default function Dashboard() {
     content: {
       padding: spacing.xl,
       paddingBottom: 100,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     statsRow: {
       flexDirection: 'row',
@@ -112,7 +123,11 @@ export default function Dashboard() {
         <GpaCard gpa={cumulativeGpa} academicStanding={academicStanding} />
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.statsRow}>
-          <TouchableOpacity style={styles.statCard} onPress={() => router.push('/(tabs)/academic-record')} accessibilityLabel="View semesters">
+          <TouchableOpacity
+            style={styles.statCard}
+            onPress={() => router.push('/(tabs)/academic-record')}
+            accessibilityLabel="View semesters"
+          >
             <View style={[styles.statIconBg, { backgroundColor: statusColors.inProgress.bg }]}>
               <Trophy size={16} color="#1A73E8" />
             </View>
@@ -121,7 +136,11 @@ export default function Dashboard() {
               <Text style={styles.statLabel}>Semesters</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.statCard} onPress={() => router.push('/(tabs)/courses')} accessibilityLabel="View courses">
+          <TouchableOpacity
+            style={styles.statCard}
+            onPress={() => router.push('/(tabs)/courses')}
+            accessibilityLabel="View courses"
+          >
             <View style={[styles.statIconBg, { backgroundColor: statusColors.warning.bg }]}>
               <TrendingUp size={16} color={statusColors.warning.text} />
             </View>
@@ -133,43 +152,186 @@ export default function Dashboard() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(150).duration(500)}>
-          {(targetCgpa !== null || targetCredits !== null) ? (
+          {targetCgpa !== null || targetCredits !== null ? (
             <View
-              style={{ backgroundColor: colors.card, borderRadius: 16, padding: 16, marginTop: 12, borderWidth: 1, borderColor: colors.border }}
+              style={{
+                backgroundColor: colors.card,
+                borderRadius: 16,
+                padding: 16,
+                marginTop: 12,
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
             >
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: 14,
+                }}
+              >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <View style={[styles.statIconBg, { backgroundColor: statusColors.goal.bg }]}>
                     <Target size={16} color={statusColors.goal.text} />
                   </View>
-                  <Text style={{ fontFamily: fonts.semiBold, fontSize: 15, color: colors.text, marginLeft: 10 }}>My Goals</Text>
+                  <Text
+                    style={{
+                      fontFamily: fonts.semiBold,
+                      fontSize: 15,
+                      color: colors.text,
+                      marginLeft: 10,
+                    }}
+                  >
+                    My Goals
+                  </Text>
                 </View>
-                <TouchableOpacity onPress={() => router.push('/(tabs)/goals')} accessibilityLabel="Edit goals">
-                  <Text style={{ fontFamily: fonts.medium, fontSize: 13, color: colors.primary }}>Edit</Text>
+                <TouchableOpacity
+                  onPress={() => router.push('/(tabs)/goals')}
+                  accessibilityLabel="Edit goals"
+                >
+                  <Text style={{ fontFamily: fonts.medium, fontSize: 13, color: colors.primary }}>
+                    Edit
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={{ flexDirection: 'row', gap: spacing.md }}>
                 {targetCgpa !== null && (
-                  <View style={{ flex: 1, backgroundColor: colors.background, borderRadius: radii.lg, padding: spacing.md }}>
-                    <Text style={{ fontFamily: fonts.regular, fontSize: fontSizes.xs, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 }}>GPA Goal</Text>
-                    <Text style={{ fontFamily: fonts.bold, fontSize: 22, color: cumulativeGpa >= targetCgpa ? statusColors.completed.text : colors.text, marginTop: spacing.xs }}>{targetCgpa.toFixed(2)}</Text>
-                    <View style={{ height: 4, backgroundColor: colors.border, borderRadius: 2, marginTop: 6 }}>
-                      <View style={{ height: '100%', backgroundColor: cumulativeGpa >= targetCgpa ? statusColors.completed.text : colors.primary, borderRadius: 2, width: `${Math.min(100, (cumulativeGpa / targetCgpa) * 100)}%` }} />
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: colors.background,
+                      borderRadius: radii.lg,
+                      padding: spacing.md,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: fonts.regular,
+                        fontSize: fontSizes.xs,
+                        color: colors.textSecondary,
+                        textTransform: 'uppercase',
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      GPA Goal
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: fonts.bold,
+                        fontSize: 22,
+                        color:
+                          cumulativeGpa >= targetCgpa ? statusColors.completed.text : colors.text,
+                        marginTop: spacing.xs,
+                      }}
+                    >
+                      {targetCgpa.toFixed(2)}
+                    </Text>
+                    <View
+                      style={{
+                        height: 4,
+                        backgroundColor: colors.border,
+                        borderRadius: 2,
+                        marginTop: 6,
+                      }}
+                    >
+                      <View
+                        style={{
+                          height: '100%',
+                          backgroundColor:
+                            cumulativeGpa >= targetCgpa
+                              ? statusColors.completed.text
+                              : colors.primary,
+                          borderRadius: 2,
+                          width: `${Math.min(100, (cumulativeGpa / targetCgpa) * 100)}%`,
+                        }}
+                      />
                     </View>
-                    <Text style={{ fontFamily: fonts.regular, fontSize: fontSizes.xs, color: colors.textSecondary, marginTop: spacing.xs }}>
-                      {cumulativeGpa >= targetCgpa ? `Achieved ✓` : `Current: ${cumulativeGpa.toFixed(2)}`}
+                    <Text
+                      style={{
+                        fontFamily: fonts.regular,
+                        fontSize: fontSizes.xs,
+                        color: colors.textSecondary,
+                        marginTop: spacing.xs,
+                      }}
+                    >
+                      {cumulativeGpa >= targetCgpa
+                        ? `Achieved ✓`
+                        : `Current: ${cumulativeGpa.toFixed(2)}`}
                     </Text>
                   </View>
                 )}
                 {targetCredits !== null && (
-                  <View style={{ flex: 1, backgroundColor: colors.background, borderRadius: radii.lg, padding: spacing.md }}>
-                    <Text style={{ fontFamily: fonts.regular, fontSize: fontSizes.xs, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 }}>Credits Goal</Text>
-                    <Text style={{ fontFamily: fonts.bold, fontSize: fontSizes.xl, color: totalCredits >= targetCredits ? statusColors.completed.text : colors.text, marginTop: spacing.xs }}>{totalCredits}<Text style={{ fontFamily: fonts.regular, fontSize: 13, color: colors.textSecondary }}>/{targetCredits}</Text></Text>
-                    <View style={{ height: 4, backgroundColor: colors.border, borderRadius: 2, marginTop: 6 }}>
-                      <View style={{ height: '100%', backgroundColor: totalCredits >= targetCredits ? statusColors.completed.text : colors.primary, borderRadius: 2, width: `${Math.min(100, (totalCredits / targetCredits) * 100)}%` }} />
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: colors.background,
+                      borderRadius: radii.lg,
+                      padding: spacing.md,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: fonts.regular,
+                        fontSize: fontSizes.xs,
+                        color: colors.textSecondary,
+                        textTransform: 'uppercase',
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      Credits Goal
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: fonts.bold,
+                        fontSize: fontSizes.xl,
+                        color:
+                          totalCredits >= targetCredits ? statusColors.completed.text : colors.text,
+                        marginTop: spacing.xs,
+                      }}
+                    >
+                      {totalCredits}
+                      <Text
+                        style={{
+                          fontFamily: fonts.regular,
+                          fontSize: 13,
+                          color: colors.textSecondary,
+                        }}
+                      >
+                        /{targetCredits}
+                      </Text>
+                    </Text>
+                    <View
+                      style={{
+                        height: 4,
+                        backgroundColor: colors.border,
+                        borderRadius: 2,
+                        marginTop: 6,
+                      }}
+                    >
+                      <View
+                        style={{
+                          height: '100%',
+                          backgroundColor:
+                            totalCredits >= targetCredits
+                              ? statusColors.completed.text
+                              : colors.primary,
+                          borderRadius: 2,
+                          width: `${Math.min(100, (totalCredits / targetCredits) * 100)}%`,
+                        }}
+                      />
                     </View>
-                    <Text style={{ fontFamily: fonts.regular, fontSize: fontSizes.xs, color: colors.textSecondary, marginTop: spacing.xs }}>
-                      {totalCredits >= targetCredits ? `Complete ✓` : `${targetCredits - totalCredits} remaining`}
+                    <Text
+                      style={{
+                        fontFamily: fonts.regular,
+                        fontSize: fontSizes.xs,
+                        color: colors.textSecondary,
+                        marginTop: spacing.xs,
+                      }}
+                    >
+                      {totalCredits >= targetCredits
+                        ? `Complete ✓`
+                        : `${targetCredits - totalCredits} remaining`}
                     </Text>
                   </View>
                 )}
@@ -186,7 +348,9 @@ export default function Dashboard() {
               </View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={styles.goalCardTitle}>Set Goals</Text>
-                <Text style={styles.goalCardSubtitle}>Set your target GPA and graduation credits</Text>
+                <Text style={styles.goalCardSubtitle}>
+                  Set your target GPA and graduation credits
+                </Text>
               </View>
             </TouchableOpacity>
           )}
@@ -197,7 +361,9 @@ export default function Dashboard() {
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>This Semester</Text>
               <View style={[styles.sectionBadge, { backgroundColor: statusColors.inProgress.bg }]}>
-                <Text style={[styles.sectionBadgeText, { color: statusColors.inProgress.text }]}>In Progress</Text>
+                <Text style={[styles.sectionBadgeText, { color: statusColors.inProgress.text }]}>
+                  In Progress
+                </Text>
               </View>
             </View>
             <SemesterProgress semester={inProgressSemester} />

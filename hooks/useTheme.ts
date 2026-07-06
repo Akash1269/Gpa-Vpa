@@ -52,37 +52,37 @@ export function useTheme() {
     };
     loadPreferences();
   }, []);
-  
+
   const isDark = useMemo(() => {
     if (userTheme === 'system') {
       return systemColorScheme === 'dark';
     }
     return userTheme === 'dark';
   }, [userTheme, systemColorScheme]);
-  
+
   const toggleTheme = useCallback(() => {
-    setUserTheme(current => {
+    setUserTheme((current) => {
       const next = current === 'light' ? 'dark' : 'light';
       AsyncStorage.setItem('userTheme', next).catch(() => {});
       return next;
     });
   }, []);
-  
+
   const setTheme = useCallback((theme: 'light' | 'dark' | 'system') => {
     setUserTheme(theme);
     AsyncStorage.setItem('userTheme', theme).catch(() => {});
   }, []);
 
   const toggleHideGrades = useCallback(() => {
-    setHideGrades(current => {
+    setHideGrades((current) => {
       const next = !current;
       AsyncStorage.setItem('hideGrades', JSON.stringify(next)).catch(() => {});
       return next;
     });
   }, []);
-  
-  const colors = useMemo(() => isDark ? darkColors : lightColors, [isDark]);
-  
+
+  const colors = useMemo(() => (isDark ? darkColors : lightColors), [isDark]);
+
   return {
     isDark,
     toggleTheme,

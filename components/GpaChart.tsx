@@ -16,12 +16,14 @@ export default function GpaChart({ semesters }: GpaChartProps) {
   const [chartWidth, setChartWidth] = useState(0);
 
   const sortedSemesters = [...semesters]
-    .filter(s => s.status === 'completed')
+    .filter((s) => s.status === 'completed')
     .sort((a, b) => {
       if (a.year !== b.year) return a.year - b.year;
-      const semesterOrder = { 'Spring': 0, 'Summer': 1, 'Fall': 2 };
-      return semesterOrder[a.semester as keyof typeof semesterOrder] - 
-             semesterOrder[b.semester as keyof typeof semesterOrder];
+      const semesterOrder = { Spring: 0, Summer: 1, Fall: 2 };
+      return (
+        semesterOrder[a.semester as keyof typeof semesterOrder] -
+        semesterOrder[b.semester as keyof typeof semesterOrder]
+      );
     });
 
   const maxGpa = 4.0;
@@ -108,17 +110,24 @@ export default function GpaChart({ semesters }: GpaChartProps) {
   // Calculate points in pixels once we know the chart width
   const usableWidth = chartWidth - dotPadding * 2;
   const points = sortedSemesters.map((sem, index) => {
-    const xFraction = sortedSemesters.length > 1
-      ? index / (sortedSemesters.length - 1)
-      : 0.5;
+    const xFraction = sortedSemesters.length > 1 ? index / (sortedSemesters.length - 1) : 0.5;
     const x = dotPadding + xFraction * usableWidth;
     const y = (1 - sem.gpa / maxGpa) * chartHeight;
-    return { x, y, gpa: sem.gpa, label: `${sem.semester.substring(0, 2)} ${String(sem.year).slice(-2)}` };
+    return {
+      x,
+      y,
+      gpa: sem.gpa,
+      label: `${sem.semester.substring(0, 2)} ${String(sem.year).slice(-2)}`,
+    };
   });
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.toggleHeader} onPress={() => setExpanded(!expanded)} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.toggleHeader}
+        onPress={() => setExpanded(!expanded)}
+        activeOpacity={0.7}
+      >
         <View style={styles.toggleLeft}>
           <TrendingUp size={16} color={colors.primary} />
           <Text style={styles.toggleTitle}>GPA Progression</Text>
@@ -131,7 +140,11 @@ export default function GpaChart({ semesters }: GpaChartProps) {
       </TouchableOpacity>
 
       {expanded && (
-        <Animated.View entering={FadeIn.duration(250)} exiting={FadeOut.duration(150)} style={styles.chartArea}>
+        <Animated.View
+          entering={FadeIn.duration(250)}
+          exiting={FadeOut.duration(150)}
+          style={styles.chartArea}
+        >
           <View
             style={styles.chartCanvas}
             onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}

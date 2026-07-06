@@ -27,15 +27,16 @@ export default function CoursesScreen() {
     let filtered = courses;
 
     if (searchQuery) {
-      filtered = filtered.filter(course =>
-        course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.code.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (course) =>
+          course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          course.code.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     // Group by semester-year
     const grouped: Record<string, Course[]> = {};
-    filtered.forEach(course => {
+    filtered.forEach((course) => {
       const key = `${course.semester}-${course.year}`;
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(course);
@@ -65,7 +66,9 @@ export default function CoursesScreen() {
     content: {
       flex: 1,
       padding: spacing.xl,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     header: {
       flexDirection: 'row',
@@ -142,10 +145,25 @@ export default function CoursesScreen() {
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                     <Text style={styles.sectionTitle}>{section.title}</Text>
                     {hasUngraded && (
-                      <Text style={{ fontFamily: fonts.medium, fontSize: fontSizes.xs, color: statusColors.warning.text, backgroundColor: statusColors.warning.bg, paddingHorizontal: spacing.sm, paddingVertical: 2, borderRadius: 6, overflow: 'hidden' }}>In Progress</Text>
+                      <Text
+                        style={{
+                          fontFamily: fonts.medium,
+                          fontSize: fontSizes.xs,
+                          color: statusColors.warning.text,
+                          backgroundColor: statusColors.warning.bg,
+                          paddingHorizontal: spacing.sm,
+                          paddingVertical: 2,
+                          borderRadius: 6,
+                          overflow: 'hidden',
+                        }}
+                      >
+                        In Progress
+                      </Text>
                     )}
                   </View>
-                  <Text style={styles.sectionCount}>{section.data.length} course{section.data.length !== 1 ? 's' : ''}</Text>
+                  <Text style={styles.sectionCount}>
+                    {section.data.length} course{section.data.length !== 1 ? 's' : ''}
+                  </Text>
                 </View>
               );
             }}
@@ -157,7 +175,9 @@ export default function CoursesScreen() {
           <EmptyState
             icon="book-open"
             title="No courses found"
-            message={searchQuery ? "Try adjusting your search" : "Add your first course to get started"}
+            message={
+              searchQuery ? 'Try adjusting your search' : 'Add your first course to get started'
+            }
           />
         )}
       </View>

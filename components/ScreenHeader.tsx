@@ -11,13 +11,31 @@ type ScreenHeaderProps = {
   rightElement?: React.ReactNode;
 };
 
-export default function ScreenHeader({ title, showBorder = true, rightElement }: ScreenHeaderProps) {
+export default function ScreenHeader({
+  title,
+  showBorder = true,
+  rightElement,
+}: ScreenHeaderProps) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 8, borderBottomColor: colors.border, borderBottomWidth: showBorder ? 1 : 0 }]}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Go back">
+    <View
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top + 8,
+          borderBottomColor: colors.border,
+          borderBottomWidth: showBorder ? 1 : 0,
+        },
+      ]}
+    >
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()}
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+      >
         <ArrowLeft size={22} color={colors.text} />
       </TouchableOpacity>
       <Text style={[styles.title, { color: colors.text }]}>{title}</Text>

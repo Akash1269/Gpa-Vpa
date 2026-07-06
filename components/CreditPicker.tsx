@@ -9,7 +9,7 @@ type CreditPickerProps = {
 
 export default function CreditPicker({ value, onChange }: CreditPickerProps) {
   const { colors } = useTheme();
-  
+
   const creditOptions = [1, 2, 3, 4];
 
   const styles = StyleSheet.create({
@@ -52,18 +52,10 @@ export default function CreditPicker({ value, onChange }: CreditPickerProps) {
         {creditOptions.map((credit) => (
           <TouchableOpacity
             key={credit}
-            style={[
-              styles.option,
-              value === credit && styles.selectedOption,
-            ]}
+            style={[styles.option, value === credit && styles.selectedOption]}
             onPress={() => onChange(credit)}
           >
-            <Text
-              style={[
-                styles.optionText,
-                value === credit && styles.selectedOptionText,
-              ]}
-            >
+            <Text style={[styles.optionText, value === credit && styles.selectedOptionText]}>
               {credit}
             </Text>
           </TouchableOpacity>

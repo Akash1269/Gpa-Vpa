@@ -14,7 +14,13 @@ type ToastProps = {
   duration?: number;
 };
 
-export default function Toast({ message, visible, onDismiss, action, duration = 4000 }: ToastProps) {
+export default function Toast({
+  message,
+  visible,
+  onDismiss,
+  action,
+  duration = 4000,
+}: ToastProps) {
   useEffect(() => {
     if (visible) {
       const timer = setTimeout(onDismiss, duration);

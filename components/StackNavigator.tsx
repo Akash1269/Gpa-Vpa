@@ -6,61 +6,62 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function StackNavigator() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  
+
   return (
-    <Stack 
-      screenOptions={{ 
-        headerBackTitle: " ",
+    <Stack
+      screenOptions={{
+        headerBackTitle: ' ',
         contentStyle: {
           paddingBottom: Platform.OS === 'ios' ? Math.max(insets.bottom, 20) : 0,
           backgroundColor: colors.background,
-        }
-      }}>
+        },
+      }}
+    >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen 
-        name="course/[id]" 
-        options={{ 
+      <Stack.Screen
+        name="course/[id]"
+        options={{
           presentation: 'transparentModal',
           headerShown: false,
           animation: 'slide_from_bottom',
           contentStyle: { backgroundColor: 'transparent' },
-        }} 
+        }}
       />
-      <Stack.Screen 
-        name="semester/[id]" 
-        options={{ 
+      <Stack.Screen
+        name="semester/[id]"
+        options={{
           presentation: 'card',
           headerShown: false,
           animation: 'slide_from_right',
         }}
       />
-      <Stack.Screen 
-        name="credits" 
-        options={{ 
+      <Stack.Screen
+        name="credits"
+        options={{
           presentation: 'card',
           headerShown: false,
           animation: 'slide_from_right',
         }}
       />
-      <Stack.Screen 
-        name="goal-calculator" 
-        options={{ 
+      <Stack.Screen
+        name="goal-calculator"
+        options={{
           presentation: 'card',
           headerShown: false,
           animation: 'slide_from_right',
         }}
       />
-      <Stack.Screen 
-        name="semester-goal" 
-        options={{ 
+      <Stack.Screen
+        name="semester-goal"
+        options={{
           presentation: 'card',
           headerShown: false,
           animation: 'slide_from_right',
         }}
       />
-      <Stack.Screen 
-        name="settings" 
-        options={{ 
+      <Stack.Screen
+        name="settings"
+        options={{
           presentation: 'card',
           headerShown: false,
           animation: 'slide_from_right',

@@ -17,13 +17,19 @@ const gradeOptions = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F
 
 export default function SemesterGoalScreen() {
   const { colors } = useTheme();
-  const { inProgressSemester, courseGoals, setCourseGoals, setTargetSemesterGpa, targetSemesterGpa } = useGpa();
+  const {
+    inProgressSemester,
+    courseGoals,
+    setCourseGoals,
+    setTargetSemesterGpa,
+    targetSemesterGpa,
+  } = useGpa();
 
   const [mode, setMode] = useState<Mode>('by-course');
   const [perCourseGoals, setPerCourseGoals] = useState<Record<string, string>>(() => {
     if (!inProgressSemester) return {};
     const initial: Record<string, string> = {};
-    inProgressSemester.courses.forEach(c => {
+    inProgressSemester.courses.forEach((c) => {
       initial[c.id] = courseGoals[c.id] || 'A';
     });
     return initial;
@@ -31,7 +37,7 @@ export default function SemesterGoalScreen() {
   const [selectedGpaGrade, setSelectedGpaGrade] = useState<string>(() => {
     // Find grade closest to target semester GPA
     if (targetSemesterGpa) {
-      const closest = gradeOptions.find(g => calculateGradeValue(g) <= targetSemesterGpa);
+      const closest = gradeOptions.find((g) => calculateGradeValue(g) <= targetSemesterGpa);
       return closest || 'A';
     }
     return 'A';
@@ -44,7 +50,7 @@ export default function SemesterGoalScreen() {
     if (courses.length === 0) return 0;
     let totalPoints = 0;
     let totalCredits = 0;
-    courses.forEach(c => {
+    courses.forEach((c) => {
       const grade = mode === 'by-course' ? perCourseGoals[c.id] : selectedGpaGrade;
       if (grade) {
         totalPoints += calculateGradeValue(grade) * c.credits;
@@ -61,7 +67,7 @@ export default function SemesterGoalScreen() {
     } else {
       // Distribute selected grade to all courses
       const distributed: Record<string, string> = {};
-      courses.forEach(c => {
+      courses.forEach((c) => {
         distributed[c.id] = selectedGpaGrade;
       });
       setCourseGoals(distributed);
@@ -72,7 +78,7 @@ export default function SemesterGoalScreen() {
   };
 
   const updateCourseGoal = (courseId: string, grade: string) => {
-    setPerCourseGoals(prev => ({ ...prev, [courseId]: grade }));
+    setPerCourseGoals((prev) => ({ ...prev, [courseId]: grade }));
   };
 
   const styles = StyleSheet.create({
@@ -83,7 +89,9 @@ export default function SemesterGoalScreen() {
     content: {
       padding: 20,
       paddingBottom: 40,
-      ...(Platform.OS === 'web' ? { maxWidth: 600, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 600, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     projectedCard: {
       backgroundColor: colors.card,
@@ -192,7 +200,14 @@ export default function SemesterGoalScreen() {
       <View style={styles.container}>
         <ScreenHeader title="Semester Goal" showBorder={false} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 }}>
-          <Text style={{ fontFamily: fonts.regular, fontSize: 15, color: colors.textSecondary, textAlign: 'center' }}>
+          <Text
+            style={{
+              fontFamily: fonts.regular,
+              fontSize: 15,
+              color: colors.textSecondary,
+              textAlign: 'center',
+            }}
+          >
             No in-progress semester found. Add courses without grades to set semester goals.
           </Text>
         </View>
@@ -224,17 +239,27 @@ export default function SemesterGoalScreen() {
             {courses.map((course) => (
               <View key={course.id} style={styles.courseCard}>
                 <View style={styles.courseHeader}>
-                  <Text style={styles.courseName} numberOfLines={1}>{course.name}</Text>
+                  <Text style={styles.courseName} numberOfLines={1}>
+                    {course.name}
+                  </Text>
                   <Text style={styles.courseCredits}>{course.credits} CR</Text>
                 </View>
                 <View style={styles.gradeRow}>
                   {gradeOptions.map((grade) => (
                     <TouchableOpacity
                       key={grade}
-                      style={[styles.gradeChip, perCourseGoals[course.id] === grade && styles.gradeChipActive]}
+                      style={[
+                        styles.gradeChip,
+                        perCourseGoals[course.id] === grade && styles.gradeChipActive,
+                      ]}
                       onPress={() => updateCourseGoal(course.id, grade)}
                     >
-                      <Text style={[styles.gradeChipText, perCourseGoals[course.id] === grade && styles.gradeChipTextActive]}>
+                      <Text
+                        style={[
+                          styles.gradeChipText,
+                          perCourseGoals[course.id] === grade && styles.gradeChipTextActive,
+                        ]}
+                      >
                         {grade}
                       </Text>
                     </TouchableOpacity>
@@ -257,23 +282,46 @@ export default function SemesterGoalScreen() {
                     style={[styles.gradeChip, selectedGpaGrade === grade && styles.gradeChipActive]}
                     onPress={() => setSelectedGpaGrade(grade)}
                   >
-                    <Text style={[styles.gradeChipText, selectedGpaGrade === grade && styles.gradeChipTextActive]}>
+                    <Text
+                      style={[
+                        styles.gradeChipText,
+                        selectedGpaGrade === grade && styles.gradeChipTextActive,
+                      ]}
+                    >
                       {grade}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
-              <Text style={{ fontFamily: fonts.regular, fontSize: fontSizes.sm, color: colors.textSecondary, marginTop: spacing.md }}>
-                This will set {selectedGpaGrade} ({calculateGradeValue(selectedGpaGrade).toFixed(1)}) as the target for all {courses.length} courses
+              <Text
+                style={{
+                  fontFamily: fonts.regular,
+                  fontSize: fontSizes.sm,
+                  color: colors.textSecondary,
+                  marginTop: spacing.md,
+                }}
+              >
+                This will set {selectedGpaGrade} ({calculateGradeValue(selectedGpaGrade).toFixed(1)}
+                ) as the target for all {courses.length} courses
               </Text>
             </View>
 
             {/* Preview per-course distribution */}
             {courses.map((course) => (
-              <View key={course.id} style={[styles.courseCard, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+              <View
+                key={course.id}
+                style={[
+                  styles.courseCard,
+                  { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+                ]}
+              >
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.courseName} numberOfLines={1}>{course.name}</Text>
-                  <Text style={styles.courseCredits}>{course.code} • {course.credits} CR</Text>
+                  <Text style={styles.courseName} numberOfLines={1}>
+                    {course.name}
+                  </Text>
+                  <Text style={styles.courseCredits}>
+                    {course.code} • {course.credits} CR
+                  </Text>
                 </View>
                 <View style={[styles.gradeChip, styles.gradeChipActive]}>
                   <Text style={styles.gradeChipTextActive}>{selectedGpaGrade}</Text>
@@ -285,7 +333,12 @@ export default function SemesterGoalScreen() {
 
         {/* Save Button */}
         <Animated.View entering={FadeInDown.delay(200).duration(400)}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave} accessibilityRole="button" accessibilityLabel="Save semester goal">
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSave}
+            accessibilityRole="button"
+            accessibilityLabel="Save semester goal"
+          >
             <Check size={20} color="#FFFFFF" />
             <Text style={styles.saveButtonText}>Save Goal</Text>
           </TouchableOpacity>

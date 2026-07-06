@@ -1,5 +1,13 @@
 import { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, Platform, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import { router } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
@@ -12,11 +20,22 @@ type Tab = 'gpa' | 'graduation';
 
 export default function GoalsScreen() {
   const { colors } = useTheme();
-  const { cumulativeGpa, totalCredits, semesters, targetCgpa, setTargetCgpa, targetCredits, setTargetCredits, inProgressSemester } = useGpa();
+  const {
+    cumulativeGpa,
+    totalCredits,
+    semesters,
+    targetCgpa,
+    setTargetCgpa,
+    targetCredits,
+    setTargetCredits,
+    inProgressSemester,
+  } = useGpa();
   const [activeTab, setActiveTab] = useState<Tab>('gpa');
 
   // Cumulative goal state
-  const [cumulativeTargetGpaInput, setCumulativeTargetGpaInput] = useState(targetCgpa?.toString() ?? '3.5');
+  const [cumulativeTargetGpaInput, setCumulativeTargetGpaInput] = useState(
+    targetCgpa?.toString() ?? '3.5'
+  );
   const [remainingSemesters, setRemainingSemesters] = useState('2');
   const [futureSemesterCredits, setFutureSemesterCredits] = useState('15');
 
@@ -35,7 +54,16 @@ export default function GoalsScreen() {
     const target = parseFloat(cumulativeTargetGpaInput);
     const numSemesters = parseInt(remainingSemesters);
     const creditsPerSem = parseInt(futureSemesterCredits);
-    if (isNaN(target) || isNaN(numSemesters) || isNaN(creditsPerSem) || target < 0 || target > 4.0 || numSemesters <= 0 || creditsPerSem <= 0) return null;
+    if (
+      isNaN(target) ||
+      isNaN(numSemesters) ||
+      isNaN(creditsPerSem) ||
+      target < 0 ||
+      target > 4.0 ||
+      numSemesters <= 0 ||
+      creditsPerSem <= 0
+    )
+      return null;
 
     const totalFutureCredits = numSemesters * creditsPerSem;
     const currentPoints = cumulativeGpa * totalCredits;
@@ -43,7 +71,8 @@ export default function GoalsScreen() {
     const requiredGpaPerSemester = (totalNeeded - currentPoints) / totalFutureCredits;
 
     const grades = Object.entries(gradePoints).sort((a, b) => b[1] - a[1]);
-    const closestGrade = grades.find(([_, val]) => val <= requiredGpaPerSemester) || grades[grades.length - 1];
+    const closestGrade =
+      grades.find(([_, val]) => val <= requiredGpaPerSemester) || grades[grades.length - 1];
 
     return {
       target,
@@ -56,7 +85,13 @@ export default function GoalsScreen() {
       creditsPerSem,
       totalFutureCredits,
     };
-  }, [cumulativeTargetGpaInput, remainingSemesters, futureSemesterCredits, cumulativeGpa, totalCredits]);
+  }, [
+    cumulativeTargetGpaInput,
+    remainingSemesters,
+    futureSemesterCredits,
+    cumulativeGpa,
+    totalCredits,
+  ]);
 
   // Persist cumulative goal after render
   useEffect(() => {
@@ -84,7 +119,13 @@ export default function GoalsScreen() {
       progress,
       avgCredits: avgCreditsPerSemester,
     };
-  }, [graduationCredits, creditsPerSemester, totalCredits, semesters.length, avgCreditsPerSemester]);
+  }, [
+    graduationCredits,
+    creditsPerSemester,
+    totalCredits,
+    semesters.length,
+    avgCreditsPerSemester,
+  ]);
 
   // Persist credits goal after render
   useEffect(() => {
@@ -105,7 +146,9 @@ export default function GoalsScreen() {
     content: {
       padding: spacing.lg,
       paddingBottom: 100,
-      ...(Platform.OS === 'web' ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number } : {}),
+      ...(Platform.OS === 'web'
+        ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
+        : {}),
     },
     // Tab switcher
     tabRow: {
@@ -371,17 +414,35 @@ export default function GoalsScreen() {
               <View style={styles.summaryLeft}>
                 <Text style={styles.summaryLabel}>Current GPA</Text>
                 <Text style={styles.summaryValue}>{cumulativeGpa.toFixed(2)}</Text>
-                <Text style={styles.summaryTarget}>
-                  Target: {cumulativeTargetGpaInput || '—'}
-                </Text>
+                <Text style={styles.summaryTarget}>Target: {cumulativeTargetGpaInput || '—'}</Text>
               </View>
               <View style={[styles.progressRing, { borderColor: colors.border }]}>
-                <View style={[StyleSheet.absoluteFill, { borderRadius: 36, borderWidth: 6, borderColor: resultColor, borderTopColor: gpaProgress >= 0.25 ? resultColor : 'transparent', borderRightColor: gpaProgress >= 0.5 ? resultColor : 'transparent', borderBottomColor: gpaProgress >= 0.75 ? resultColor : 'transparent', borderLeftColor: gpaProgress >= 1 ? resultColor : 'transparent' }]} />
-                <Text style={[styles.progressRingText, { color: resultColor }]}>{progressPercent}%</Text>
+                <View
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      borderRadius: 36,
+                      borderWidth: 6,
+                      borderColor: resultColor,
+                      borderTopColor: gpaProgress >= 0.25 ? resultColor : 'transparent',
+                      borderRightColor: gpaProgress >= 0.5 ? resultColor : 'transparent',
+                      borderBottomColor: gpaProgress >= 0.75 ? resultColor : 'transparent',
+                      borderLeftColor: gpaProgress >= 1 ? resultColor : 'transparent',
+                    },
+                  ]}
+                />
+                <Text style={[styles.progressRingText, { color: resultColor }]}>
+                  {progressPercent}%
+                </Text>
               </View>
             </View>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${progressPercent}%`, backgroundColor: resultColor }]} />
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${progressPercent}%`, backgroundColor: resultColor },
+                ]}
+              />
             </View>
           </View>
         </Animated.View>
@@ -393,7 +454,14 @@ export default function GoalsScreen() {
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Target GPA</Text>
               <TextInput
-                style={[styles.input, cumulativeTargetGpaInput !== '' && (parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0) ? { borderColor: colors.error } : {}]}
+                style={[
+                  styles.input,
+                  cumulativeTargetGpaInput !== '' &&
+                  (parseFloat(cumulativeTargetGpaInput) > 4.0 ||
+                    parseFloat(cumulativeTargetGpaInput) < 0)
+                    ? { borderColor: colors.error }
+                    : {},
+                ]}
                 value={cumulativeTargetGpaInput}
                 onChangeText={setCumulativeTargetGpaInput}
                 keyboardType="decimal-pad"
@@ -401,9 +469,20 @@ export default function GoalsScreen() {
                 placeholderTextColor={colors.textSecondary}
                 maxLength={4}
               />
-              {cumulativeTargetGpaInput !== '' && (parseFloat(cumulativeTargetGpaInput) > 4.0 || parseFloat(cumulativeTargetGpaInput) < 0) && (
-                <Text style={{ fontFamily: fonts.medium, fontSize: 12, color: colors.error, marginTop: 4 }}>GPA must be between 0.0 and 4.0</Text>
-              )}
+              {cumulativeTargetGpaInput !== '' &&
+                (parseFloat(cumulativeTargetGpaInput) > 4.0 ||
+                  parseFloat(cumulativeTargetGpaInput) < 0) && (
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: 12,
+                      color: colors.error,
+                      marginTop: 4,
+                    }}
+                  >
+                    GPA must be between 0.0 and 4.0
+                  </Text>
+                )}
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Semesters Remaining</Text>
@@ -433,7 +512,12 @@ export default function GoalsScreen() {
         {/* Result */}
         {cumulativeResult && (
           <Animated.View entering={FadeInDown.delay(150).duration(400)}>
-            <View style={[styles.resultCard, { backgroundColor: resultColor + '08', borderColor: resultColor + '25' }]}>
+            <View
+              style={[
+                styles.resultCard,
+                { backgroundColor: resultColor + '08', borderColor: resultColor + '25' },
+              ]}
+            >
               <View style={styles.resultHeader}>
                 <View style={[styles.resultIconBg, { backgroundColor: resultColor + '15' }]}>
                   <TrendingUp size={18} color={resultColor} />
@@ -476,7 +560,11 @@ export default function GoalsScreen() {
                   <Text style={styles.statLabel}>Semesters left</Text>
                 </View>
                 <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{(cumulativeResult.requiredGpa * cumulativeResult.totalFutureCredits).toFixed(0)}</Text>
+                  <Text style={styles.statValue}>
+                    {(cumulativeResult.requiredGpa * cumulativeResult.totalFutureCredits).toFixed(
+                      0
+                    )}
+                  </Text>
                   <Text style={styles.statLabel}>Points needed</Text>
                 </View>
               </View>
@@ -524,17 +612,35 @@ export default function GoalsScreen() {
               <View style={styles.summaryLeft}>
                 <Text style={styles.summaryLabel}>Credits Earned</Text>
                 <Text style={styles.summaryValue}>{totalCredits}</Text>
-                <Text style={styles.summaryTarget}>
-                  of {graduationCredits || '—'} required
-                </Text>
+                <Text style={styles.summaryTarget}>of {graduationCredits || '—'} required</Text>
               </View>
               <View style={[styles.progressRing, { borderColor: colors.border }]}>
-                <View style={[StyleSheet.absoluteFill, { borderRadius: 36, borderWidth: 6, borderColor: progressColor, borderTopColor: progress >= 0.25 ? progressColor : 'transparent', borderRightColor: progress >= 0.5 ? progressColor : 'transparent', borderBottomColor: progress >= 0.75 ? progressColor : 'transparent', borderLeftColor: progress >= 1 ? progressColor : 'transparent' }]} />
-                <Text style={[styles.progressRingText, { color: progressColor }]}>{progressPercent}%</Text>
+                <View
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      borderRadius: 36,
+                      borderWidth: 6,
+                      borderColor: progressColor,
+                      borderTopColor: progress >= 0.25 ? progressColor : 'transparent',
+                      borderRightColor: progress >= 0.5 ? progressColor : 'transparent',
+                      borderBottomColor: progress >= 0.75 ? progressColor : 'transparent',
+                      borderLeftColor: progress >= 1 ? progressColor : 'transparent',
+                    },
+                  ]}
+                />
+                <Text style={[styles.progressRingText, { color: progressColor }]}>
+                  {progressPercent}%
+                </Text>
               </View>
             </View>
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${progressPercent}%`, backgroundColor: progressColor }]} />
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${progressPercent}%`, backgroundColor: progressColor },
+                ]}
+              />
             </View>
           </View>
         </Animated.View>
@@ -571,7 +677,12 @@ export default function GoalsScreen() {
         {/* Result */}
         {graduationResult && (
           <Animated.View entering={FadeInDown.delay(150).duration(400)}>
-            <View style={[styles.resultCard, { backgroundColor: progressColor + '08', borderColor: progressColor + '25' }]}>
+            <View
+              style={[
+                styles.resultCard,
+                { backgroundColor: progressColor + '08', borderColor: progressColor + '25' },
+              ]}
+            >
               <View style={styles.resultHeader}>
                 <View style={[styles.resultIconBg, { backgroundColor: progressColor + '15' }]}>
                   <GraduationCap size={18} color={progressColor} />
@@ -608,7 +719,9 @@ export default function GoalsScreen() {
                   <Text style={styles.statLabel}>Semesters done</Text>
                 </View>
                 <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{creditsPerSemester || avgCreditsPerSemester}</Text>
+                  <Text style={styles.statValue}>
+                    {creditsPerSemester || avgCreditsPerSemester}
+                  </Text>
                   <Text style={styles.statLabel}>Credits/semester</Text>
                 </View>
               </View>
@@ -631,7 +744,9 @@ export default function GoalsScreen() {
             accessibilityState={{ selected: activeTab === 'gpa' }}
           >
             <Target size={16} color={activeTab === 'gpa' ? colors.primary : colors.textSecondary} />
-            <Text style={[styles.tabText, activeTab === 'gpa' && styles.tabTextActive]}>GPA Goal</Text>
+            <Text style={[styles.tabText, activeTab === 'gpa' && styles.tabTextActive]}>
+              GPA Goal
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'graduation' && styles.tabActive]}
@@ -639,8 +754,13 @@ export default function GoalsScreen() {
             accessibilityRole="tab"
             accessibilityState={{ selected: activeTab === 'graduation' }}
           >
-            <GraduationCap size={16} color={activeTab === 'graduation' ? colors.primary : colors.textSecondary} />
-            <Text style={[styles.tabText, activeTab === 'graduation' && styles.tabTextActive]}>Graduation</Text>
+            <GraduationCap
+              size={16}
+              color={activeTab === 'graduation' ? colors.primary : colors.textSecondary}
+            />
+            <Text style={[styles.tabText, activeTab === 'graduation' && styles.tabTextActive]}>
+              Graduation
+            </Text>
           </TouchableOpacity>
         </View>
 

@@ -12,7 +12,10 @@ export default function SegmentedControl({ options, selected, onChange }: Segmen
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.card, borderColor: colors.border }]} accessibilityRole="tablist">
+    <View
+      style={[styles.container, { backgroundColor: colors.card, borderColor: colors.border }]}
+      accessibilityRole="tablist"
+    >
       {options.map((option) => (
         <TouchableOpacity
           key={option}
@@ -22,7 +25,13 @@ export default function SegmentedControl({ options, selected, onChange }: Segmen
           accessibilityState={{ selected: selected === option }}
           accessibilityLabel={option}
         >
-          <Text style={[styles.text, { color: colors.textSecondary }, selected === option && styles.textActive]}>
+          <Text
+            style={[
+              styles.text,
+              { color: colors.textSecondary },
+              selected === option && styles.textActive,
+            ]}
+          >
             {option}
           </Text>
         </TouchableOpacity>

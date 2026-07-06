@@ -60,9 +60,7 @@ export default function EmptyState({ icon, title, message }: EmptyStateProps) {
 
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(500)}>
-      <View style={styles.iconContainer}>
-        {renderIcon()}
-      </View>
+      <View style={styles.iconContainer}>{renderIcon()}</View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
     </Animated.View>

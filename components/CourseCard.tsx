@@ -18,7 +18,9 @@ type CourseCardProps = {
 export default React.memo(function CourseCard({ course, showSemester = false }: CourseCardProps) {
   const { colors } = useTheme();
   const { deleteCourse } = useGpa();
-  const gradeColor = course.grade ? getGradeColor(course.grade) : { background: colors.border, text: colors.textSecondary };
+  const gradeColor = course.grade
+    ? getGradeColor(course.grade)
+    : { background: colors.border, text: colors.textSecondary };
 
   const styles = StyleSheet.create({
     container: {
@@ -134,11 +136,15 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
           </View>
           <View style={styles.infoContainer}>
             <View style={styles.topRow}>
-              <Text style={styles.courseName} numberOfLines={1}>{course.name}</Text>
+              <Text style={styles.courseName} numberOfLines={1}>
+                {course.name}
+              </Text>
             </View>
             <Text style={styles.courseCode}>{course.code}</Text>
             {showSemester && (
-              <Text style={styles.semesterText}>{course.semester} {course.year}</Text>
+              <Text style={styles.semesterText}>
+                {course.semester} {course.year}
+              </Text>
             )}
           </View>
           <View style={styles.creditBadge}>

@@ -101,7 +101,9 @@ describe('GpaContext', () => {
   });
 
   it('deletes a course', async () => {
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([mockCourse, mockCourse2]));
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+      JSON.stringify([mockCourse, mockCourse2])
+    );
 
     const { result } = renderHook(() => useGpaContext(), { wrapper });
 
@@ -123,7 +125,7 @@ describe('GpaContext', () => {
     const { result } = renderHook(() => useGpaContext(), { wrapper });
 
     act(() => {
-      result.current.addCourse(mockCourse);  // A = 4.0, 3 credits
+      result.current.addCourse(mockCourse); // A = 4.0, 3 credits
       result.current.addCourse(mockCourse2); // B+ = 3.3, 4 credits
     });
 
@@ -137,7 +139,7 @@ describe('GpaContext', () => {
     const { result } = renderHook(() => useGpaContext(), { wrapper });
 
     act(() => {
-      result.current.addCourse(mockCourse);  // 3 credits
+      result.current.addCourse(mockCourse); // 3 credits
       result.current.addCourse(mockCourse2); // 4 credits
     });
 
@@ -160,8 +162,8 @@ describe('GpaContext', () => {
     const { result } = renderHook(() => useGpaContext(), { wrapper });
 
     act(() => {
-      result.current.addCourse(mockCourse);   // Fall 2025
-      result.current.addCourse(mockCourse2);  // Fall 2025
+      result.current.addCourse(mockCourse); // Fall 2025
+      result.current.addCourse(mockCourse2); // Fall 2025
       result.current.addCourse(springCourse); // Spring 2026
     });
 
