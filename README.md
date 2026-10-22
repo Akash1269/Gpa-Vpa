@@ -10,7 +10,7 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 [![Release App](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/release.yml/badge.svg)](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/release.yml)
 [![Deploy](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/deploy-web.yml/badge.svg)](https://github.com/Akash1269/Gpa-Vpa/actions/workflows/deploy-web.yml)
 [![Expo SDK](https://img.shields.io/badge/Expo-SDK%2056-000020?logo=expo)](https://expo.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![React Native](https://img.shields.io/badge/React%20Native-0.85-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
@@ -52,7 +52,7 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 </table>
 </div>
 
-> *Screenshots coming soon — add your own to `docs/screenshots/`*
+> _Screenshots coming soon — add your own to `docs/screenshots/`_
 
 ---
 
@@ -89,18 +89,18 @@ Then scan the QR code with **Expo Go** (iOS/Android) or press `w` to open in you
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Framework** | [Expo](https://expo.dev) SDK 56 |
-| **UI** | React Native 0.85 + React 19 |
-| **Language** | TypeScript 5.8 |
-| **Routing** | Expo Router v5 (file-based) |
-| **State** | React Context API |
-| **Storage** | AsyncStorage (local, no backend) |
-| **Animations** | React Native Reanimated |
-| **Icons** | Lucide React Native |
-| **Font** | Inter (via @expo-google-fonts) |
-| **CI/CD** | GitHub Actions + EAS Build |
+| Layer          | Technology                       |
+| -------------- | -------------------------------- |
+| **Framework**  | [Expo](https://expo.dev) SDK 56  |
+| **UI**         | React Native 0.85 + React 19     |
+| **Language**   | TypeScript 6.0                   |
+| **Routing**    | Expo Router 56 (file-based)      |
+| **State**      | React Context API                |
+| **Storage**    | AsyncStorage (local, no backend) |
+| **Animations** | React Native Reanimated          |
+| **Icons**      | Lucide React Native              |
+| **Font**       | Inter (via @expo-google-fonts)   |
+| **CI/CD**      | GitHub Actions + EAS Build       |
 
 ---
 
@@ -140,29 +140,29 @@ docs/                 → Documentation
 
 ## GPA Scale
 
-| Grade | Points | | Grade | Points |
-|-------|--------|-|-------|--------|
-| A     | 4.0    | | C+    | 2.3    |
-| A-    | 3.7    | | C     | 2.0    |
-| B+    | 3.3    | | C-    | 1.7    |
-| B     | 3.0    | | D+    | 1.3    |
-| B-    | 2.7    | | D     | 1.0    |
-|       |        | | F     | 0.0    |
+| Grade | Points |     | Grade | Points |
+| ----- | ------ | --- | ----- | ------ |
+| A     | 4.0    |     | C+    | 2.3    |
+| A-    | 3.7    |     | C     | 2.0    |
+| B+    | 3.3    |     | C-    | 1.7    |
+| B     | 3.0    |     | D+    | 1.3    |
+| B-    | 2.7    |     | D     | 1.0    |
+|       |        |     | F     | 0.0    |
 
 ---
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start Expo dev server |
-| `npm run android` | Run on Android |
-| `npm run ios` | Run on iOS |
-| `npm run web` | Run in browser |
-| `npm run lint` | Run ESLint |
-| `npm test` | Run unit tests |
+| Command                 | Description                |
+| ----------------------- | -------------------------- |
+| `npm start`             | Start Expo dev server      |
+| `npm run android`       | Run on Android             |
+| `npm run ios`           | Run on iOS                 |
+| `npm run web`           | Run in browser             |
+| `npm run lint`          | Run ESLint                 |
+| `npm test`              | Run unit tests             |
 | `npm run test:coverage` | Tests with coverage report |
-| `npm run build:web` | Export for web deployment |
+| `npm run build:web`     | Export for web deployment  |
 
 ---
 

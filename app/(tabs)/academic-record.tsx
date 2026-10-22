@@ -4,10 +4,12 @@ import SemesterCard from '@/components/SemesterCard';
 import GpaChart from '@/components/GpaChart';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';
+import { useTabBarClearance } from '@/hooks/useTabBarClearance';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 export default function AcademicRecord() {
   const { colors } = useTheme();
+  const tabBarClearance = useTabBarClearance();
   const { semesters, cumulativeGpa, totalCredits } = useGpa();
 
   const styles = StyleSheet.create({
@@ -17,7 +19,7 @@ export default function AcademicRecord() {
     },
     content: {
       padding: spacing.xl,
-      paddingBottom: 100,
+      paddingBottom: tabBarClearance,
       ...(Platform.OS === 'web'
         ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
         : {}),

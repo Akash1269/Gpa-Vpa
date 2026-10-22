@@ -200,6 +200,12 @@ describe('gpaCalculator', () => {
   });
 
   describe('getGradeColor', () => {
+    it('returns dark-mode tints when isDark is set', () => {
+      const color = getGradeColor('A', true);
+      expect(color.text).toBe('#81C995');
+      expect(color.background).toBe('rgba(129,201,149,0.16)');
+    });
+
     it('returns green colors for A grades', () => {
       const color = getGradeColor('A');
       expect(color.text).toBe('#34A853');

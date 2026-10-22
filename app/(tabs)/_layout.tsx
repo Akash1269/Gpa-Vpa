@@ -1,5 +1,5 @@
 import { Tabs, router } from 'expo-router';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   House,
@@ -12,6 +12,7 @@ import {
 } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing } from '@/constants/theme';
+import { TAB_BAR_HEIGHT, useTabBarOffset } from '@/hooks/useTabBarClearance';
 
 const WEB_MAX_WIDTH = 1200;
 
@@ -103,7 +104,7 @@ function CustomHeader() {
             accessibilityLabel="Add new course"
             accessibilityHint="Navigate to add a new course"
           >
-            <Plus size={18} color="#FFFFFF" strokeWidth={2.5} />
+            <Plus size={18} color={colors.onPrimary} strokeWidth={2.5} />
           </TouchableOpacity>
         </View>
       </View>
@@ -113,8 +114,7 @@ function CustomHeader() {
 
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const { colors, isDark } = useTheme();
-  const insets = useSafeAreaInsets();
-  const bottomSpacing = Math.max(insets.bottom, 16);
+  const bottomSpacing = useTabBarOffset();
 
   return (
     <View
@@ -123,7 +123,6 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
         bottom: bottomSpacing,
         left: 36,
         right: 36,
-        backgroundColor: isDark ? 'rgba(28,28,30,0.4)' : 'rgba(255,255,255,0.4)',
         borderRadius: 28,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -143,14 +142,21 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
                 ? '0 0px 24px rgba(0,0,0,0.2)'
                 : '0 0px 24px rgba(164, 164, 164, 0.1)',
               overflow: 'hidden',
+              backgroundColor: isDark ? 'rgba(28,28,30,0.4)' : 'rgba(255,255,255,0.4)',
             } as any)
-          : {}),
+          : {
+              // No backdrop blur on native, so a translucent bar lets content show through
+              // and Android renders the elevation shadow through it. Keep it opaque.
+              backgroundColor: colors.card,
+              borderWidth: StyleSheet.hairlineWidth,
+              borderColor: colors.border,
+            }),
       }}
     >
       <View
         style={{
           flexDirection: 'row',
-          height: 62,
+          height: TAB_BAR_HEIGHT,
           alignItems: 'center',
           paddingHorizontal: 12,
         }}

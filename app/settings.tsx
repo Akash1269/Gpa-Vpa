@@ -99,7 +99,7 @@ export default function SettingsScreen() {
     dangerButtonText: {
       fontFamily: fonts.semiBold,
       fontSize: fontSizes.lg,
-      color: '#FFFFFF',
+      color: colors.onError,
     },
   });
 

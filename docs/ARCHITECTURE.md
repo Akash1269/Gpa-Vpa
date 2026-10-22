@@ -50,32 +50,32 @@ The app uses React Context as a global store. A single `GpaProvider` wraps the e
 
 **State:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `courses` | `Course[]` | Master array — single source of truth |
-| `semesters` | `Semester[]` | Derived groupings with calculated GPAs |
-| `cumulativeGpa` | `number` | Weighted average across all courses |
-| `totalCredits` | `number` | Sum of all course credits |
-| `recentCourses` | `Course[]` | Top 5 most recent courses |
-| `currentSemester` | `Semester \| null` | Most recent semester |
+| Field             | Type               | Description                            |
+| ----------------- | ------------------ | -------------------------------------- |
+| `courses`         | `Course[]`         | Master array — single source of truth  |
+| `semesters`       | `Semester[]`       | Derived groupings with calculated GPAs |
+| `cumulativeGpa`   | `number`           | Weighted average across all courses    |
+| `totalCredits`    | `number`           | Sum of all course credits              |
+| `recentCourses`   | `Course[]`         | Top 5 most recent courses              |
+| `currentSemester` | `Semester \| null` | Most recent semester                   |
 
 **Actions (useCallback):**
 
-| Action | Description |
-|--------|-------------|
-| `addCourse(course)` | Insert new course |
-| `updateCourse(course)` | Update existing course by ID |
-| `deleteCourse(id)` | Remove course by ID |
-| `getCourse(id)` | Retrieve single course |
-| `getSemester(id)` | Retrieve semester by "semester-year" key |
-| `clearAllData()` | Reset storage and state |
+| Action                 | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `addCourse(course)`    | Insert new course                        |
+| `updateCourse(course)` | Update existing course by ID             |
+| `deleteCourse(id)`     | Remove course by ID                      |
+| `getCourse(id)`        | Retrieve single course                   |
+| `getSemester(id)`      | Retrieve semester by "semester-year" key |
+| `clearAllData()`       | Reset storage and state                  |
 
 ### Custom Hooks
 
-| Hook | Location | Purpose |
-|------|----------|---------|
-| `useGpa()` | `hooks/useGpa.ts` | Access GpaContext (courses, semesters, GPA, actions) |
-| `useTheme()` | `hooks/useTheme.ts` | Access theme mode, colors, and toggle |
+| Hook         | Location            | Purpose                                              |
+| ------------ | ------------------- | ---------------------------------------------------- |
+| `useGpa()`   | `hooks/useGpa.ts`   | Access GpaContext (courses, semesters, GPA, actions) |
+| `useTheme()` | `hooks/useTheme.ts` | Access theme mode, colors, and toggle                |
 
 ## Data Flow
 
@@ -118,13 +118,13 @@ Courses → FAB → router.push('/course/new')
 
 ```typescript
 {
-  id: string;          // Unique identifier
-  name: string;        // Course title
-  code: string;        // Course code (e.g., CS101)
-  credits: number;     // 1–4 credit hours
-  grade: string;       // Letter grade (A through F)
-  semester: string;    // Fall | Spring | Summer
-  year: number;        // Enrollment year
+  id: string; // Unique identifier
+  name: string; // Course title
+  code: string; // Course code (e.g., CS101)
+  credits: number; // 1–4 credit hours
+  grade: string; // Letter grade (A through F)
+  semester: string; // Fall | Spring | Summer
+  year: number; // Enrollment year
 }
 ```
 
@@ -141,14 +141,14 @@ Courses → FAB → router.push('/course/new')
 
 ## Navigation
 
-**Router:** Expo Router v5 (file-based routing)
+**Router:** Expo Router 56 (file-based routing)
 
-| Route | Presentation | Animation |
-|-------|-------------|-----------|
-| `(tabs)/` | Tab navigator | Default |
-| `course/[id]` | Modal | slide_from_bottom |
-| `semester/[id]` | Screen | slide_from_right |
-| `+not-found` | Screen | Default |
+| Route           | Presentation  | Animation         |
+| --------------- | ------------- | ----------------- |
+| `(tabs)/`       | Tab navigator | Default           |
+| `course/[id]`   | Modal         | slide_from_bottom |
+| `semester/[id]` | Screen        | slide_from_right  |
+| `+not-found`    | Screen        | Default           |
 
 **Tab Bar:** 4 tabs — Dashboard, Courses, Academic Record, Settings (themed styling, Lucide icons)
 
@@ -163,18 +163,18 @@ Courses → FAB → router.push('/course/new')
 
 ### Color Palette
 
-| Token | Light | Dark |
-|-------|-------|------|
-| background | #F8F9FA | #121212 |
-| card | #FFFFFF | #1E1E1E |
-| text | #212529 | #E9ECEF |
+| Token         | Light   | Dark    |
+| ------------- | ------- | ------- |
+| background    | #F8F9FA | #121212 |
+| card          | #FFFFFF | #1E1E1E |
+| text          | #212529 | #E9ECEF |
 | textSecondary | #6C757D | #ADB5BD |
-| border | #E9ECEF | #2C2C2C |
-| primary | #1A73E8 | #8AB4F8 |
-| primaryLight | #E8F0FE | #174EA6 |
-| success | #34A853 | #81C995 |
-| warning | #FBBC04 | #FDD663 |
-| error | #EA4335 | #F28B82 |
+| border        | #E9ECEF | #2C2C2C |
+| primary       | #1A73E8 | #8AB4F8 |
+| primaryLight  | #E8F0FE | #174EA6 |
+| success       | #34A853 | #81C995 |
+| warning       | #FBBC04 | #FDD663 |
+| error         | #EA4335 | #F28B82 |
 
 ### Implementation
 
@@ -182,13 +182,13 @@ Each component consumes `useTheme()` and applies colors from the `colors` object
 
 ## Storage & Persistence
 
-| Technology | AsyncStorage (`@react-native-async-storage/async-storage`) |
-|---|---|
-| **Storage Key** | `'courses'` (JSON stringified array) |
-| **Persistence Timing** | Automatic save when courses array changes |
-| **Hydration** | Loads on app startup before rendering |
-| **Error Handling** | try-catch with console.error logging |
-| **Reset** | `clearAllData()` removes key from storage |
+| Technology             | AsyncStorage (`@react-native-async-storage/async-storage`) |
+| ---------------------- | ---------------------------------------------------------- |
+| **Storage Key**        | `'courses'` (JSON stringified array)                       |
+| **Persistence Timing** | Automatic save when courses array changes                  |
+| **Hydration**          | Loads on app startup before rendering                      |
+| **Error Handling**     | try-catch with console.error logging                       |
+| **Reset**              | `clearAllData()` removes key from storage                  |
 
 ## GPA Calculation (`utils/gpaCalculator.ts`)
 
@@ -211,14 +211,14 @@ Determined by cumulative GPA value — mapped to color and label for UI display.
 
 ## Performance
 
-| Strategy | Implementation |
-|----------|---------------|
-| FlatList | Used for all lists with `keyExtractor` |
-| useCallback | All context actions memoized |
-| useMemo | Theme `isDark` computation |
-| Lazy derivation | Semesters recalculated only when courses change |
-| Single storage blob | One AsyncStorage key for all courses |
-| StyleSheet | Created per-component to avoid object recreation |
+| Strategy            | Implementation                                   |
+| ------------------- | ------------------------------------------------ |
+| FlatList            | Used for all lists with `keyExtractor`           |
+| useCallback         | All context actions memoized                     |
+| useMemo             | Theme `isDark` computation                       |
+| Lazy derivation     | Semesters recalculated only when courses change  |
+| Single storage blob | One AsyncStorage key for all courses             |
+| StyleSheet          | Created per-component to avoid object recreation |
 
 ## Error Handling & Validation
 
@@ -230,14 +230,14 @@ Determined by cumulative GPA value — mapped to color and label for UI display.
 
 ## Dependencies
 
-| Package | Role |
-|---------|------|
-| `expo-router` | File-based routing & navigation |
-| `@react-native-async-storage/async-storage` | Data persistence |
-| `react-native-reanimated` | Animations |
-| `lucide-react-native` | Icons |
-| `@expo-google-fonts/inter` | Typography |
-| `@react-native-picker/picker` | Native picker UI |
-| `react-native-gesture-handler` | Touch gestures |
-| `react-native-safe-area-context` | Safe area insets |
-| `expo-linear-gradient` | Gradient backgrounds |
+| Package                                     | Role                            |
+| ------------------------------------------- | ------------------------------- |
+| `expo-router`                               | File-based routing & navigation |
+| `@react-native-async-storage/async-storage` | Data persistence                |
+| `react-native-reanimated`                   | Animations                      |
+| `lucide-react-native`                       | Icons                           |
+| `@expo-google-fonts/inter`                  | Typography                      |
+| `@react-native-picker/picker`               | Native picker UI                |
+| `react-native-gesture-handler`              | Touch gestures                  |
+| `react-native-safe-area-context`            | Safe area insets                |
+| `expo-linear-gradient`                      | Gradient backgrounds            |

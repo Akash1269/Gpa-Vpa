@@ -190,7 +190,7 @@ export default function SemesterGoalScreen() {
     saveButtonText: {
       fontFamily: fonts.semiBold,
       fontSize: fontSizes.lg,
-      color: '#FFFFFF',
+      color: colors.onPrimary,
       marginLeft: spacing.sm,
     },
   });
@@ -339,7 +339,7 @@ export default function SemesterGoalScreen() {
             accessibilityRole="button"
             accessibilityLabel="Save semester goal"
           >
-            <Check size={20} color="#FFFFFF" />
+            <Check size={20} color={colors.onPrimary} />
             <Text style={styles.saveButtonText}>Save Goal</Text>
           </TouchableOpacity>
         </Animated.View>

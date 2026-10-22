@@ -26,9 +26,10 @@ export default function GpaChart({ semesters }: GpaChartProps) {
       );
     });
 
-  const maxGpa = 4.0;
   const chartHeight = 120;
   const dotPadding = 16; // horizontal padding so dots don't clip edges
+  const labelSpace = 24; // room above the highest dot for its GPA label
+  const bottomPadding = 8;
 
   const styles = StyleSheet.create({
     container: {},
@@ -79,12 +80,12 @@ export default function GpaChart({ semesters }: GpaChartProps) {
       textAlign: 'center',
     },
     xLabelsRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      height: 14,
       marginTop: spacing.sm,
-      paddingHorizontal: dotPadding,
     },
     xLabel: {
+      position: 'absolute',
+      width: 40,
       fontFamily: fonts.regular,
       fontSize: 10,
       color: colors.textSecondary,
@@ -107,12 +108,19 @@ export default function GpaChart({ semesters }: GpaChartProps) {
     );
   }
 
+  // Fit the y-axis to the data (with some margin) so small changes are visible
+  // instead of every point sitting along the top of a fixed 0–4 scale
+  const gpas = sortedSemesters.map((sem) => sem.gpa);
+  const minGpa = Math.max(0, Math.min(...gpas) - 0.5);
+  const maxGpa = Math.min(4, Math.max(...gpas) + 0.25);
+  const usableHeight = chartHeight - labelSpace - bottomPadding;
+
   // Calculate points in pixels once we know the chart width
   const usableWidth = chartWidth - dotPadding * 2;
   const points = sortedSemesters.map((sem, index) => {
     const xFraction = sortedSemesters.length > 1 ? index / (sortedSemesters.length - 1) : 0.5;
     const x = dotPadding + xFraction * usableWidth;
-    const y = (1 - sem.gpa / maxGpa) * chartHeight;
+    const y = labelSpace + (1 - (sem.gpa - minGpa) / (maxGpa - minGpa)) * usableHeight;
     return {
       x,
       y,
@@ -208,11 +216,12 @@ export default function GpaChart({ semesters }: GpaChartProps) {
 
           {/* X-axis labels */}
           <View style={styles.xLabelsRow}>
-            {sortedSemesters.map((sem, index) => (
-              <Text key={index} style={styles.xLabel}>
-                {`${sem.semester.substring(0, 2)} ${String(sem.year).slice(-2)}`}
-              </Text>
-            ))}
+            {chartWidth > 0 &&
+              points.map((point, index) => (
+                <Text key={index} style={[styles.xLabel, { left: point.x - 20 }]}>
+                  {point.label}
+                </Text>
+              ))}
           </View>
         </Animated.View>
       )}

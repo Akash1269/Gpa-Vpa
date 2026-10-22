@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
-import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type GradePickerProps = {
   value: string | null;
@@ -59,8 +59,8 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
             style={[
               styles.option,
               grade === null && {
-                backgroundColor: value === null ? statusColors.na.bg : colors.card,
-                borderColor: value === null ? statusColors.na.text : colors.border,
+                backgroundColor: value === null ? colors.status.na.bg : colors.card,
+                borderColor: value === null ? colors.status.na.text : colors.border,
               },
               grade !== null && value === grade && styles.selectedOption,
             ]}
@@ -71,7 +71,7 @@ export default function GradePicker({ value, onChange }: GradePickerProps) {
                 styles.optionText,
                 grade === null && {
                   fontSize: fontSizes.sm,
-                  color: value === null ? statusColors.na.text : colors.textSecondary,
+                  color: value === null ? colors.status.na.text : colors.textSecondary,
                 },
                 grade !== null && value === grade && styles.selectedOptionText,
               ]}

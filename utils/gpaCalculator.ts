@@ -70,13 +70,30 @@ export const getAcademicStanding = (gpa: number) => {
 };
 
 // Get color for a grade display
-export const getGradeColor = (grade: string | number) => {
+// Dark mode uses a translucent tint of a lighter text color; light pastels glare on dark cards
+const darkGradeColors = {
+  green: { background: 'rgba(129,201,149,0.16)', text: '#81C995' },
+  blue: { background: 'rgba(138,180,248,0.16)', text: '#8AB4F8' },
+  yellow: { background: 'rgba(253,214,99,0.16)', text: '#FDD663' },
+  orange: { background: 'rgba(246,174,107,0.16)', text: '#F6AE6B' },
+  red: { background: 'rgba(242,139,130,0.16)', text: '#F28B82' },
+};
+
+export const getGradeColor = (grade: string | number, isDark = false) => {
   let gradeValue: number;
 
   if (typeof grade === 'string') {
     gradeValue = calculateGradeValue(grade);
   } else {
     gradeValue = grade;
+  }
+
+  if (isDark) {
+    if (gradeValue >= 3.7) return darkGradeColors.green;
+    if (gradeValue >= 3.0) return darkGradeColors.blue;
+    if (gradeValue >= 2.0) return darkGradeColors.yellow;
+    if (gradeValue >= 1.0) return darkGradeColors.orange;
+    return darkGradeColors.red;
   }
 
   if (gradeValue >= 3.7) {

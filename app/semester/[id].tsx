@@ -6,12 +6,12 @@ import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import { useTheme } from '@/hooks/useTheme';
 import { getGradeColor } from '@/utils/gpaCalculator';
-import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { Plus, ArrowLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SemesterScreen() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getSemester, targetSemesterGpa } = useGpa();
   const semester = useMemo(() => (id ? (getSemester(id) ?? null) : null), [id, getSemester]);
@@ -209,7 +209,7 @@ export default function SemesterScreen() {
             onPress={handleAddCourse}
             accessibilityLabel="Add course"
           >
-            <Plus size={18} color="#FFFFFF" strokeWidth={2.5} />
+            <Plus size={18} color={colors.onPrimary} strokeWidth={2.5} />
           </TouchableOpacity>
         </View>
       </View>
@@ -225,8 +225,8 @@ export default function SemesterScreen() {
                 {
                   backgroundColor:
                     semester.status === 'in-progress'
-                      ? statusColors.warning.bg
-                      : statusColors.completed.bg,
+                      ? colors.status.warning.bg
+                      : colors.status.completed.bg,
                 },
               ]}
             >
@@ -236,8 +236,8 @@ export default function SemesterScreen() {
                   {
                     color:
                       semester.status === 'in-progress'
-                        ? statusColors.warning.text
-                        : statusColors.completed.text,
+                        ? colors.status.warning.text
+                        : colors.status.completed.text,
                   },
                 ]}
               >
@@ -248,7 +248,7 @@ export default function SemesterScreen() {
 
           {semester.gpa > 0 && (
             <View style={styles.gpaSection}>
-              <Text style={[styles.gpaValue, { color: getGradeColor(semester.gpa).text }]}>
+              <Text style={[styles.gpaValue, { color: getGradeColor(semester.gpa, isDark).text }]}>
                 {semester.gpa.toFixed(2)}
               </Text>
               <Text style={styles.gpaLabel}>Semester GPA</Text>
@@ -290,7 +290,7 @@ export default function SemesterScreen() {
             </View>
             {semester.status === 'in-progress' && targetSemesterGpa !== null && (
               <View style={styles.statPill}>
-                <Text style={[styles.statPillValue, { color: statusColors.goal.text }]}>
+                <Text style={[styles.statPillValue, { color: colors.status.goal.text }]}>
                   🎯 {targetSemesterGpa.toFixed(2)}
                 </Text>
                 <Text style={styles.statPillLabel}>Goal</Text>

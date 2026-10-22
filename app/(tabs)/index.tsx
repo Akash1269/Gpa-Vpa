@@ -5,12 +5,14 @@ import GpaCard from '@/components/GpaCard';
 import SemesterProgress from '@/components/SemesterProgress';
 import { getAcademicStanding } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
-import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
+import { useTabBarClearance } from '@/hooks/useTabBarClearance';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { Trophy, TrendingUp, Target } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function Dashboard() {
   const { colors } = useTheme();
+  const tabBarClearance = useTabBarClearance();
   const {
     cumulativeGpa,
     totalCredits,
@@ -33,7 +35,7 @@ export default function Dashboard() {
     },
     content: {
       padding: spacing.xl,
-      paddingBottom: 100,
+      paddingBottom: tabBarClearance,
       ...(Platform.OS === 'web'
         ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
         : {}),
@@ -128,7 +130,7 @@ export default function Dashboard() {
             onPress={() => router.push('/(tabs)/academic-record')}
             accessibilityLabel="View semesters"
           >
-            <View style={[styles.statIconBg, { backgroundColor: statusColors.inProgress.bg }]}>
+            <View style={[styles.statIconBg, { backgroundColor: colors.status.inProgress.bg }]}>
               <Trophy size={16} color="#1A73E8" />
             </View>
             <View>
@@ -141,8 +143,8 @@ export default function Dashboard() {
             onPress={() => router.push('/(tabs)/courses')}
             accessibilityLabel="View courses"
           >
-            <View style={[styles.statIconBg, { backgroundColor: statusColors.warning.bg }]}>
-              <TrendingUp size={16} color={statusColors.warning.text} />
+            <View style={[styles.statIconBg, { backgroundColor: colors.status.warning.bg }]}>
+              <TrendingUp size={16} color={colors.status.warning.text} />
             </View>
             <View>
               <Text style={styles.statValue}>{courses.length}</Text>
@@ -172,8 +174,8 @@ export default function Dashboard() {
                 }}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <View style={[styles.statIconBg, { backgroundColor: statusColors.goal.bg }]}>
-                    <Target size={16} color={statusColors.goal.text} />
+                  <View style={[styles.statIconBg, { backgroundColor: colors.status.goal.bg }]}>
+                    <Target size={16} color={colors.status.goal.text} />
                   </View>
                   <Text
                     style={{
@@ -221,7 +223,7 @@ export default function Dashboard() {
                         fontFamily: fonts.bold,
                         fontSize: 22,
                         color:
-                          cumulativeGpa >= targetCgpa ? statusColors.completed.text : colors.text,
+                          cumulativeGpa >= targetCgpa ? colors.status.completed.text : colors.text,
                         marginTop: spacing.xs,
                       }}
                     >
@@ -240,7 +242,7 @@ export default function Dashboard() {
                           height: '100%',
                           backgroundColor:
                             cumulativeGpa >= targetCgpa
-                              ? statusColors.completed.text
+                              ? colors.status.completed.text
                               : colors.primary,
                           borderRadius: 2,
                           width: `${Math.min(100, (cumulativeGpa / targetCgpa) * 100)}%`,
@@ -286,7 +288,9 @@ export default function Dashboard() {
                         fontFamily: fonts.bold,
                         fontSize: fontSizes.xl,
                         color:
-                          totalCredits >= targetCredits ? statusColors.completed.text : colors.text,
+                          totalCredits >= targetCredits
+                            ? colors.status.completed.text
+                            : colors.text,
                         marginTop: spacing.xs,
                       }}
                     >
@@ -314,7 +318,7 @@ export default function Dashboard() {
                           height: '100%',
                           backgroundColor:
                             totalCredits >= targetCredits
-                              ? statusColors.completed.text
+                              ? colors.status.completed.text
                               : colors.primary,
                           borderRadius: 2,
                           width: `${Math.min(100, (totalCredits / targetCredits) * 100)}%`,
@@ -343,8 +347,8 @@ export default function Dashboard() {
               onPress={() => router.push('/(tabs)/goals')}
               accessibilityLabel="Open GPA Planner"
             >
-              <View style={[styles.statIconBg, { backgroundColor: statusColors.goal.bg }]}>
-                <Target size={16} color={statusColors.goal.text} />
+              <View style={[styles.statIconBg, { backgroundColor: colors.status.goal.bg }]}>
+                <Target size={16} color={colors.status.goal.text} />
               </View>
               <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={styles.goalCardTitle}>Set Goals</Text>
@@ -360,8 +364,8 @@ export default function Dashboard() {
           <Animated.View entering={FadeInDown.delay(200).duration(500)}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>This Semester</Text>
-              <View style={[styles.sectionBadge, { backgroundColor: statusColors.inProgress.bg }]}>
-                <Text style={[styles.sectionBadgeText, { color: statusColors.inProgress.text }]}>
+              <View style={[styles.sectionBadge, { backgroundColor: colors.status.inProgress.bg }]}>
+                <Text style={[styles.sectionBadgeText, { color: colors.status.inProgress.text }]}>
                   In Progress
                 </Text>
               </View>

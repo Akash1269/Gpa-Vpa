@@ -6,11 +6,13 @@ import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
 import Toast from '@/components/Toast';
 import { useTheme } from '@/hooks/useTheme';
-import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
+import { useTabBarClearance } from '@/hooks/useTabBarClearance';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { Course } from '@/types/course';
 
 export default function CoursesScreen() {
   const { colors } = useTheme();
+  const tabBarClearance = useTabBarClearance();
   const { courses, lastDeletedCourse, undoDelete, clearLastDeleted } = useGpa();
   const [searchQuery, setSearchQuery] = useState('');
   const showToast = !!lastDeletedCourse;
@@ -149,8 +151,8 @@ export default function CoursesScreen() {
                         style={{
                           fontFamily: fonts.medium,
                           fontSize: fontSizes.xs,
-                          color: statusColors.warning.text,
-                          backgroundColor: statusColors.warning.bg,
+                          color: colors.status.warning.text,
+                          backgroundColor: colors.status.warning.bg,
                           paddingHorizontal: spacing.sm,
                           paddingVertical: 2,
                           borderRadius: 6,
@@ -167,7 +169,7 @@ export default function CoursesScreen() {
                 </View>
               );
             }}
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{ paddingBottom: tabBarClearance }}
             showsVerticalScrollIndicator={false}
             stickySectionHeadersEnabled={false}
           />

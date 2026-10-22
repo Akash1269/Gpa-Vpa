@@ -7,8 +7,8 @@ This is a React Native (Expo 56) mobile app for tracking courses, calculating GP
 ## Tech Stack
 
 - **Framework:** Expo 56 + React 19 + React Native 0.85
-- **Language:** TypeScript 5.8
-- **Routing:** Expo Router v5 (file-based)
+- **Language:** TypeScript 6.0
+- **Routing:** Expo Router 56 (file-based)
 - **State:** React Context API (single GpaContext provider)
 - **Storage:** AsyncStorage (local, no backend)
 - **Animations:** React Native Reanimated
@@ -82,6 +82,7 @@ eas build --profile production --platform android # AAB for Play Store
 ```
 
 ### Release Process (Tag-Based)
+
 ```bash
 # Bump version in app.json, commit, then:
 git tag vX.Y.Z

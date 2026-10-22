@@ -29,7 +29,7 @@ export default function CreditsScreen() {
         : {}),
     },
     totalCard: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.hero,
       borderRadius: radii.xl,
       padding: spacing.xl,
       marginBottom: spacing['2xl'],

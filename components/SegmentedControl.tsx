@@ -29,7 +29,7 @@ export default function SegmentedControl({ options, selected, onChange }: Segmen
             style={[
               styles.text,
               { color: colors.textSecondary },
-              selected === option && styles.textActive,
+              selected === option && { color: colors.onPrimary },
             ]}
           >
             {option}
@@ -57,8 +57,5 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: fonts.medium,
     fontSize: 13,
-  },
-  textActive: {
-    color: '#FFFFFF',
   },
 });

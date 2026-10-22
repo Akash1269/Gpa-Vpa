@@ -39,14 +39,33 @@ function useGpaContext() {
   return React.useContext(GpaContext);
 }
 
+// Back AsyncStorage.getItem with a key/value map. '@hasLaunched' defaults to
+// set so tests don't take the first-launch demo-data path unless they opt in.
+function mockStorage(values: Record<string, string | null> = {}) {
+  const store: Record<string, string | null> = { '@hasLaunched': 'true', ...values };
+  (AsyncStorage.getItem as jest.Mock).mockImplementation((key: string) =>
+    Promise.resolve(store[key] ?? null)
+  );
+}
+
+// Render the provider and let its async storage load settle inside act(),
+// so the load can't race with (or overwrite) the test's own updates.
+async function renderGpaContext() {
+  const utils = renderHook(() => useGpaContext(), { wrapper });
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  return utils;
+}
+
 describe('GpaContext', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
+    mockStorage();
   });
 
-  it('provides default values', () => {
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+  it('provides default values', async () => {
+    const { result } = await renderGpaContext();
 
     expect(result.current.courses).toEqual([]);
     expect(result.current.semesters).toEqual([]);
@@ -57,10 +76,9 @@ describe('GpaContext', () => {
   });
 
   it('loads courses from AsyncStorage on mount', async () => {
-    const storedCourses = [mockCourse];
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(storedCourses));
+    mockStorage({ courses: JSON.stringify([mockCourse]) });
 
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     await waitFor(() => {
       expect(result.current.courses).toHaveLength(1);
@@ -68,8 +86,17 @@ describe('GpaContext', () => {
     });
   });
 
+  it('loads demo data on first launch', async () => {
+    mockStorage({ '@hasLaunched': null });
+
+    const { result } = await renderGpaContext();
+
+    expect(result.current.courses.length).toBeGreaterThan(0);
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith('@hasLaunched', 'true');
+  });
+
   it('adds a course', async () => {
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     act(() => {
       result.current.addCourse(mockCourse);
@@ -82,9 +109,9 @@ describe('GpaContext', () => {
   });
 
   it('updates a course', async () => {
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([mockCourse]));
+    mockStorage({ courses: JSON.stringify([mockCourse]) });
 
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     await waitFor(() => {
       expect(result.current.courses).toHaveLength(1);
@@ -101,11 +128,9 @@ describe('GpaContext', () => {
   });
 
   it('deletes a course', async () => {
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
-      JSON.stringify([mockCourse, mockCourse2])
-    );
+    mockStorage({ courses: JSON.stringify([mockCourse, mockCourse2]) });
 
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     await waitFor(() => {
       expect(result.current.courses).toHaveLength(2);
@@ -122,7 +147,7 @@ describe('GpaContext', () => {
   });
 
   it('calculates cumulative GPA after adding courses', async () => {
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     act(() => {
       result.current.addCourse(mockCourse); // A = 4.0, 3 credits
@@ -136,7 +161,7 @@ describe('GpaContext', () => {
   });
 
   it('calculates total credits', async () => {
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     act(() => {
       result.current.addCourse(mockCourse); // 3 credits
@@ -159,7 +184,7 @@ describe('GpaContext', () => {
       year: 2026,
     };
 
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     act(() => {
       result.current.addCourse(mockCourse); // Fall 2025
@@ -173,9 +198,9 @@ describe('GpaContext', () => {
   });
 
   it('gets a course by id', async () => {
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([mockCourse]));
+    mockStorage({ courses: JSON.stringify([mockCourse]) });
 
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     await waitFor(() => {
       expect(result.current.getCourse('test-1')).toEqual(mockCourse);
@@ -184,16 +209,16 @@ describe('GpaContext', () => {
   });
 
   it('clears all data', async () => {
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify([mockCourse]));
+    mockStorage({ courses: JSON.stringify([mockCourse]) });
 
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     await waitFor(() => {
       expect(result.current.courses).toHaveLength(1);
     });
 
     await act(async () => {
-      result.current.clearAllData();
+      await result.current.clearAllData();
     });
 
     await waitFor(() => {
@@ -203,7 +228,7 @@ describe('GpaContext', () => {
   });
 
   it('persists courses to AsyncStorage on change', async () => {
-    const { result } = renderHook(() => useGpaContext(), { wrapper });
+    const { result } = await renderGpaContext();
 
     act(() => {
       result.current.addCourse(mockCourse);

@@ -8,7 +8,7 @@ You are a feature development agent for a React Native (Expo 56) GPA calculator 
 
 ### Context
 
-- Tech: Expo 56, React 19, React Native 0.85, TypeScript 5.8, Expo Router v5, AsyncStorage
+- Tech: Expo 56, React 19, React Native 0.85, TypeScript 6.0, Expo Router 56, AsyncStorage
 - State: React Context API via `GpaContext` — courses are single source of truth
 - Styling: `useTheme()` hook returns `colors` object — never hardcode colors
 - Data: `useGpa()` hook provides courses, semesters, GPA values, and CRUD actions

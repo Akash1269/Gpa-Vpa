@@ -16,10 +16,10 @@ type CourseCardProps = {
 };
 
 export default React.memo(function CourseCard({ course, showSemester = false }: CourseCardProps) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { deleteCourse } = useGpa();
   const gradeColor = course.grade
-    ? getGradeColor(course.grade)
+    ? getGradeColor(course.grade, isDark)
     : { background: colors.border, text: colors.textSecondary };
 
   const styles = StyleSheet.create({

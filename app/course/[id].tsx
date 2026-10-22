@@ -249,7 +249,7 @@ export default function CourseScreen() {
     saveButtonText: {
       fontFamily: fonts.semiBold,
       fontSize: fontSizes.lg,
-      color: '#FFFFFF',
+      color: colors.onPrimary,
       marginLeft: spacing.sm,
     },
     deleteButton: {
@@ -369,7 +369,7 @@ export default function CourseScreen() {
             accessibilityRole="button"
             accessibilityLabel="Save course"
           >
-            <Save size={20} color="#FFFFFF" />
+            <Save size={20} color={colors.onPrimary} />
             <Text style={styles.saveButtonText}>Save Course</Text>
           </TouchableOpacity>
 
@@ -380,7 +380,7 @@ export default function CourseScreen() {
               accessibilityRole="button"
               accessibilityLabel="Delete course"
             >
-              <Trash2 size={22} color="#FFFFFF" />
+              <Trash2 size={22} color={colors.onError} />
             </TouchableOpacity>
           )}
         </View>

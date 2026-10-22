@@ -17,7 +17,7 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.hero,
       borderRadius: radii.xl + 4,
       padding: spacing['2xl'],
       overflow: 'hidden',

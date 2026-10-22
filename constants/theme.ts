@@ -38,11 +38,4 @@ export const radii = {
   full: 999,
 } as const;
 
-// ─── Status Colors (theme-independent) ───────────────
-export const statusColors = {
-  inProgress: { bg: '#E3F2FD', text: '#1976D2' },
-  completed: { bg: '#E8F5E9', text: '#34A853' },
-  warning: { bg: '#FFF3E0', text: '#F57C00' },
-  na: { bg: '#FFF3E0', text: '#F57C00' },
-  goal: { bg: '#F3E5F5', text: '#9C27B0' },
-} as const;
+// Status colors are theme-dependent: use `colors.status` from useTheme()

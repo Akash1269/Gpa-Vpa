@@ -11,15 +11,18 @@ import {
 import { router } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
-import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
+import { useTabBarClearance } from '@/hooks/useTabBarClearance';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { gradePoints } from '@/utils/gpaCalculator';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Target, GraduationCap, TrendingUp, ChevronRight } from 'lucide-react-native';
+import ProgressRing from '@/components/ProgressRing';
 
 type Tab = 'gpa' | 'graduation';
 
 export default function GoalsScreen() {
   const { colors } = useTheme();
+  const tabBarClearance = useTabBarClearance();
   const {
     cumulativeGpa,
     totalCredits,
@@ -145,7 +148,7 @@ export default function GoalsScreen() {
     },
     content: {
       padding: spacing.lg,
-      paddingBottom: 100,
+      paddingBottom: tabBarClearance,
       ...(Platform.OS === 'web'
         ? { maxWidth: 1200, alignSelf: 'center' as const, width: '100%' as unknown as number }
         : {}),
@@ -216,20 +219,6 @@ export default function GoalsScreen() {
       fontSize: fontSizes.md,
       color: colors.textSecondary,
       marginTop: 2,
-    },
-    progressRing: {
-      width: 72,
-      height: 72,
-      borderRadius: 36,
-      borderWidth: 6,
-      borderColor: colors.border,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    progressRingText: {
-      fontFamily: fonts.bold,
-      fontSize: fontSizes.md,
-      color: colors.primary,
     },
     progressBar: {
       height: 6,
@@ -353,7 +342,7 @@ export default function GoalsScreen() {
     warningBanner: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: '#FFF3E0',
+      backgroundColor: colors.status.warning.bg,
       borderRadius: radii.md,
       padding: spacing.md,
       marginTop: spacing.md,
@@ -361,7 +350,7 @@ export default function GoalsScreen() {
     warningText: {
       fontFamily: fonts.medium,
       fontSize: fontSizes.sm,
-      color: '#E65100',
+      color: colors.status.warning.text,
       marginLeft: spacing.sm,
       flex: 1,
     },
@@ -416,25 +405,12 @@ export default function GoalsScreen() {
                 <Text style={styles.summaryValue}>{cumulativeGpa.toFixed(2)}</Text>
                 <Text style={styles.summaryTarget}>Target: {cumulativeTargetGpaInput || '—'}</Text>
               </View>
-              <View style={[styles.progressRing, { borderColor: colors.border }]}>
-                <View
-                  style={[
-                    StyleSheet.absoluteFill,
-                    {
-                      borderRadius: 36,
-                      borderWidth: 6,
-                      borderColor: resultColor,
-                      borderTopColor: gpaProgress >= 0.25 ? resultColor : 'transparent',
-                      borderRightColor: gpaProgress >= 0.5 ? resultColor : 'transparent',
-                      borderBottomColor: gpaProgress >= 0.75 ? resultColor : 'transparent',
-                      borderLeftColor: gpaProgress >= 1 ? resultColor : 'transparent',
-                    },
-                  ]}
-                />
-                <Text style={[styles.progressRingText, { color: resultColor }]}>
-                  {progressPercent}%
-                </Text>
-              </View>
+              <ProgressRing
+                progress={gpaProgress}
+                color={resultColor}
+                trackColor={colors.border}
+                label={`${progressPercent}%`}
+              />
             </View>
             <View style={styles.progressBar}>
               <View
@@ -580,8 +556,8 @@ export default function GoalsScreen() {
               onPress={() => router.push('/semester-goal')}
               accessibilityLabel="Set semester course goals"
             >
-              <View style={[styles.semesterLinkIcon, { backgroundColor: statusColors.goal.bg }]}>
-                <Target size={20} color={statusColors.goal.text} />
+              <View style={[styles.semesterLinkIcon, { backgroundColor: colors.status.goal.bg }]}>
+                <Target size={20} color={colors.status.goal.text} />
               </View>
               <View style={styles.semesterLinkText}>
                 <Text style={styles.semesterLinkTitle}>Semester Course Goals</Text>
@@ -601,7 +577,7 @@ export default function GoalsScreen() {
     const progress = graduationResult?.progress ?? 0;
     const progressPercent = Math.round(progress * 100);
     const isComplete = progress >= 1;
-    const progressColor = isComplete ? statusColors.completed.text : colors.primary;
+    const progressColor = isComplete ? colors.status.completed.text : colors.primary;
 
     return (
       <>
@@ -614,25 +590,12 @@ export default function GoalsScreen() {
                 <Text style={styles.summaryValue}>{totalCredits}</Text>
                 <Text style={styles.summaryTarget}>of {graduationCredits || '—'} required</Text>
               </View>
-              <View style={[styles.progressRing, { borderColor: colors.border }]}>
-                <View
-                  style={[
-                    StyleSheet.absoluteFill,
-                    {
-                      borderRadius: 36,
-                      borderWidth: 6,
-                      borderColor: progressColor,
-                      borderTopColor: progress >= 0.25 ? progressColor : 'transparent',
-                      borderRightColor: progress >= 0.5 ? progressColor : 'transparent',
-                      borderBottomColor: progress >= 0.75 ? progressColor : 'transparent',
-                      borderLeftColor: progress >= 1 ? progressColor : 'transparent',
-                    },
-                  ]}
-                />
-                <Text style={[styles.progressRingText, { color: progressColor }]}>
-                  {progressPercent}%
-                </Text>
-              </View>
+              <ProgressRing
+                progress={progress}
+                color={progressColor}
+                trackColor={colors.border}
+                label={`${progressPercent}%`}
+              />
             </View>
             <View style={styles.progressBar}>
               <View

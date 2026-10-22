@@ -4,16 +4,16 @@ import { Semester } from '@/types/semester';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
 import { useGpa } from '@/hooks/useGpa';
-import { fonts, fontSizes, spacing, radii, statusColors } from '@/constants/theme';
+import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type SemesterProgressProps = {
   semester: Semester;
 };
 
 export default function SemesterProgress({ semester }: SemesterProgressProps) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { targetSemesterGpa, courseGoals } = useGpa();
-  const gpaColor = getGradeColor(semester.gpa);
+  const gpaColor = getGradeColor(semester.gpa, isDark);
 
   const totalCredits = semester.courses.reduce((sum, course) => sum + course.credits, 0);
   const gradedCourses = semester.courses.filter((c) => c.grade !== null);
@@ -25,7 +25,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
 
   const getCourseBorderColor = (grade: string | null): string => {
     if (!grade) return colors.border;
-    const value = getGradeColor(grade);
+    const value = getGradeColor(grade, isDark);
     return value.text;
   };
 
@@ -100,7 +100,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
     goalText: {
       fontFamily: fonts.medium,
       fontSize: fontSizes.sm,
-      color: statusColors.goal.text,
+      color: colors.status.goal.text,
     },
     courseList: {
       marginBottom: 14,
@@ -160,7 +160,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
     goalBadgeText: {
       fontFamily: fonts.semiBold,
       fontSize: fontSizes.sm,
-      color: statusColors.goal.text,
+      color: colors.status.goal.text,
     },
     editGoalButton: {
       alignSelf: 'flex-start',
@@ -255,7 +255,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
                     styles.gradeBadge,
                     {
                       backgroundColor: course.grade
-                        ? getGradeColor(course.grade).background
+                        ? getGradeColor(course.grade, isDark).background
                         : colors.background,
                     },
                   ]}
@@ -265,7 +265,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
                       styles.gradeBadgeText,
                       {
                         color: course.grade
-                          ? getGradeColor(course.grade).text
+                          ? getGradeColor(course.grade, isDark).text
                           : colors.textSecondary,
                       },
                     ]}

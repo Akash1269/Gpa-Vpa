@@ -12,6 +12,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import Head from 'expo-router/head';
 import { GpaProvider } from '@/context/GpaContext';
+import { ThemeProvider } from '@/context/ThemeContext';
+import { useTheme } from '@/hooks/useTheme';
 import StackNavigator from '@/components/StackNavigator';
 import ErrorBoundary from '@/components/ErrorBoundary';
 if (Platform.OS === 'web') {
@@ -58,12 +60,22 @@ export default function RootLayout() {
         <meta name="theme-color" content="#F8F9FA" />
         <style type="text/css">{`html, body, #root { background-color: #F8F9FA; }`}</style>
       </Head>
-      <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
-        <GpaProvider>
-          <StackNavigator />
-          <StatusBar style="auto" />
-        </GpaProvider>
-      </GestureHandlerRootView>
+      <ThemeProvider>
+        <ThemedRoot />
+      </ThemeProvider>
     </ErrorBoundary>
+  );
+}
+
+function ThemedRoot() {
+  const { colors, isDark } = useTheme();
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
+      <GpaProvider>
+        <StackNavigator />
+        <StatusBar style={isDark ? 'light' : 'dark'} />
+      </GpaProvider>
+    </GestureHandlerRootView>
   );
 }
