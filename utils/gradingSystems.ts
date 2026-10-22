@@ -1,6 +1,6 @@
-import { GradingSystem, GradingSystemId } from '@/types/gradingSystem';
+import { GradingSystem, GradingSystemId, PresetGradingSystemId } from '@/types/gradingSystem';
 
-export const GRADING_SYSTEMS: Record<GradingSystemId, GradingSystem> = {
+export const GRADING_SYSTEMS: Record<PresetGradingSystemId, GradingSystem> = {
   'us_4.0': {
     id: 'us_4.0',
     name: 'US 4.0 scale',
@@ -8,6 +8,7 @@ export const GRADING_SYSTEMS: Record<GradingSystemId, GradingSystem> = {
     flag: '🇺🇸',
     maxGpa: 4.0,
     scaleLabel: '4.0',
+    hasPercentage: false,
     defaultTargetGpa: 3.5,
     grades: [
       { label: 'A', value: 4.0, description: 'Excellent' },
@@ -40,6 +41,7 @@ export const GRADING_SYSTEMS: Record<GradingSystemId, GradingSystem> = {
     flag: '🇮🇳',
     maxGpa: 10,
     scaleLabel: '10',
+    hasPercentage: true,
     defaultTargetGpa: 8.5,
     grades: [
       { label: 'O', value: 10, description: 'Outstanding' },
@@ -64,7 +66,7 @@ export const GRADING_SYSTEMS: Record<GradingSystemId, GradingSystem> = {
   },
 };
 
-export const DEFAULT_GRADING_SYSTEM_ID: GradingSystemId = 'us_4.0';
+export const DEFAULT_GRADING_SYSTEM_ID: PresetGradingSystemId = 'us_4.0';
 
 export const GRADING_SYSTEM_LIST: GradingSystem[] = [
   GRADING_SYSTEMS['us_4.0'],
@@ -72,10 +74,12 @@ export const GRADING_SYSTEM_LIST: GradingSystem[] = [
 ];
 
 export const isGradingSystemId = (value: unknown): value is GradingSystemId =>
-  typeof value === 'string' && value in GRADING_SYSTEMS;
+  value === 'custom' || (typeof value === 'string' && value in GRADING_SYSTEMS);
 
-export const getGradingSystem = (id: GradingSystemId = DEFAULT_GRADING_SYSTEM_ID): GradingSystem =>
-  GRADING_SYSTEMS[id];
+// Presets only; the custom scale lives in the context because the user defines it
+export const getGradingSystem = (
+  id: PresetGradingSystemId = DEFAULT_GRADING_SYSTEM_ID
+): GradingSystem => GRADING_SYSTEMS[id];
 
 // Convert a GPA between scales by keeping the same share of the maximum (3.5/4 -> 8.75/10)
 export const convertGpa = (value: number, from: GradingSystem, to: GradingSystem): number =>

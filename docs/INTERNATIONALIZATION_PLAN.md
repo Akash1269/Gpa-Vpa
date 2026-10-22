@@ -1,5 +1,7 @@
 # Internationalization Plan — Multi-Country Grading System Support
 
+> **Status:** Phase 1 is partly shipped. The app has a data-driven grading engine with the US 4.0 and India 10-point (UGC CBCS) scales, a user-defined custom scale, a CGPA-to-percentage estimate for the Indian scale, and a first-launch prompt that suggests a scale from the device time zone and region (no location access). The UK, European and other systems below are not built yet.
+
 ## Current State
 
 | Dimension | Current Implementation |

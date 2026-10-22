@@ -44,7 +44,7 @@ export default function StackNavigator() {
         }}
       />
       <Stack.Screen
-        name="goal-calculator"
+        name="custom-scale"
         options={{
           presentation: 'card',
           headerShown: false,

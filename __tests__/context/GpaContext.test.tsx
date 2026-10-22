@@ -145,6 +145,164 @@ describe('GpaContext', () => {
     expect(result.current.cumulativeGpa).toBe(10);
   });
 
+  it('restores and saves the percentage formula', async () => {
+    mockStorage({
+      '@percentFormula': JSON.stringify({ id: 'times_10', multiplier: 10, offset: 0 }),
+    });
+    const { result } = await renderGpaContext();
+    expect(result.current.percentFormula.id).toBe('times_10');
+
+    await act(async () => {
+      result.current.setPercentFormula({ id: 'custom', multiplier: 8, offset: 5 });
+    });
+    expect(result.current.percentFormula).toEqual({ id: 'custom', multiplier: 8, offset: 5 });
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      '@percentFormula',
+      JSON.stringify({ id: 'custom', multiplier: 8, offset: 5 })
+    );
+  });
+
+  it('falls back to the default formula when the stored one is corrupt', async () => {
+    mockStorage({ '@percentFormula': '{"id":"bogus"}' });
+    const { result } = await renderGpaContext();
+    expect(result.current.percentFormula.id).toBe('times_9_5');
+  });
+
+  describe('custom scale', () => {
+    const custom = {
+      name: 'My Uni',
+      maxGpa: 10,
+      grades: [
+        { label: 'S', value: 10 },
+        { label: 'A', value: 9 },
+        { label: 'B', value: 8 },
+        { label: 'U', value: 0 },
+      ],
+    };
+
+    it('rejects an invalid scale without changing anything', async () => {
+      mockStorage({ courses: JSON.stringify([mockCourse]) });
+      const { result } = await renderGpaContext();
+
+      let error: string | null = null;
+      await act(async () => {
+        error = result.current.saveCustomScale({ ...custom, maxGpa: 0 });
+      });
+
+      expect(error).toMatch(/maximum/);
+      expect(result.current.gradingSystem.id).toBe('us_4.0');
+      expect(result.current.customScale).toBeNull();
+    });
+
+    it('saves, switches to it and converts existing grades', async () => {
+      mockStorage({ courses: JSON.stringify([mockCourse]) }); // A = 4.0
+      const { result } = await renderGpaContext();
+
+      let error: string | null = 'unset';
+      await act(async () => {
+        error = result.current.saveCustomScale(custom, 'convert');
+      });
+
+      expect(error).toBeNull();
+      expect(result.current.gradingSystem.id).toBe('custom');
+      expect(result.current.gradingSystem.name).toBe('My Uni');
+      expect(result.current.getCourse('test-1')?.grade).toBe('S'); // 4.0/4 -> 10
+      expect(result.current.cumulativeGpa).toBe(10);
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('@customScale', JSON.stringify(custom));
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('@gradingSystem', 'custom');
+    });
+
+    it('restores a stored custom scale', async () => {
+      mockStorage({
+        '@gradingSystem': 'custom',
+        '@customScale': JSON.stringify(custom),
+        courses: JSON.stringify([{ ...mockCourse, grade: 'A' }]),
+      });
+      const { result } = await renderGpaContext();
+
+      expect(result.current.gradingSystem.id).toBe('custom');
+      expect(result.current.cumulativeGpa).toBe(9);
+    });
+
+    it('falls back to the default and asks again when the stored custom scale is corrupt', async () => {
+      mockStorage({ '@gradingSystem': 'custom', '@customScale': '{"name":1}' });
+      const { result } = await renderGpaContext();
+
+      expect(result.current.gradingSystem.id).toBe('us_4.0');
+      expect(result.current.gradingSystemPrompt).toBe('existing');
+    });
+
+    it('lets you edit points but blocks removing a grade that courses use', async () => {
+      mockStorage({
+        '@gradingSystem': 'custom',
+        '@customScale': JSON.stringify(custom),
+        courses: JSON.stringify([{ ...mockCourse, grade: 'B' }]),
+        '@courseGoals': JSON.stringify({ 'test-1': 'S' }),
+      });
+      const { result } = await renderGpaContext();
+      expect(result.current.cumulativeGpa).toBe(8);
+
+      // changing what B is worth is fine
+      let error: string | null = 'unset';
+      await act(async () => {
+        error = result.current.saveCustomScale({
+          ...custom,
+          grades: custom.grades.map((g) => (g.label === 'B' ? { ...g, value: 7 } : g)),
+        });
+      });
+      expect(error).toBeNull();
+      expect(result.current.cumulativeGpa).toBe(7);
+
+      // dropping B (used by a course) is refused
+      await act(async () => {
+        error = result.current.saveCustomScale({
+          ...custom,
+          grades: custom.grades.filter((g) => g.label !== 'B'),
+        });
+      });
+      expect(error).toMatch(/"B"/);
+      expect(result.current.cumulativeGpa).toBe(7);
+
+      // dropping S (used by a goal) is refused too
+      await act(async () => {
+        error = result.current.saveCustomScale({
+          ...custom,
+          maxGpa: 9,
+          grades: custom.grades.filter((g) => g.label !== 'S'),
+        });
+      });
+      expect(error).toMatch(/"S"/);
+    });
+
+    it('does not switch to custom before one is defined', async () => {
+      mockStorage({ courses: JSON.stringify([mockCourse]) });
+      const { result } = await renderGpaContext();
+
+      await act(async () => {
+        result.current.setGradingSystem('custom');
+      });
+
+      expect(result.current.gradingSystem.id).toBe('us_4.0');
+    });
+
+    it('applies a custom scale chosen on first launch and loads demo data in it', async () => {
+      mockStorage({ '@hasLaunched': null, '@gradingSystem': null });
+      const { result } = await renderGpaContext();
+      expect(result.current.gradingSystemPrompt).toBe('new');
+
+      await act(async () => {
+        result.current.saveCustomScale(custom);
+      });
+
+      expect(result.current.gradingSystemPrompt).toBeNull();
+      expect(result.current.gradingSystem.id).toBe('custom');
+      const labels = custom.grades.map((g) => g.label);
+      result.current.courses
+        .filter((c) => c.grade !== null)
+        .forEach((c) => expect(labels).toContain(c.grade));
+    });
+  });
+
   describe('switching grading systems', () => {
     const setup = async () => {
       mockStorage({

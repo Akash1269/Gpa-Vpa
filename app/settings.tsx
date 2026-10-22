@@ -10,6 +10,7 @@ import {
   Platform,
   Linking,
 } from 'react-native';
+import { router } from 'expo-router';
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { useGpa } from '@/hooks/useGpa';
@@ -17,6 +18,8 @@ import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import ScreenHeader from '@/components/ScreenHeader';
 import GradingSystemModal from '@/components/GradingSystemModal';
+import PercentFormulaModal from '@/components/PercentFormulaModal';
+import { describeFormula } from '@/utils/percentage';
 import {
   Info,
   CircleHelp as HelpCircle,
@@ -30,11 +33,23 @@ import {
   Shield,
   GraduationCap,
   ChevronRight,
+  Percent,
 } from 'lucide-react-native';
 
 export default function SettingsScreen() {
   const { colors, isDark, toggleTheme, hideGrades, toggleHideGrades } = useTheme();
-  const { clearAllData, courses, loadDemoData, gradingSystem, setGradingSystem } = useGpa();
+  const {
+    clearAllData,
+    courses,
+    loadDemoData,
+    gradingSystem,
+    setGradingSystem,
+    percentFormula,
+    setPercentFormula,
+    cumulativeGpa,
+    customScale,
+  } = useGpa();
+  const [showFormulaPicker, setShowFormulaPicker] = useState(false);
   const [showSystemPicker, setShowSystemPicker] = useState(false);
 
   const styles = StyleSheet.create({
@@ -140,7 +155,13 @@ export default function SettingsScreen() {
       return;
     }
     const json = JSON.stringify(
-      { gradingSystem: gradingSystem.id, courses, exportedAt: new Date().toISOString() },
+      {
+        gradingSystem: gradingSystem.id,
+        // Needed to read the grades back if the scale is the user's own
+        ...(gradingSystem.id === 'custom' ? { customScale } : {}),
+        courses,
+        exportedAt: new Date().toISOString(),
+      },
       null,
       2
     );
@@ -213,7 +234,7 @@ export default function SettingsScreen() {
           <Text style={styles.sectionTitle}>Grades</Text>
           <View style={styles.sectionContainer}>
             <TouchableOpacity
-              style={[styles.settingRow, styles.lastSettingRow]}
+              style={[styles.settingRow, !gradingSystem.hasPercentage && styles.lastSettingRow]}
               onPress={() => setShowSystemPicker(true)}
               accessibilityRole="button"
               accessibilityLabel={`Grading system, ${gradingSystem.name}`}
@@ -231,6 +252,25 @@ export default function SettingsScreen() {
               </Text>
               <ChevronRight size={18} color={colors.textSecondary} />
             </TouchableOpacity>
+            {gradingSystem.hasPercentage && (
+              <TouchableOpacity
+                style={[styles.settingRow, styles.lastSettingRow]}
+                onPress={() => setShowFormulaPicker(true)}
+                accessibilityRole="button"
+                accessibilityLabel={`Percentage formula, ${describeFormula(percentFormula)}`}
+              >
+                <View style={styles.settingLabelContainer}>
+                  <Percent
+                    size={Platform.OS === 'ios' ? 18 : 20}
+                    color={colors.text}
+                    style={styles.settingIcon}
+                  />
+                  <Text style={styles.settingLabel}>Percentage formula</Text>
+                </View>
+                <Text style={styles.settingValue}>{describeFormula(percentFormula)}</Text>
+                <ChevronRight size={18} color={colors.textSecondary} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
@@ -410,6 +450,16 @@ export default function SettingsScreen() {
           </View>
         </View>
       </ScrollView>
+      <PercentFormulaModal
+        visible={showFormulaPicker}
+        initial={percentFormula}
+        cgpa={cumulativeGpa}
+        onConfirm={(formula) => {
+          setShowFormulaPicker(false);
+          setPercentFormula(formula);
+        }}
+        onCancel={() => setShowFormulaPicker(false)}
+      />
       <GradingSystemModal
         visible={showSystemPicker}
         title="Grading system"
@@ -418,9 +468,11 @@ export default function SettingsScreen() {
         currentId={gradingSystem.id}
         hasData={courses.length > 0}
         confirmLabel="Save"
+        customName={customScale ? customScale.name.trim() || 'My scale' : undefined}
         onConfirm={(id, mode) => {
           setShowSystemPicker(false);
-          setGradingSystem(id, mode);
+          if (id === 'custom') router.push({ pathname: '/custom-scale', params: { mode } });
+          else setGradingSystem(id, mode);
         }}
         onCancel={() => setShowSystemPicker(false)}
       />

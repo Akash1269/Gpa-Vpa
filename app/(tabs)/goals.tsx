@@ -14,6 +14,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { useTabBarClearance } from '@/hooks/useTabBarClearance';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { cgpaToPercent } from '@/utils/percentage';
 import { Target, GraduationCap, TrendingUp, ChevronRight } from 'lucide-react-native';
 import ProgressRing from '@/components/ProgressRing';
 
@@ -27,6 +28,7 @@ function GoalsContent() {
     totalCredits,
     semesters,
     gradingSystem,
+    percentFormula,
     targetCgpa,
     setTargetCgpa,
     targetCredits,
@@ -460,6 +462,22 @@ function GoalsContent() {
                     }}
                   >
                     GPA must be between 0 and {gradingSystem.scaleLabel}
+                  </Text>
+                )}
+              {gradingSystem.hasPercentage &&
+                parseFloat(cumulativeTargetGpaInput) > 0 &&
+                parseFloat(cumulativeTargetGpaInput) <= gradingSystem.maxGpa && (
+                  <Text
+                    style={{
+                      fontFamily: fonts.medium,
+                      fontSize: 12,
+                      color: colors.textSecondary,
+                      marginTop: 4,
+                    }}
+                  >
+                    ≈{' '}
+                    {cgpaToPercent(parseFloat(cumulativeTargetGpaInput), percentFormula).toFixed(1)}
+                    % with your percentage formula
                   </Text>
                 )}
             </View>

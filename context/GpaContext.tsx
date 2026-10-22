@@ -1,10 +1,11 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Course } from '@/types/course';
 import { Semester } from '@/types/semester';
-import { GradingSystem, GradingSystemId } from '@/types/gradingSystem';
+import { CustomScaleInput, GradingSystem, GradingSystemId } from '@/types/gradingSystem';
 import { calculateSemesterGpa, calculateCumulativeGpa } from '@/utils/gpaCalculator';
+import { buildCustomSystem, isCustomScaleInput, validateCustomScale } from '@/utils/customScale';
 import {
   DEFAULT_GRADING_SYSTEM_ID,
   convertGpa,
@@ -12,6 +13,7 @@ import {
   getGradingSystem,
   isGradingSystemId,
 } from '@/utils/gradingSystems';
+import { DEFAULT_PERCENT_FORMULA, PercentFormula, isPercentFormula } from '@/utils/percentage';
 import demoCourses from '@/assets/data/demo-courses.json';
 
 // 'new' = fresh install choosing a scale; 'existing' = upgrade from a version without scales
@@ -43,6 +45,11 @@ type GpaContextType = {
   gradingSystem: GradingSystem;
   gradingSystemPrompt: GradingSystemPrompt;
   setGradingSystem: (id: GradingSystemId, mode?: GradingSystemSwitchMode) => void;
+  customScale: CustomScaleInput | null;
+  // Saves the user's own scale and switches to it. Returns an error message, or null on success.
+  saveCustomScale: (input: CustomScaleInput, mode?: GradingSystemSwitchMode) => string | null;
+  percentFormula: PercentFormula;
+  setPercentFormula: (formula: PercentFormula) => void;
   setTargetCgpa: (value: number | null) => void;
   setTargetSemesterGpa: (value: number | null) => void;
   setTargetCredits: (value: number | null) => void;
@@ -75,6 +82,10 @@ export const GpaContext = createContext<GpaContextType>({
   gradingSystem: getGradingSystem(DEFAULT_GRADING_SYSTEM_ID),
   gradingSystemPrompt: null,
   setGradingSystem: () => {},
+  customScale: null,
+  saveCustomScale: () => null,
+  percentFormula: DEFAULT_PERCENT_FORMULA,
+  setPercentFormula: () => {},
   setTargetCgpa: () => {},
   setTargetSemesterGpa: () => {},
   setTargetCredits: () => {},
@@ -111,7 +122,19 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [gradingSystemId, setGradingSystemId] =
     useState<GradingSystemId>(DEFAULT_GRADING_SYSTEM_ID);
   const [gradingSystemPrompt, setGradingSystemPrompt] = useState<GradingSystemPrompt>(null);
-  const gradingSystem = getGradingSystem(gradingSystemId);
+  const [customScale, setCustomScaleState] = useState<CustomScaleInput | null>(null);
+  const customSystem = useMemo(
+    () => (customScale ? buildCustomSystem(customScale) : null),
+    [customScale]
+  );
+  const gradingSystem: GradingSystem =
+    gradingSystemId === 'custom' && customSystem
+      ? customSystem
+      : getGradingSystem(
+          gradingSystemId === 'custom' ? DEFAULT_GRADING_SYSTEM_ID : gradingSystemId
+        );
+  const [percentFormula, setPercentFormulaState] =
+    useState<PercentFormula>(DEFAULT_PERCENT_FORMULA);
   const [isLoaded, setIsLoaded] = useState(false);
   const [cumulativeGpa, setCumulativeGpa] = useState(0);
   const [totalCredits, setTotalCredits] = useState(0);
@@ -149,8 +172,18 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       // Grading system: a stored choice wins; otherwise ask once. A fresh install also gets demo
       // data, but only after the choice so that it is written in the chosen scale.
       try {
+        let hasValidCustomScale = false;
+        const storedCustom = await AsyncStorage.getItem('@customScale');
+        if (storedCustom) {
+          const parsed = JSON.parse(storedCustom);
+          if (isCustomScaleInput(parsed)) {
+            setCustomScaleState(parsed);
+            hasValidCustomScale = true;
+          }
+        }
+
         const storedSystem = await AsyncStorage.getItem('@gradingSystem');
-        if (isGradingSystemId(storedSystem)) {
+        if (isGradingSystemId(storedSystem) && (storedSystem !== 'custom' || hasValidCustomScale)) {
           setGradingSystemId(storedSystem);
         } else {
           const hasLaunched = await AsyncStorage.getItem('@hasLaunched');
@@ -159,6 +192,16 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       } catch (error) {
         console.error('Error loading grading system:', error);
+      }
+
+      try {
+        const storedFormula = await AsyncStorage.getItem('@percentFormula');
+        if (storedFormula) {
+          const parsed = JSON.parse(storedFormula);
+          if (isPercentFormula(parsed)) setPercentFormulaState(parsed);
+        }
+      } catch (error) {
+        console.error('Error loading percentage formula:', error);
       }
 
       // Load GPA goals
@@ -383,24 +426,28 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCourses(demoCoursesFor(gradingSystem));
   }, [gradingSystem]);
 
-  const setGradingSystem = useCallback(
-    (id: GradingSystemId, mode: GradingSystemSwitchMode = 'convert') => {
-      const from = gradingSystem;
-      const to = getGradingSystem(id);
+  const setPercentFormula = useCallback((formula: PercentFormula) => {
+    setPercentFormulaState(formula);
+    AsyncStorage.setItem('@percentFormula', JSON.stringify(formula)).catch(() => {});
+  }, []);
 
-      AsyncStorage.setItem('@gradingSystem', id).catch(() => {});
+  const applySystem = useCallback(
+    (to: GradingSystem, mode: GradingSystemSwitchMode) => {
+      const from = gradingSystem;
+
+      AsyncStorage.setItem('@gradingSystem', to.id).catch(() => {});
       setGradingSystemPrompt(null);
       setLastDeletedCourse(null); // an undo would bring back a grade from the old scale
 
       if (gradingSystemPrompt === 'new') {
         AsyncStorage.setItem('@hasLaunched', 'true').catch(() => {});
-        setGradingSystemId(id);
+        setGradingSystemId(to.id);
         setCourses(demoCoursesFor(to));
         return;
       }
 
-      if (id === gradingSystem.id) return;
-      setGradingSystemId(id);
+      if (to.id === from.id) return;
+      setGradingSystemId(to.id);
 
       // A degree-credit goal that is still the old scale's default follows the new scale's default
       if (targetCredits === from.degreeCredits) setTargetCredits(to.degreeCredits);
@@ -444,6 +491,39 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     ]
   );
 
+  const setGradingSystem = useCallback(
+    (id: GradingSystemId, mode: GradingSystemSwitchMode = 'convert') => {
+      const to = id === 'custom' ? customSystem : getGradingSystem(id);
+      if (to) applySystem(to, mode);
+    },
+    [customSystem, applySystem]
+  );
+
+  const saveCustomScale = useCallback(
+    (input: CustomScaleInput, mode: GradingSystemSwitchMode = 'convert'): string | null => {
+      const error = validateCustomScale(input);
+      if (error) return error;
+      const system = buildCustomSystem(input);
+
+      if (gradingSystem.id === 'custom') {
+        // Editing the scale in use: a grade that disappears would silently count as 0 points
+        const kept = new Set(system.grades.map((g) => g.label));
+        const used = new Set<string>(Object.values(courseGoals));
+        courses.forEach((c) => c.grade && used.add(c.grade));
+        const missing = [...used].filter((label) => !kept.has(label));
+        if (missing.length > 0) {
+          return `Your courses or goals still use ${missing.map((m) => `"${m}"`).join(', ')}. Keep those grades in the table, or change those courses first.`;
+        }
+      }
+
+      AsyncStorage.setItem('@customScale', JSON.stringify(input)).catch(() => {});
+      setCustomScaleState(input);
+      if (gradingSystem.id !== 'custom') applySystem(system, mode);
+      return null;
+    },
+    [gradingSystem, courses, courseGoals, applySystem]
+  );
+
   return (
     <GpaContext.Provider
       value={{
@@ -462,6 +542,10 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         gradingSystem,
         gradingSystemPrompt,
         setGradingSystem,
+        customScale,
+        saveCustomScale,
+        percentFormula,
+        setPercentFormula,
         setTargetCgpa,
         setTargetSemesterGpa,
         setTargetCredits,

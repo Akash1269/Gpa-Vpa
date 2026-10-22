@@ -1,4 +1,12 @@
-export type GradingSystemId = 'us_4.0' | 'india_10';
+export type PresetGradingSystemId = 'us_4.0' | 'india_10';
+export type GradingSystemId = PresetGradingSystemId | 'custom';
+
+// What the user types in the custom-scale editor. The full GradingSystem is derived from it.
+export type CustomScaleInput = {
+  name: string;
+  maxGpa: number;
+  grades: { label: string; value: number }[];
+};
 
 // Colour family used for a grade chip or academic standing; resolved to real colours per theme
 export type GradeTone = 'green' | 'blue' | 'yellow' | 'orange' | 'red';
@@ -22,6 +30,7 @@ export type GradingSystem = {
   flag: string;
   maxGpa: number;
   scaleLabel: string; // "4.0", "10": how the maximum is written next to a GPA
+  hasPercentage: boolean; // CGPA is commonly converted to a percentage on this scale
   defaultTargetGpa: number; // suggested CGPA goal when the user has not set one
   grades: GradeOption[]; // best to worst
   creditOptions: number[];

@@ -9,13 +9,19 @@ import AnimatedNumber from '@/components/AnimatedNumber';
 type GpaCardProps = {
   gpa: number;
   scaleLabel: string;
+  percentLabel?: string; // e.g. "≈ 83.1%", shown when the scale has a percentage conversion
   academicStanding: {
     label: string;
     color: string;
   };
 };
 
-export default React.memo(function GpaCard({ gpa, scaleLabel, academicStanding }: GpaCardProps) {
+export default React.memo(function GpaCard({
+  gpa,
+  scaleLabel,
+  percentLabel,
+  academicStanding,
+}: GpaCardProps) {
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -65,6 +71,12 @@ export default React.memo(function GpaCard({ gpa, scaleLabel, academicStanding }
       color: 'rgba(255,255,255,0.6)',
       marginLeft: spacing.sm,
     },
+    percent: {
+      fontFamily: fonts.medium,
+      fontSize: fontSizes.md,
+      color: 'rgba(255,255,255,0.85)',
+      marginTop: spacing.sm,
+    },
     decorCircle1: {
       position: 'absolute',
       width: 120,
@@ -101,6 +113,7 @@ export default React.memo(function GpaCard({ gpa, scaleLabel, academicStanding }
           <AnimatedNumber value={gpa} style={styles.gpaValue} />
           <Text style={styles.gpaScale}>/ {scaleLabel}</Text>
         </View>
+        {percentLabel ? <Text style={styles.percent}>{percentLabel}</Text> : null}
       </View>
     </Animated.View>
   );

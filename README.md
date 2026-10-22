@@ -58,7 +58,7 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 
 ## Features
 
-- **Real-time GPA calculation** — weighted by credit hours, on the US 4.0 scale or the Indian 10-point CGPA scale (suggested from your device's time zone and region, never from your location)
+- **Real-time GPA calculation** — weighted by credit hours, on the US 4.0 scale, the Indian 10-point CGPA scale, or your own custom scale (the default is suggested from your device's time zone and region, never from your location), with an estimated CGPA-to-percentage conversion
 - **Semester & cumulative GPA** — track progress across your entire academic career
 - **Academic standing indicators** — color-coded status (Excellent → Academic Warning)
 - **Course management** — add, edit, delete with search & semester filtering

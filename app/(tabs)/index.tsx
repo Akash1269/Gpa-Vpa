@@ -6,6 +6,7 @@ import PressableScale from '@/components/PressableScale';
 import AchievedBadge from '@/components/AchievedBadge';
 import SemesterProgress from '@/components/SemesterProgress';
 import { getAcademicStanding } from '@/utils/gpaCalculator';
+import { cgpaToPercent } from '@/utils/percentage';
 import { useTheme } from '@/hooks/useTheme';
 import { useTabBarClearance } from '@/hooks/useTabBarClearance';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
@@ -25,6 +26,7 @@ export default function Dashboard() {
     targetCgpa,
     targetCredits,
     gradingSystem,
+    percentFormula,
   } = useGpa();
   const academicStanding = getAcademicStanding(cumulativeGpa, gradingSystem);
 
@@ -128,6 +130,11 @@ export default function Dashboard() {
         <GpaCard
           gpa={cumulativeGpa}
           scaleLabel={gradingSystem.scaleLabel}
+          percentLabel={
+            gradingSystem.hasPercentage && cumulativeGpa > 0
+              ? `≈ ${cgpaToPercent(cumulativeGpa, percentFormula).toFixed(1)}%`
+              : undefined
+          }
           academicStanding={academicStanding}
         />
 
