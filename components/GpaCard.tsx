@@ -8,13 +8,14 @@ import AnimatedNumber from '@/components/AnimatedNumber';
 
 type GpaCardProps = {
   gpa: number;
+  scaleLabel: string;
   academicStanding: {
     label: string;
     color: string;
   };
 };
 
-export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardProps) {
+export default React.memo(function GpaCard({ gpa, scaleLabel, academicStanding }: GpaCardProps) {
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -98,7 +99,7 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
         </View>
         <View style={styles.gpaRow}>
           <AnimatedNumber value={gpa} style={styles.gpaValue} />
-          <Text style={styles.gpaScale}>/ 4.0</Text>
+          <Text style={styles.gpaScale}>/ {scaleLabel}</Text>
         </View>
       </View>
     </Animated.View>

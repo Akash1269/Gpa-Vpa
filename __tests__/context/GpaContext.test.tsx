@@ -39,10 +39,14 @@ function useGpaContext() {
   return React.useContext(GpaContext);
 }
 
-// Back AsyncStorage.getItem with a key/value map. '@hasLaunched' defaults to
-// set so tests don't take the first-launch demo-data path unless they opt in.
+// Back AsyncStorage.getItem with a key/value map. '@hasLaunched' and '@gradingSystem' default to
+// set so tests skip the first-launch prompt unless they opt in.
 function mockStorage(values: Record<string, string | null> = {}) {
-  const store: Record<string, string | null> = { '@hasLaunched': 'true', ...values };
+  const store: Record<string, string | null> = {
+    '@hasLaunched': 'true',
+    '@gradingSystem': 'us_4.0',
+    ...values,
+  };
   (AsyncStorage.getItem as jest.Mock).mockImplementation((key: string) =>
     Promise.resolve(store[key] ?? null)
   );
@@ -86,13 +90,125 @@ describe('GpaContext', () => {
     });
   });
 
-  it('loads demo data on first launch', async () => {
-    mockStorage({ '@hasLaunched': null });
+  it('asks for a grading system on first launch, then loads demo data in that scale', async () => {
+    mockStorage({ '@hasLaunched': null, '@gradingSystem': null });
 
     const { result } = await renderGpaContext();
 
+    expect(result.current.gradingSystemPrompt).toBe('new');
+    expect(result.current.courses).toEqual([]);
+
+    await act(async () => {
+      result.current.setGradingSystem('india_10');
+    });
+
+    expect(result.current.gradingSystemPrompt).toBeNull();
+    expect(result.current.gradingSystem.id).toBe('india_10');
     expect(result.current.courses.length).toBeGreaterThan(0);
+    // demo grades were written in US letters; they must now be valid India grades
+    const indiaLabels = result.current.gradingSystem.grades.map((g) => g.label);
+    result.current.courses
+      .filter((c) => c.grade !== null)
+      .forEach((c) => expect(indiaLabels).toContain(c.grade));
+    expect(result.current.cumulativeGpa).toBeGreaterThan(4);
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith('@gradingSystem', 'india_10');
     expect(AsyncStorage.setItem).toHaveBeenCalledWith('@hasLaunched', 'true');
+  });
+
+  it('asks upgrading users once and keeps US 4.0 if they decline', async () => {
+    mockStorage({ '@gradingSystem': null, courses: JSON.stringify([mockCourse]) });
+
+    const { result } = await renderGpaContext();
+
+    expect(result.current.gradingSystemPrompt).toBe('existing');
+    expect(result.current.gradingSystem.id).toBe('us_4.0');
+
+    await act(async () => {
+      result.current.setGradingSystem('us_4.0');
+    });
+
+    expect(result.current.gradingSystemPrompt).toBeNull();
+    expect(result.current.courses).toHaveLength(1);
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith('@gradingSystem', 'us_4.0');
+  });
+
+  it('restores the stored grading system', async () => {
+    mockStorage({
+      '@gradingSystem': 'india_10',
+      courses: JSON.stringify([{ ...mockCourse, grade: 'O' }]),
+    });
+
+    const { result } = await renderGpaContext();
+
+    expect(result.current.gradingSystemPrompt).toBeNull();
+    expect(result.current.gradingSystem.id).toBe('india_10');
+    expect(result.current.cumulativeGpa).toBe(10);
+  });
+
+  describe('switching grading systems', () => {
+    const setup = async () => {
+      mockStorage({
+        courses: JSON.stringify([mockCourse, mockCourse2]), // A (3 cr), B+ (4 cr)
+        '@targetCgpa': '3.5',
+        '@courseGoals': JSON.stringify({ 'test-1': 'A' }),
+      });
+      return renderGpaContext();
+    };
+
+    it('converts grades and goals to the closest equivalents', async () => {
+      const { result } = await setup();
+
+      await act(async () => {
+        result.current.setGradingSystem('india_10', 'convert');
+      });
+
+      expect(result.current.gradingSystem.id).toBe('india_10');
+      expect(result.current.getCourse('test-1')?.grade).toBe('O'); // A -> O
+      expect(result.current.getCourse('test-2')?.grade).toBe('A'); // B+ (3.3/4) -> 8.25 -> closest is A (8)
+      expect(result.current.targetCgpa).toBe(8.75);
+      expect(result.current.courseGoals).toEqual({ 'test-1': 'O' });
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('@gradingSystem', 'india_10');
+    });
+
+    it('clears courses and grade goals when starting fresh', async () => {
+      const { result } = await setup();
+
+      await act(async () => {
+        result.current.setGradingSystem('india_10', 'reset');
+      });
+
+      expect(result.current.gradingSystem.id).toBe('india_10');
+      expect(result.current.courses).toEqual([]);
+      expect(result.current.targetCgpa).toBeNull();
+      expect(result.current.courseGoals).toEqual({});
+    });
+
+    it('moves a default credit goal to the new default but keeps a custom one', async () => {
+      mockStorage({ '@targetCredits': '120' });
+      const first = await renderGpaContext();
+      await act(async () => {
+        first.result.current.setGradingSystem('india_10', 'convert');
+      });
+      expect(first.result.current.targetCredits).toBe(140);
+
+      mockStorage({ '@targetCredits': '128' });
+      const second = await renderGpaContext();
+      await act(async () => {
+        second.result.current.setGradingSystem('india_10', 'convert');
+      });
+      expect(second.result.current.targetCredits).toBe(128);
+    });
+
+    it('does nothing to the data when the same system is chosen again', async () => {
+      const { result } = await setup();
+
+      await act(async () => {
+        result.current.setGradingSystem('us_4.0', 'reset');
+      });
+
+      expect(result.current.courses).toHaveLength(2);
+      expect(result.current.targetCgpa).toBe(3.5);
+    });
   });
 
   it('adds a course', async () => {

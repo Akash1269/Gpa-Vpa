@@ -10,7 +10,7 @@ import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 export default function AcademicRecord() {
   const { colors } = useTheme();
   const tabBarClearance = useTabBarClearance();
-  const { semesters, cumulativeGpa, totalCredits } = useGpa();
+  const { semesters, cumulativeGpa, totalCredits, gradingSystem } = useGpa();
 
   const styles = StyleSheet.create({
     container: {
@@ -102,7 +102,7 @@ export default function AcademicRecord() {
           </View>
 
           <View style={styles.chartContainer}>
-            <GpaChart semesters={semesters} />
+            <GpaChart semesters={semesters} maxGpa={gradingSystem.maxGpa} />
           </View>
 
           <Text style={styles.sectionTitle}>Semesters</Text>

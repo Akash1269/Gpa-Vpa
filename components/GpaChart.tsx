@@ -8,9 +8,10 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 type GpaChartProps = {
   semesters: Semester[];
+  maxGpa: number;
 };
 
-export default function GpaChart({ semesters }: GpaChartProps) {
+export default function GpaChart({ semesters, maxGpa: scaleMax }: GpaChartProps) {
   const { colors } = useTheme();
   const [expanded, setExpanded] = useState(false);
   const [chartWidth, setChartWidth] = useState(0);
@@ -111,8 +112,9 @@ export default function GpaChart({ semesters }: GpaChartProps) {
   // Fit the y-axis to the data (with some margin) so small changes are visible
   // instead of every point sitting along the top of a fixed 0–4 scale
   const gpas = sortedSemesters.map((sem) => sem.gpa);
-  const minGpa = Math.max(0, Math.min(...gpas) - 0.5);
-  const maxGpa = Math.min(4, Math.max(...gpas) + 0.25);
+  const unit = scaleMax / 4; // margins below are written for a 4.0 scale
+  const minGpa = Math.max(0, Math.min(...gpas) - 0.5 * unit);
+  const maxGpa = Math.min(scaleMax, Math.max(...gpas) + 0.25 * unit);
   const usableHeight = chartHeight - labelSpace - bottomPadding;
 
   // Calculate points in pixels once we know the chart width

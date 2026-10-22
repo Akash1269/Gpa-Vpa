@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { useGpa } from '@/hooks/useGpa';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type CreditPickerProps = {
@@ -9,8 +10,9 @@ type CreditPickerProps = {
 
 export default function CreditPicker({ value, onChange }: CreditPickerProps) {
   const { colors } = useTheme();
+  const { gradingSystem } = useGpa();
 
-  const creditOptions = [1, 2, 3, 4];
+  const creditOptions = gradingSystem.creditOptions;
 
   const styles = StyleSheet.create({
     container: {

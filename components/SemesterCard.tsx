@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Semester } from '@/types/semester';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
+import { useGpa } from '@/hooks/useGpa';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { ChevronDown, ChevronUp } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeIn, FadeOut } from 'react-native-reanimated';
@@ -13,11 +14,12 @@ type SemesterCardProps = {
 
 export default React.memo(function SemesterCard({ semester }: SemesterCardProps) {
   const { colors, isDark } = useTheme();
+  const { gradingSystem } = useGpa();
   const [expanded, setExpanded] = useState(false);
   const isInProgress = semester.status === 'in-progress';
   const gpaColor =
     !isInProgress || semester.gpa > 0
-      ? getGradeColor(semester.gpa ?? 0, isDark)
+      ? getGradeColor(semester.gpa ?? 0, isDark, gradingSystem)
       : { background: colors.status.warning.bg, text: colors.status.warning.text };
 
   const styles = StyleSheet.create({
@@ -187,7 +189,7 @@ export default React.memo(function SemesterCard({ semester }: SemesterCardProps)
             >
               {semester.courses.map((course, index) => {
                 const courseGradeColor = course.grade
-                  ? getGradeColor(course.grade, isDark)
+                  ? getGradeColor(course.grade, isDark, gradingSystem)
                   : { background: colors.border, text: colors.textSecondary };
                 const isLast = index === semester.courses.length - 1;
                 return (

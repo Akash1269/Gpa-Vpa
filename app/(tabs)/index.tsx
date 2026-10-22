@@ -24,8 +24,9 @@ export default function Dashboard() {
     courses,
     targetCgpa,
     targetCredits,
+    gradingSystem,
   } = useGpa();
-  const academicStanding = getAcademicStanding(cumulativeGpa);
+  const academicStanding = getAcademicStanding(cumulativeGpa, gradingSystem);
 
   const styles = StyleSheet.create({
     container: {
@@ -124,7 +125,11 @@ export default function Dashboard() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <GpaCard gpa={cumulativeGpa} academicStanding={academicStanding} />
+        <GpaCard
+          gpa={cumulativeGpa}
+          scaleLabel={gradingSystem.scaleLabel}
+          academicStanding={academicStanding}
+        />
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.statsRow}>
           <PressableScale

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,6 +16,7 @@ import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import ScreenHeader from '@/components/ScreenHeader';
+import GradingSystemModal from '@/components/GradingSystemModal';
 import {
   Info,
   CircleHelp as HelpCircle,
@@ -26,11 +28,14 @@ import {
   Upload,
   Database,
   Shield,
+  GraduationCap,
+  ChevronRight,
 } from 'lucide-react-native';
 
 export default function SettingsScreen() {
   const { colors, isDark, toggleTheme, hideGrades, toggleHideGrades } = useTheme();
-  const { clearAllData, courses, loadDemoData } = useGpa();
+  const { clearAllData, courses, loadDemoData, gradingSystem, setGradingSystem } = useGpa();
+  const [showSystemPicker, setShowSystemPicker] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -80,6 +85,12 @@ export default function SettingsScreen() {
       flex: 1,
       marginRight: spacing.sm,
     },
+    settingValue: {
+      fontFamily: fonts.regular,
+      fontSize: fontSizes.md,
+      color: colors.textSecondary,
+      marginRight: spacing.xs,
+    },
     settingLabel: {
       fontFamily: Platform.OS === 'ios' ? '-apple-system' : fonts.regular,
       fontSize: Platform.OS === 'ios' ? 17 : fontSizes.lg,
@@ -128,7 +139,11 @@ export default function SettingsScreen() {
       Alert.alert('No Data', 'Add some courses before exporting.');
       return;
     }
-    const json = JSON.stringify({ courses, exportedAt: new Date().toISOString() }, null, 2);
+    const json = JSON.stringify(
+      { gradingSystem: gradingSystem.id, courses, exportedAt: new Date().toISOString() },
+      null,
+      2
+    );
 
     if (Platform.OS === 'web') {
       downloadFileWeb(json, 'gpa-calculator-backup.json', 'application/json');
@@ -185,7 +200,7 @@ export default function SettingsScreen() {
   const showHelp = () => {
     Alert.alert(
       'GPA Calculator Help',
-      '1. Add courses using the + button on the Courses tab\n\n2. View your GPA summary on the Dashboard\n\n3. See your complete academic record in the Record tab\n\n4. GPA is calculated on a 4.0 scale (A = 4.0, B = 3.0, etc.)',
+      `1. Add courses using the + button on the Courses tab\n\n2. View your GPA summary on the Dashboard\n\n3. See your complete academic record in the Record tab\n\n4. GPA is calculated on the ${gradingSystem.name} (${gradingSystem.grades[0].label} = ${gradingSystem.grades[0].value}). Change it in Settings > Grading system.`,
       [{ text: 'OK' }]
     );
   };
@@ -194,6 +209,31 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <ScreenHeader title="Settings" />
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Grades</Text>
+          <View style={styles.sectionContainer}>
+            <TouchableOpacity
+              style={[styles.settingRow, styles.lastSettingRow]}
+              onPress={() => setShowSystemPicker(true)}
+              accessibilityRole="button"
+              accessibilityLabel={`Grading system, ${gradingSystem.name}`}
+            >
+              <View style={styles.settingLabelContainer}>
+                <GraduationCap
+                  size={Platform.OS === 'ios' ? 18 : 20}
+                  color={colors.text}
+                  style={styles.settingIcon}
+                />
+                <Text style={styles.settingLabel}>Grading system</Text>
+              </View>
+              <Text style={styles.settingValue}>
+                {gradingSystem.flag} {gradingSystem.name}
+              </Text>
+              <ChevronRight size={18} color={colors.textSecondary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Appearance</Text>
           <View style={styles.sectionContainer}>
@@ -370,6 +410,20 @@ export default function SettingsScreen() {
           </View>
         </View>
       </ScrollView>
+      <GradingSystemModal
+        visible={showSystemPicker}
+        title="Grading system"
+        subtitle="Choose the scale your university uses."
+        initialId={gradingSystem.id}
+        currentId={gradingSystem.id}
+        hasData={courses.length > 0}
+        confirmLabel="Save"
+        onConfirm={(id, mode) => {
+          setShowSystemPicker(false);
+          setGradingSystem(id, mode);
+        }}
+        onCancel={() => setShowSystemPicker(false)}
+      />
     </View>
   );
 }

@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function SemesterScreen() {
   const { colors, isDark } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { getSemester, targetSemesterGpa } = useGpa();
+  const { getSemester, targetSemesterGpa, gradingSystem } = useGpa();
   const semester = useMemo(() => (id ? (getSemester(id) ?? null) : null), [id, getSemester]);
   const insets = useSafeAreaInsets();
 
@@ -248,7 +248,12 @@ export default function SemesterScreen() {
 
           {semester.gpa > 0 && (
             <View style={styles.gpaSection}>
-              <Text style={[styles.gpaValue, { color: getGradeColor(semester.gpa, isDark).text }]}>
+              <Text
+                style={[
+                  styles.gpaValue,
+                  { color: getGradeColor(semester.gpa, isDark, gradingSystem).text },
+                ]}
+              >
                 {semester.gpa.toFixed(2)}
               </Text>
               <Text style={styles.gpaLabel}>Semester GPA</Text>

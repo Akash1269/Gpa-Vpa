@@ -1,77 +1,63 @@
 import { Course } from '@/types/course';
+import { GradeTone, GradingSystem } from '@/types/gradingSystem';
+import { GRADING_SYSTEMS } from '@/utils/gradingSystems';
 
-// Grade point values based on a 4.0 scale
-export const gradePoints: Record<string, number> = {
-  A: 4.0,
-  'A-': 3.7,
-  'B+': 3.3,
-  B: 3.0,
-  'B-': 2.7,
-  'C+': 2.3,
-  C: 2.0,
-  'C-': 1.7,
-  'D+': 1.3,
-  D: 1.0,
-  F: 0.0,
-};
+// Every function takes the grading system as its last argument and defaults to the US 4.0 scale
+const US_SYSTEM = GRADING_SYSTEMS['us_4.0'];
+
+// Grade point values on the US 4.0 scale
+export const gradePoints: Record<string, number> = Object.fromEntries(
+  US_SYSTEM.grades.map((g) => [g.label, g.value])
+);
 
 // Calculate the numeric value for a letter grade
-export const calculateGradeValue = (grade: string): number => {
-  return gradePoints[grade] || 0;
+export const calculateGradeValue = (grade: string, system: GradingSystem = US_SYSTEM): number => {
+  return system.grades.find((g) => g.label === grade)?.value ?? 0;
+};
+
+// Credit-weighted GPA over the graded courses in `courses`
+const weightedGpa = (courses: Course[], system: GradingSystem): number => {
+  const gradedCourses = courses.filter((course) => course.grade !== null);
+  if (gradedCourses.length === 0) return 0;
+
+  let totalPoints = 0;
+  let totalCredits = 0;
+
+  gradedCourses.forEach((course) => {
+    totalPoints += calculateGradeValue(course.grade!, system) * course.credits;
+    totalCredits += course.credits;
+  });
+
+  return totalCredits > 0 ? totalPoints / totalCredits : 0;
 };
 
 // Calculate GPA for a semester (only graded courses)
-export const calculateSemesterGpa = (courses: Course[]): number => {
-  const gradedCourses = courses.filter((course) => course.grade !== null);
-  if (gradedCourses.length === 0) return 0;
-
-  let totalPoints = 0;
-  let totalCredits = 0;
-
-  gradedCourses.forEach((course) => {
-    const gradeValue = calculateGradeValue(course.grade!);
-    totalPoints += gradeValue * course.credits;
-    totalCredits += course.credits;
-  });
-
-  return totalCredits > 0 ? totalPoints / totalCredits : 0;
-};
+export const calculateSemesterGpa = (courses: Course[], system: GradingSystem = US_SYSTEM) =>
+  weightedGpa(courses, system);
 
 // Calculate cumulative GPA (only graded courses)
-export const calculateCumulativeGpa = (courses: Course[]): number => {
-  const gradedCourses = courses.filter((course) => course.grade !== null);
-  if (gradedCourses.length === 0) return 0;
+export const calculateCumulativeGpa = (courses: Course[], system: GradingSystem = US_SYSTEM) =>
+  weightedGpa(courses, system);
 
-  let totalPoints = 0;
-  let totalCredits = 0;
-
-  gradedCourses.forEach((course) => {
-    const gradeValue = calculateGradeValue(course.grade!);
-    totalPoints += gradeValue * course.credits;
-    totalCredits += course.credits;
-  });
-
-  return totalCredits > 0 ? totalPoints / totalCredits : 0;
+// Hex colour for each standing/grade tone (used for text and indicators)
+const toneText: Record<GradeTone, string> = {
+  green: '#34A853',
+  blue: '#4285F4',
+  yellow: '#FBBC04',
+  orange: '#FA7B17',
+  red: '#EA4335',
 };
 
-// Determine academic standing based on GPA
-export const getAcademicStanding = (gpa: number) => {
-  if (gpa >= 3.7) {
-    return { label: 'Excellent', color: '#34A853' }; // Green
-  } else if (gpa >= 3.0) {
-    return { label: 'Very Good', color: '#4285F4' }; // Blue
-  } else if (gpa >= 2.0) {
-    return { label: 'Satisfactory', color: '#FBBC04' }; // Yellow
-  } else if (gpa >= 1.0) {
-    return { label: 'Probation', color: '#FA7B17' }; // Orange
-  } else {
-    return { label: 'Academic Warning', color: '#EA4335' }; // Red
-  }
+const lightToneColors: Record<GradeTone, { background: string; text: string }> = {
+  green: { background: '#E6F4EA', text: toneText.green },
+  blue: { background: '#E8F0FE', text: toneText.blue },
+  yellow: { background: '#FEF7E0', text: toneText.yellow },
+  orange: { background: '#FEF0E6', text: toneText.orange },
+  red: { background: '#FCE8E6', text: toneText.red },
 };
 
-// Get color for a grade display
 // Dark mode uses a translucent tint of a lighter text color; light pastels glare on dark cards
-const darkGradeColors = {
+const darkToneColors: Record<GradeTone, { background: string; text: string }> = {
   green: { background: 'rgba(129,201,149,0.16)', text: '#81C995' },
   blue: { background: 'rgba(138,180,248,0.16)', text: '#8AB4F8' },
   yellow: { background: 'rgba(253,214,99,0.16)', text: '#FDD663' },
@@ -79,32 +65,22 @@ const darkGradeColors = {
   red: { background: 'rgba(242,139,130,0.16)', text: '#F28B82' },
 };
 
-export const getGradeColor = (grade: string | number, isDark = false) => {
-  let gradeValue: number;
+const findBand = (gpa: number, system: GradingSystem) =>
+  system.bands.find((band) => gpa >= band.min) ?? system.bands[system.bands.length - 1];
 
-  if (typeof grade === 'string') {
-    gradeValue = calculateGradeValue(grade);
-  } else {
-    gradeValue = grade;
-  }
+// Determine academic standing based on GPA
+export const getAcademicStanding = (gpa: number, system: GradingSystem = US_SYSTEM) => {
+  const band = findBand(gpa, system);
+  return { label: band.label, color: toneText[band.tone] };
+};
 
-  if (isDark) {
-    if (gradeValue >= 3.7) return darkGradeColors.green;
-    if (gradeValue >= 3.0) return darkGradeColors.blue;
-    if (gradeValue >= 2.0) return darkGradeColors.yellow;
-    if (gradeValue >= 1.0) return darkGradeColors.orange;
-    return darkGradeColors.red;
-  }
-
-  if (gradeValue >= 3.7) {
-    return { background: '#E6F4EA', text: '#34A853' }; // Green
-  } else if (gradeValue >= 3.0) {
-    return { background: '#E8F0FE', text: '#4285F4' }; // Blue
-  } else if (gradeValue >= 2.0) {
-    return { background: '#FEF7E0', text: '#FBBC04' }; // Yellow
-  } else if (gradeValue >= 1.0) {
-    return { background: '#FEF0E6', text: '#FA7B17' }; // Orange
-  } else {
-    return { background: '#FCE8E6', text: '#EA4335' }; // Red
-  }
+// Get color for a grade display
+export const getGradeColor = (
+  grade: string | number,
+  isDark = false,
+  system: GradingSystem = US_SYSTEM
+) => {
+  const gradeValue = typeof grade === 'string' ? calculateGradeValue(grade, system) : grade;
+  const { tone } = findBand(gradeValue, system);
+  return (isDark ? darkToneColors : lightToneColors)[tone];
 };

@@ -38,7 +38,7 @@ export default function CourseScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const isNew = id === 'new';
-  const { getCourse, addCourse, updateCourse, deleteCourse, courses } = useGpa();
+  const { getCourse, addCourse, updateCourse, deleteCourse, courses, gradingSystem } = useGpa();
 
   const [course, setCourse] = useState<Course>(() => {
     if (!isNew) {
@@ -334,7 +334,7 @@ export default function CourseScreen() {
               <Text style={styles.gradeValue}>
                 {course.grade === null
                   ? 'Not yet graded — tracked as in-progress'
-                  : `Grade Value: ${calculateGradeValue(course.grade).toFixed(1)}`}
+                  : `Grade Value: ${calculateGradeValue(course.grade, gradingSystem).toFixed(1)}`}
               </Text>
             </View>
           </View>

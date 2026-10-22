@@ -13,11 +13,10 @@ import SegmentedControl from '@/components/SegmentedControl';
 
 type Mode = 'by-course' | 'by-gpa';
 
-const gradeOptions = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
-
 export default function SemesterGoalScreen() {
   const { colors } = useTheme();
   const {
+    gradingSystem,
     inProgressSemester,
     courseGoals,
     setCourseGoals,
@@ -25,22 +24,27 @@ export default function SemesterGoalScreen() {
     targetSemesterGpa,
   } = useGpa();
 
+  const gradeOptions = gradingSystem.grades.map((g) => g.label);
+  const topGrade = gradeOptions[0];
+
   const [mode, setMode] = useState<Mode>('by-course');
   const [perCourseGoals, setPerCourseGoals] = useState<Record<string, string>>(() => {
     if (!inProgressSemester) return {};
     const initial: Record<string, string> = {};
     inProgressSemester.courses.forEach((c) => {
-      initial[c.id] = courseGoals[c.id] || 'A';
+      initial[c.id] = courseGoals[c.id] || topGrade;
     });
     return initial;
   });
   const [selectedGpaGrade, setSelectedGpaGrade] = useState<string>(() => {
     // Find grade closest to target semester GPA
     if (targetSemesterGpa) {
-      const closest = gradeOptions.find((g) => calculateGradeValue(g) <= targetSemesterGpa);
-      return closest || 'A';
+      const closest = gradeOptions.find(
+        (g) => calculateGradeValue(g, gradingSystem) <= targetSemesterGpa
+      );
+      return closest || topGrade;
     }
-    return 'A';
+    return topGrade;
   });
 
   const courses = useMemo(() => inProgressSemester?.courses ?? [], [inProgressSemester]);
@@ -53,12 +57,12 @@ export default function SemesterGoalScreen() {
     courses.forEach((c) => {
       const grade = mode === 'by-course' ? perCourseGoals[c.id] : selectedGpaGrade;
       if (grade) {
-        totalPoints += calculateGradeValue(grade) * c.credits;
+        totalPoints += calculateGradeValue(grade, gradingSystem) * c.credits;
         totalCredits += c.credits;
       }
     });
     return totalCredits > 0 ? totalPoints / totalCredits : 0;
-  }, [perCourseGoals, selectedGpaGrade, mode, courses]);
+  }, [perCourseGoals, selectedGpaGrade, mode, courses, gradingSystem]);
 
   const handleSave = () => {
     if (mode === 'by-course') {
@@ -71,7 +75,7 @@ export default function SemesterGoalScreen() {
         distributed[c.id] = selectedGpaGrade;
       });
       setCourseGoals(distributed);
-      setTargetSemesterGpa(calculateGradeValue(selectedGpaGrade));
+      setTargetSemesterGpa(calculateGradeValue(selectedGpaGrade, gradingSystem));
     }
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     router.back();
@@ -301,8 +305,9 @@ export default function SemesterGoalScreen() {
                   marginTop: spacing.md,
                 }}
               >
-                This will set {selectedGpaGrade} ({calculateGradeValue(selectedGpaGrade).toFixed(1)}
-                ) as the target for all {courses.length} courses
+                This will set {selectedGpaGrade} (
+                {calculateGradeValue(selectedGpaGrade, gradingSystem).toFixed(1)}) as the target for
+                all {courses.length} courses
               </Text>
             </View>
 

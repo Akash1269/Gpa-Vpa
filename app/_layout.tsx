@@ -15,6 +15,7 @@ import { GpaProvider } from '@/context/GpaContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { useTheme } from '@/hooks/useTheme';
 import StackNavigator from '@/components/StackNavigator';
+import GradingSystemPrompt from '@/components/GradingSystemPrompt';
 import ErrorBoundary from '@/components/ErrorBoundary';
 if (Platform.OS === 'web') {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -74,6 +75,7 @@ function ThemedRoot() {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
       <GpaProvider>
         <StackNavigator />
+        <GradingSystemPrompt />
         <StatusBar style={isDark ? 'light' : 'dark'} />
       </GpaProvider>
     </GestureHandlerRootView>

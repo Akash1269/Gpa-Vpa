@@ -3,8 +3,29 @@ import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Course } from '@/types/course';
 import { Semester } from '@/types/semester';
+import { GradingSystem, GradingSystemId } from '@/types/gradingSystem';
 import { calculateSemesterGpa, calculateCumulativeGpa } from '@/utils/gpaCalculator';
+import {
+  DEFAULT_GRADING_SYSTEM_ID,
+  convertGpa,
+  convertGradeLabel,
+  getGradingSystem,
+  isGradingSystemId,
+} from '@/utils/gradingSystems';
 import demoCourses from '@/assets/data/demo-courses.json';
+
+// 'new' = fresh install choosing a scale; 'existing' = upgrade from a version without scales
+export type GradingSystemPrompt = 'new' | 'existing' | null;
+// What to do with existing grades and goals when the scale changes
+export type GradingSystemSwitchMode = 'convert' | 'reset';
+
+// Demo data is written with US grades; express it in the given scale
+const demoCoursesFor = (system: GradingSystem): Course[] => {
+  const us = getGradingSystem('us_4.0');
+  return (demoCourses as Course[]).map((c) =>
+    c.grade ? { ...c, grade: convertGradeLabel(c.grade, us, system) } : c
+  );
+};
 
 type GpaContextType = {
   courses: Course[];
@@ -19,6 +40,9 @@ type GpaContextType = {
   targetSemesterGpa: number | null;
   targetCredits: number | null;
   courseGoals: Record<string, string>;
+  gradingSystem: GradingSystem;
+  gradingSystemPrompt: GradingSystemPrompt;
+  setGradingSystem: (id: GradingSystemId, mode?: GradingSystemSwitchMode) => void;
   setTargetCgpa: (value: number | null) => void;
   setTargetSemesterGpa: (value: number | null) => void;
   setTargetCredits: (value: number | null) => void;
@@ -48,6 +72,9 @@ export const GpaContext = createContext<GpaContextType>({
   targetSemesterGpa: null,
   targetCredits: null,
   courseGoals: {},
+  gradingSystem: getGradingSystem(DEFAULT_GRADING_SYSTEM_ID),
+  gradingSystemPrompt: null,
+  setGradingSystem: () => {},
   setTargetCgpa: () => {},
   setTargetSemesterGpa: () => {},
   setTargetCredits: () => {},
@@ -81,7 +108,10 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [lastDeletedCourse, setLastDeletedCourse] = useState<Course | null>(null);
-  const [loadDemoOnMount, setLoadDemoOnMount] = useState(false);
+  const [gradingSystemId, setGradingSystemId] =
+    useState<GradingSystemId>(DEFAULT_GRADING_SYSTEM_ID);
+  const [gradingSystemPrompt, setGradingSystemPrompt] = useState<GradingSystemPrompt>(null);
+  const gradingSystem = getGradingSystem(gradingSystemId);
   const [isLoaded, setIsLoaded] = useState(false);
   const [cumulativeGpa, setCumulativeGpa] = useState(0);
   const [totalCredits, setTotalCredits] = useState(0);
@@ -98,28 +128,37 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Load data from storage
   useEffect(() => {
     const loadData = async () => {
+      let loadedCourseCount = 0;
       try {
         const storedCourses = await AsyncStorage.getItem('courses');
         if (storedCourses) {
           const parsed = JSON.parse(storedCourses);
           if (Array.isArray(parsed) && parsed.every(isValidCourse)) {
             setCourses(parsed);
+            loadedCourseCount = parsed.length;
           } else {
             console.error('Invalid course data format, resetting');
             await AsyncStorage.removeItem('courses');
-          }
-        } else {
-          // First launch: load demo data so the app isn't empty
-          const hasLaunched = await AsyncStorage.getItem('@hasLaunched');
-          if (!hasLaunched) {
-            await AsyncStorage.setItem('@hasLaunched', 'true');
-            // Will be set after loadDemoData is defined
-            setLoadDemoOnMount(true);
           }
         }
       } catch (error) {
         console.error('Error loading data:', error);
         await AsyncStorage.removeItem('courses').catch(() => {});
+      }
+
+      // Grading system: a stored choice wins; otherwise ask once. A fresh install also gets demo
+      // data, but only after the choice so that it is written in the chosen scale.
+      try {
+        const storedSystem = await AsyncStorage.getItem('@gradingSystem');
+        if (isGradingSystemId(storedSystem)) {
+          setGradingSystemId(storedSystem);
+        } else {
+          const hasLaunched = await AsyncStorage.getItem('@hasLaunched');
+          const isFreshInstall = !hasLaunched && loadedCourseCount === 0;
+          setGradingSystemPrompt(isFreshInstall ? 'new' : 'existing');
+        }
+      } catch (error) {
+        console.error('Error loading grading system:', error);
       }
 
       // Load GPA goals
@@ -161,7 +200,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     semesterMap.forEach((semesterCourses, key) => {
       const [semester, yearStr] = key.split('-');
       const year = parseInt(yearStr);
-      const gpa = calculateSemesterGpa(semesterCourses);
+      const gpa = calculateSemesterGpa(semesterCourses, gradingSystem);
       const hasUngraded = semesterCourses.some((c) => c.grade === null);
 
       semestersArray.push({
@@ -187,7 +226,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setSemesters(semestersArray);
 
     // Calculate cumulative GPA
-    const cumGpa = calculateCumulativeGpa(courses);
+    const cumGpa = calculateCumulativeGpa(courses, gradingSystem);
     setCumulativeGpa(cumGpa);
 
     // Calculate total credits
@@ -223,7 +262,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Set last completed semester (most recent fully graded)
     const completed = semestersArray.find((s) => s.status === 'completed') || null;
     setLastCompletedSemester(completed);
-  }, [courses]);
+  }, [courses, gradingSystem]);
 
   // Save courses to storage whenever they change (only after initial load)
   useEffect(() => {
@@ -341,16 +380,69 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const loadDemoData = useCallback(() => {
-    setCourses(demoCourses as Course[]);
-  }, []);
+    setCourses(demoCoursesFor(gradingSystem));
+  }, [gradingSystem]);
 
-  // Auto-load demo data on first launch
-  useEffect(() => {
-    if (loadDemoOnMount) {
-      loadDemoData();
-      setLoadDemoOnMount(false);
-    }
-  }, [loadDemoOnMount, loadDemoData]);
+  const setGradingSystem = useCallback(
+    (id: GradingSystemId, mode: GradingSystemSwitchMode = 'convert') => {
+      const from = gradingSystem;
+      const to = getGradingSystem(id);
+
+      AsyncStorage.setItem('@gradingSystem', id).catch(() => {});
+      setGradingSystemPrompt(null);
+      setLastDeletedCourse(null); // an undo would bring back a grade from the old scale
+
+      if (gradingSystemPrompt === 'new') {
+        AsyncStorage.setItem('@hasLaunched', 'true').catch(() => {});
+        setGradingSystemId(id);
+        setCourses(demoCoursesFor(to));
+        return;
+      }
+
+      if (id === gradingSystem.id) return;
+      setGradingSystemId(id);
+
+      // A degree-credit goal that is still the old scale's default follows the new scale's default
+      if (targetCredits === from.degreeCredits) setTargetCredits(to.degreeCredits);
+
+      if (mode === 'reset') {
+        setCourses([]);
+        setTargetCgpa(null);
+        setTargetSemesterGpa(null);
+        setCourseGoals({});
+        return;
+      }
+
+      // Convert by closest equivalent, so a "3.5/4.0" goal becomes "8.75/10"
+      setCourses((prev) =>
+        prev.map((c) => (c.grade ? { ...c, grade: convertGradeLabel(c.grade, from, to) } : c))
+      );
+      if (targetCgpa !== null) setTargetCgpa(convertGpa(targetCgpa, from, to));
+      if (targetSemesterGpa !== null) {
+        setTargetSemesterGpa(convertGpa(targetSemesterGpa, from, to));
+      }
+      setCourseGoals(
+        Object.fromEntries(
+          Object.entries(courseGoals).map(([courseId, grade]) => [
+            courseId,
+            convertGradeLabel(grade, from, to),
+          ])
+        )
+      );
+    },
+    [
+      gradingSystem,
+      gradingSystemPrompt,
+      targetCgpa,
+      targetSemesterGpa,
+      targetCredits,
+      courseGoals,
+      setTargetCgpa,
+      setTargetSemesterGpa,
+      setTargetCredits,
+      setCourseGoals,
+    ]
+  );
 
   return (
     <GpaContext.Provider
@@ -367,6 +459,9 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         targetSemesterGpa,
         targetCredits,
         courseGoals,
+        gradingSystem,
+        gradingSystemPrompt,
+        setGradingSystem,
         setTargetCgpa,
         setTargetSemesterGpa,
         setTargetCredits,

@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
+import { useGpa } from '@/hooks/useGpa';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type GradePickerProps = {
@@ -9,8 +10,9 @@ type GradePickerProps = {
 
 export default function GradePicker({ value, onChange }: GradePickerProps) {
   const { colors } = useTheme();
+  const { gradingSystem } = useGpa();
 
-  const gradeOptions = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
+  const gradeOptions = gradingSystem.grades.map((g) => g.label);
   const allOptions: (string | null)[] = [null, ...gradeOptions];
 
   const styles = StyleSheet.create({

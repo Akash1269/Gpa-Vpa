@@ -12,8 +12,8 @@ type SemesterProgressProps = {
 
 export default function SemesterProgress({ semester }: SemesterProgressProps) {
   const { colors, isDark } = useTheme();
-  const { targetSemesterGpa, courseGoals } = useGpa();
-  const gpaColor = getGradeColor(semester.gpa, isDark);
+  const { targetSemesterGpa, courseGoals, gradingSystem } = useGpa();
+  const gpaColor = getGradeColor(semester.gpa, isDark, gradingSystem);
 
   const totalCredits = semester.courses.reduce((sum, course) => sum + course.credits, 0);
   const gradedCourses = semester.courses.filter((c) => c.grade !== null);
@@ -25,7 +25,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
 
   const getCourseBorderColor = (grade: string | null): string => {
     if (!grade) return colors.border;
-    const value = getGradeColor(grade, isDark);
+    const value = getGradeColor(grade, isDark, gradingSystem);
     return value.text;
   };
 
@@ -255,7 +255,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
                     styles.gradeBadge,
                     {
                       backgroundColor: course.grade
-                        ? getGradeColor(course.grade, isDark).background
+                        ? getGradeColor(course.grade, isDark, gradingSystem).background
                         : colors.background,
                     },
                   ]}
@@ -265,7 +265,7 @@ export default function SemesterProgress({ semester }: SemesterProgressProps) {
                       styles.gradeBadgeText,
                       {
                         color: course.grade
-                          ? getGradeColor(course.grade, isDark).text
+                          ? getGradeColor(course.grade, isDark, gradingSystem).text
                           : colors.textSecondary,
                       },
                     ]}

@@ -13,20 +13,20 @@ import { useGpa } from '@/hooks/useGpa';
 import { useTheme } from '@/hooks/useTheme';
 import { useTabBarClearance } from '@/hooks/useTabBarClearance';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
-import { gradePoints } from '@/utils/gpaCalculator';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Target, GraduationCap, TrendingUp, ChevronRight } from 'lucide-react-native';
 import ProgressRing from '@/components/ProgressRing';
 
 type Tab = 'gpa' | 'graduation';
 
-export default function GoalsScreen() {
+function GoalsContent() {
   const { colors } = useTheme();
   const tabBarClearance = useTabBarClearance();
   const {
     cumulativeGpa,
     totalCredits,
     semesters,
+    gradingSystem,
     targetCgpa,
     setTargetCgpa,
     targetCredits,
@@ -37,13 +37,15 @@ export default function GoalsScreen() {
 
   // Cumulative goal state
   const [cumulativeTargetGpaInput, setCumulativeTargetGpaInput] = useState(
-    targetCgpa?.toString() ?? '3.5'
+    targetCgpa?.toString() ?? gradingSystem.defaultTargetGpa.toString()
   );
   const [remainingSemesters, setRemainingSemesters] = useState('2');
   const [futureSemesterCredits, setFutureSemesterCredits] = useState('15');
 
   // Graduation state
-  const [graduationCredits, setGraduationCredits] = useState(targetCredits?.toString() ?? '120');
+  const [graduationCredits, setGraduationCredits] = useState(
+    targetCredits?.toString() ?? gradingSystem.degreeCredits.toString()
+  );
   const [creditsPerSemester, setCreditsPerSemester] = useState('15');
 
   // Compute average credits per semester from past data
@@ -62,7 +64,7 @@ export default function GoalsScreen() {
       isNaN(numSemesters) ||
       isNaN(creditsPerSem) ||
       target < 0 ||
-      target > 4.0 ||
+      target > gradingSystem.maxGpa ||
       numSemesters <= 0 ||
       creditsPerSem <= 0
     )
@@ -73,15 +75,15 @@ export default function GoalsScreen() {
     const totalNeeded = target * (totalCredits + totalFutureCredits);
     const requiredGpaPerSemester = (totalNeeded - currentPoints) / totalFutureCredits;
 
-    const grades = Object.entries(gradePoints).sort((a, b) => b[1] - a[1]);
+    const grades = gradingSystem.grades;
     const closestGrade =
-      grades.find(([_, val]) => val <= requiredGpaPerSemester) || grades[grades.length - 1];
+      grades.find((g) => g.value <= requiredGpaPerSemester) || grades[grades.length - 1];
 
     return {
       target,
       requiredGpa: requiredGpaPerSemester,
-      closestGrade: closestGrade[0],
-      feasible: requiredGpaPerSemester <= 4.0 && requiredGpaPerSemester >= 0,
+      closestGrade: closestGrade.label,
+      feasible: requiredGpaPerSemester <= gradingSystem.maxGpa && requiredGpaPerSemester >= 0,
       currentGpa: cumulativeGpa,
       currentCredits: totalCredits,
       numSemesters,
@@ -94,6 +96,7 @@ export default function GoalsScreen() {
     futureSemesterCredits,
     cumulativeGpa,
     totalCredits,
+    gradingSystem,
   ]);
 
   // Persist cumulative goal after render
@@ -433,7 +436,7 @@ export default function GoalsScreen() {
                 style={[
                   styles.input,
                   cumulativeTargetGpaInput !== '' &&
-                  (parseFloat(cumulativeTargetGpaInput) > 4.0 ||
+                  (parseFloat(cumulativeTargetGpaInput) > gradingSystem.maxGpa ||
                     parseFloat(cumulativeTargetGpaInput) < 0)
                     ? { borderColor: colors.error }
                     : {},
@@ -441,12 +444,12 @@ export default function GoalsScreen() {
                 value={cumulativeTargetGpaInput}
                 onChangeText={setCumulativeTargetGpaInput}
                 keyboardType="decimal-pad"
-                placeholder="3.5"
+                placeholder={gradingSystem.defaultTargetGpa.toString()}
                 placeholderTextColor={colors.textSecondary}
                 maxLength={4}
               />
               {cumulativeTargetGpaInput !== '' &&
-                (parseFloat(cumulativeTargetGpaInput) > 4.0 ||
+                (parseFloat(cumulativeTargetGpaInput) > gradingSystem.maxGpa ||
                   parseFloat(cumulativeTargetGpaInput) < 0) && (
                   <Text
                     style={{
@@ -456,7 +459,7 @@ export default function GoalsScreen() {
                       marginTop: 4,
                     }}
                   >
-                    GPA must be between 0.0 and 4.0
+                    GPA must be between 0 and {gradingSystem.scaleLabel}
                   </Text>
                 )}
             </View>
@@ -513,7 +516,7 @@ export default function GoalsScreen() {
               {!isFeasible && (
                 <View style={styles.warningBanner}>
                   <Text style={styles.warningText}>
-                    {cumulativeResult.requiredGpa > 4.0
+                    {cumulativeResult.requiredGpa > gradingSystem.maxGpa
                       ? 'Not achievable — try adding more semesters or lowering your target'
                       : 'Your current GPA already exceeds this target!'}
                   </Text>
@@ -732,4 +735,10 @@ export default function GoalsScreen() {
       </ScrollView>
     </View>
   );
+}
+
+// Inputs are seeded from the active scale, so start fresh when the scale changes
+export default function GoalsScreen() {
+  const { gradingSystem } = useGpa();
+  return <GoalsContent key={gradingSystem.id} />;
 }
