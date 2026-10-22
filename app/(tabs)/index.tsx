@@ -2,6 +2,8 @@ import { StyleSheet, View, Text, ScrollView, Platform, TouchableOpacity } from '
 import { router } from 'expo-router';
 import { useGpa } from '@/hooks/useGpa';
 import GpaCard from '@/components/GpaCard';
+import PressableScale from '@/components/PressableScale';
+import AchievedBadge from '@/components/AchievedBadge';
 import SemesterProgress from '@/components/SemesterProgress';
 import { getAcademicStanding } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
@@ -125,8 +127,9 @@ export default function Dashboard() {
         <GpaCard gpa={cumulativeGpa} academicStanding={academicStanding} />
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.statsRow}>
-          <TouchableOpacity
+          <PressableScale
             style={styles.statCard}
+            haptic="light"
             onPress={() => router.push('/(tabs)/academic-record')}
             accessibilityLabel="View semesters"
           >
@@ -137,9 +140,10 @@ export default function Dashboard() {
               <Text style={styles.statValue}>{semesters.length}</Text>
               <Text style={styles.statLabel}>Semesters</Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </PressableScale>
+          <PressableScale
             style={styles.statCard}
+            haptic="light"
             onPress={() => router.push('/(tabs)/courses')}
             accessibilityLabel="View courses"
           >
@@ -150,7 +154,7 @@ export default function Dashboard() {
               <Text style={styles.statValue}>{courses.length}</Text>
               <Text style={styles.statLabel}>Courses</Text>
             </View>
-          </TouchableOpacity>
+          </PressableScale>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(150).duration(500)}>
@@ -222,8 +226,7 @@ export default function Dashboard() {
                       style={{
                         fontFamily: fonts.bold,
                         fontSize: 22,
-                        color:
-                          cumulativeGpa >= targetCgpa ? colors.status.completed.text : colors.text,
+                        color: colors.text,
                         marginTop: spacing.xs,
                       }}
                     >
@@ -241,26 +244,28 @@ export default function Dashboard() {
                         style={{
                           height: '100%',
                           backgroundColor:
-                            cumulativeGpa >= targetCgpa
-                              ? colors.status.completed.text
-                              : colors.primary,
+                            cumulativeGpa >= targetCgpa ? colors.accent : colors.primary,
                           borderRadius: 2,
                           width: `${Math.min(100, (cumulativeGpa / targetCgpa) * 100)}%`,
                         }}
                       />
                     </View>
-                    <Text
-                      style={{
-                        fontFamily: fonts.regular,
-                        fontSize: fontSizes.xs,
-                        color: colors.textSecondary,
-                        marginTop: spacing.xs,
-                      }}
-                    >
-                      {cumulativeGpa >= targetCgpa
-                        ? `Achieved ✓`
-                        : `Current: ${cumulativeGpa.toFixed(2)}`}
-                    </Text>
+                    {cumulativeGpa >= targetCgpa ? (
+                      <View style={{ marginTop: spacing.xs }}>
+                        <AchievedBadge label="Goal met" />
+                      </View>
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: fonts.regular,
+                          fontSize: fontSizes.xs,
+                          color: colors.textSecondary,
+                          marginTop: spacing.xs,
+                        }}
+                      >
+                        {`Current: ${cumulativeGpa.toFixed(2)}`}
+                      </Text>
+                    )}
                   </View>
                 )}
                 {targetCredits !== null && (
@@ -287,10 +292,7 @@ export default function Dashboard() {
                       style={{
                         fontFamily: fonts.bold,
                         fontSize: fontSizes.xl,
-                        color:
-                          totalCredits >= targetCredits
-                            ? colors.status.completed.text
-                            : colors.text,
+                        color: colors.text,
                         marginTop: spacing.xs,
                       }}
                     >
@@ -317,26 +319,28 @@ export default function Dashboard() {
                         style={{
                           height: '100%',
                           backgroundColor:
-                            totalCredits >= targetCredits
-                              ? colors.status.completed.text
-                              : colors.primary,
+                            totalCredits >= targetCredits ? colors.accent : colors.primary,
                           borderRadius: 2,
                           width: `${Math.min(100, (totalCredits / targetCredits) * 100)}%`,
                         }}
                       />
                     </View>
-                    <Text
-                      style={{
-                        fontFamily: fonts.regular,
-                        fontSize: fontSizes.xs,
-                        color: colors.textSecondary,
-                        marginTop: spacing.xs,
-                      }}
-                    >
-                      {totalCredits >= targetCredits
-                        ? `Complete ✓`
-                        : `${targetCredits - totalCredits} remaining`}
-                    </Text>
+                    {totalCredits >= targetCredits ? (
+                      <View style={{ marginTop: spacing.xs }}>
+                        <AchievedBadge label="Complete" />
+                      </View>
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: fonts.regular,
+                          fontSize: fontSizes.xs,
+                          color: colors.textSecondary,
+                          marginTop: spacing.xs,
+                        }}
+                      >
+                        {`${targetCredits - totalCredits} remaining`}
+                      </Text>
+                    )}
                   </View>
                 )}
               </View>

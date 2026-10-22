@@ -3,6 +3,8 @@ import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import GradientBackground from '@/components/GradientBackground';
+import AnimatedNumber from '@/components/AnimatedNumber';
 
 type GpaCardProps = {
   gpa: number;
@@ -17,7 +19,7 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: colors.hero,
+      backgroundColor: colors.heroGradient[0], // shown until the gradient has measured itself
       borderRadius: radii.xl + 4,
       padding: spacing['2xl'],
       overflow: 'hidden',
@@ -85,6 +87,7 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
   return (
     <Animated.View entering={FadeIn.duration(600)}>
       <View style={styles.container}>
+        <GradientBackground colors={colors.heroGradient} />
         <View style={styles.decorCircle1} />
         <View style={styles.decorCircle2} />
         <View style={styles.topRow}>
@@ -94,7 +97,7 @@ export default React.memo(function GpaCard({ gpa, academicStanding }: GpaCardPro
           </View>
         </View>
         <View style={styles.gpaRow}>
-          <Text style={styles.gpaValue}>{gpa.toFixed(2)}</Text>
+          <AnimatedNumber value={gpa} style={styles.gpaValue} />
           <Text style={styles.gpaScale}>/ 4.0</Text>
         </View>
       </View>

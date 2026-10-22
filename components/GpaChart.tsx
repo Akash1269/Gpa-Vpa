@@ -117,6 +117,7 @@ export default function GpaChart({ semesters }: GpaChartProps) {
 
   // Calculate points in pixels once we know the chart width
   const usableWidth = chartWidth - dotPadding * 2;
+  const bestGpa = Math.max(...gpas);
   const points = sortedSemesters.map((sem, index) => {
     const xFraction = sortedSemesters.length > 1 ? index / (sortedSemesters.length - 1) : 0.5;
     const x = dotPadding + xFraction * usableWidth;
@@ -125,6 +126,7 @@ export default function GpaChart({ semesters }: GpaChartProps) {
       x,
       y,
       gpa: sem.gpa,
+      isBest: sortedSemesters.length > 1 && sem.gpa === bestGpa,
       label: `${sem.semester.substring(0, 2)} ${String(sem.year).slice(-2)}`,
     };
   });
@@ -191,15 +193,22 @@ export default function GpaChart({ semesters }: GpaChartProps) {
                     <View
                       style={[
                         styles.trendDot,
+                        point.isBest && {
+                          width: 12,
+                          height: 12,
+                          borderRadius: 6,
+                          backgroundColor: colors.accent,
+                        },
                         {
-                          left: point.x - 4,
-                          top: point.y - 4,
+                          left: point.x - (point.isBest ? 6 : 4),
+                          top: point.y - (point.isBest ? 6 : 4),
                         },
                       ]}
                     />
                     <Text
                       style={[
                         styles.gpaLabel,
+                        point.isBest && { color: colors.accentText },
                         {
                           left: point.x - 20,
                           top: point.y - 20,

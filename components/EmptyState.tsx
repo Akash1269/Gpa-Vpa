@@ -1,16 +1,16 @@
 import { StyleSheet, View, Text } from 'react-native';
-import { BookOpen, ChartBar as BarChart3, BookPlus } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing } from '@/constants/theme';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import Mascot, { MascotMood } from '@/components/Mascot';
 
 type EmptyStateProps = {
-  icon: 'book-open' | 'bar-chart-3' | 'book-plus';
   title: string;
   message: string;
+  mood?: MascotMood;
 };
 
-export default function EmptyState({ icon, title, message }: EmptyStateProps) {
+export default function EmptyState({ title, message, mood = 'sleepy' }: EmptyStateProps) {
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -20,14 +20,8 @@ export default function EmptyState({ icon, title, message }: EmptyStateProps) {
       alignItems: 'center',
       padding: spacing['2xl'],
     },
-    iconContainer: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: colors.primaryLight,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: spacing['2xl'],
+    mascot: {
+      marginBottom: spacing.lg,
     },
     title: {
       fontFamily: fonts.semiBold,
@@ -45,22 +39,11 @@ export default function EmptyState({ icon, title, message }: EmptyStateProps) {
     },
   });
 
-  const renderIcon = () => {
-    switch (icon) {
-      case 'book-open':
-        return <BookOpen size={40} color={colors.primary} />;
-      case 'bar-chart-3':
-        return <BarChart3 size={40} color={colors.primary} />;
-      case 'book-plus':
-        return <BookPlus size={40} color={colors.primary} />;
-      default:
-        return <BookOpen size={40} color={colors.primary} />;
-    }
-  };
-
   return (
     <Animated.View style={styles.container} entering={FadeIn.duration(500)}>
-      <View style={styles.iconContainer}>{renderIcon()}</View>
+      <View style={styles.mascot}>
+        <Mascot mood={mood} size={128} />
+      </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
     </Animated.View>

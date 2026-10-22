@@ -51,7 +51,11 @@ jest.mock('react-native-reanimated', () => {
     __esModule: true,
     default: {
       View,
+      createAnimatedComponent: (component: unknown) => component,
     },
+    useSharedValue: (initial: number) => ({ get: () => initial, set: () => {} }),
+    useAnimatedStyle: (factory: () => object) => factory(),
+    withSpring: (value: number) => value,
     FadeInRight: {
       duration: () => ({ delay: () => ({}) }),
     },

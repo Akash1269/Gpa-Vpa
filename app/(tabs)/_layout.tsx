@@ -1,15 +1,11 @@
+import React from 'react';
 import { Tabs, router } from 'expo-router';
-import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import { View, Text, Platform, StyleSheet } from 'react-native';
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import PressableScale from '@/components/PressableScale';
+import Mascot from '@/components/Mascot';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  House,
-  BookOpen,
-  Layers,
-  Crosshair,
-  Plus,
-  Settings2,
-  GraduationCap,
-} from 'lucide-react-native';
+import { House, BookOpen, Layers, Crosshair, Plus, Settings2 } from 'lucide-react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { fonts, fontSizes, spacing } from '@/constants/theme';
 import { TAB_BAR_HEIGHT, useTabBarOffset } from '@/hooks/useTabBarClearance';
@@ -52,15 +48,13 @@ function CustomHeader() {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              backgroundColor: colors.primary + '15',
+              width: 36,
+              height: 36,
               justifyContent: 'center',
               alignItems: 'center',
             }}
           >
-            <GraduationCap size={18} color={colors.primary} strokeWidth={2.5} />
+            <Mascot size={34} animated={false} />
           </View>
           <Text
             style={{
@@ -74,7 +68,9 @@ function CustomHeader() {
           </Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <TouchableOpacity
+          <PressableScale
+            scaleTo={0.92}
+            haptic="light"
             onPress={() => router.push('/settings')}
             style={{
               width: 36,
@@ -90,8 +86,10 @@ function CustomHeader() {
             accessibilityHint="Navigate to settings"
           >
             <Settings2 size={18} color={colors.textSecondary} strokeWidth={2} />
-          </TouchableOpacity>
-          <TouchableOpacity
+          </PressableScale>
+          <PressableScale
+            scaleTo={0.92}
+            haptic="light"
             onPress={() => router.push('/course/new')}
             style={{
               width: 36,
@@ -105,10 +103,76 @@ function CustomHeader() {
             accessibilityHint="Navigate to add a new course"
           >
             <Plus size={18} color={colors.onPrimary} strokeWidth={2.5} />
-          </TouchableOpacity>
+          </PressableScale>
         </View>
       </View>
     </View>
+  );
+}
+
+function TabBarItem({
+  label,
+  icon,
+  color,
+  isFocused,
+  pillColor,
+  onPress,
+  accessibilityLabel,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  color: string;
+  isFocused: boolean;
+  pillColor: string;
+  onPress: () => void;
+  accessibilityLabel?: string;
+}) {
+  const spring = { damping: 14, stiffness: 220 };
+  // The pill grows in behind the icon and the icon lifts a touch when its tab becomes active
+  const pillStyle = useAnimatedStyle(() => ({
+    opacity: withSpring(isFocused ? 1 : 0, spring),
+    transform: [{ scaleX: withSpring(isFocused ? 1 : 0.5, spring) }],
+  }));
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: withSpring(isFocused ? -1 : 0, spring) }],
+  }));
+
+  return (
+    <PressableScale
+      onPress={onPress}
+      scaleTo={0.9}
+      haptic="selection"
+      accessibilityRole="tab"
+      accessibilityState={{ selected: isFocused }}
+      accessibilityLabel={accessibilityLabel}
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 8,
+      }}
+    >
+      <View style={{ width: 40, height: 32, justifyContent: 'center', alignItems: 'center' }}>
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFill,
+            { borderRadius: 10, backgroundColor: pillColor },
+            pillStyle,
+          ]}
+        />
+        <Animated.View style={iconStyle}>{icon}</Animated.View>
+      </View>
+      <Text
+        style={{
+          fontFamily: isFocused ? fonts.semiBold : fonts.medium,
+          fontSize: 10,
+          color,
+          marginTop: 3,
+        }}
+      >
+        {label}
+      </Text>
+    </PressableScale>
   );
 }
 
@@ -181,42 +245,16 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           const icon = options.tabBarIcon?.({ focused: isFocused, color, size: 22 });
 
           return (
-            <TouchableOpacity
+            <TabBarItem
               key={route.key}
+              label={label}
+              icon={icon}
+              color={color}
+              isFocused={isFocused}
+              pillColor={colors.primary + '15'}
               onPress={onPress}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: isFocused }}
               accessibilityLabel={options.tabBarAccessibilityLabel}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: 8,
-              }}
-            >
-              <View
-                style={{
-                  width: 40,
-                  height: 32,
-                  borderRadius: 10,
-                  backgroundColor: isFocused ? colors.primary + '15' : 'transparent',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                {icon}
-              </View>
-              <Text
-                style={{
-                  fontFamily: isFocused ? fonts.semiBold : fonts.medium,
-                  fontSize: 10,
-                  color,
-                  marginTop: 3,
-                }}
-              >
-                {label}
-              </Text>
-            </TouchableOpacity>
+            />
           );
         })}
       </View>
@@ -231,6 +269,7 @@ export default function TabLayout() {
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
+        animation: 'fade',
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
         tabBarLabelStyle: {

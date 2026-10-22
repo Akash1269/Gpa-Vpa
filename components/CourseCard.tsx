@@ -8,6 +8,7 @@ import { Course } from '@/types/course';
 import { getGradeColor } from '@/utils/gpaCalculator';
 import { useTheme } from '@/hooks/useTheme';
 import { useGpa } from '@/hooks/useGpa';
+import PressableScale from '@/components/PressableScale';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 
 type CourseCardProps = {
@@ -123,8 +124,9 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
 
   return (
     <Swipeable renderRightActions={renderRightActions} overshootRight={false}>
-      <TouchableOpacity
+      <PressableScale
         style={styles.container}
+        scaleTo={0.98}
         onPress={handlePress}
         accessibilityRole="button"
         accessibilityLabel={`${course.name}, ${course.code}, grade ${course.grade ?? 'pending'}, ${course.credits} credits`}
@@ -151,7 +153,7 @@ export default React.memo(function CourseCard({ course, showSemester = false }: 
             <Text style={styles.creditText}>{course.credits} CR</Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </PressableScale>
     </Swipeable>
   );
 });

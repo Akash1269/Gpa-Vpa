@@ -20,11 +20,7 @@ export default function RecentCoursesList({ courses }: RecentCoursesListProps) {
   if (courses.length === 0) {
     return (
       <View style={[styles.container, styles.emptyContainer]}>
-        <EmptyState
-          icon="book-plus"
-          title="No courses yet"
-          message="Add your first course to see it here"
-        />
+        <EmptyState title="No courses yet" message="Tap the + button to add your first one" />
       </View>
     );
   }

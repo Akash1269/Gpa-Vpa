@@ -112,9 +112,8 @@ export default function AcademicRecord() {
         </ScrollView>
       ) : (
         <EmptyState
-          icon="bar-chart-3"
-          title="No academic records yet"
-          message="Add courses to see your academic progress and GPA statistics"
+          title="Nothing to chart yet"
+          message="Add a few courses and Vee will start tracking your semesters"
         />
       )}
     </View>

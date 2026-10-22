@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { StyleSheet, View, Text, SectionList, TextInput, Platform } from 'react-native';
 import { Search } from 'lucide-react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useGpa } from '@/hooks/useGpa';
 import CourseCard from '@/components/CourseCard';
 import EmptyState from '@/components/EmptyState';
@@ -139,7 +140,13 @@ export default function CoursesScreen() {
           <SectionList
             sections={sections}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <CourseCard course={item} />}
+            renderItem={({ item, index }) => (
+              <Animated.View
+                entering={index < 8 ? FadeInDown.delay(index * 45).duration(350) : undefined}
+              >
+                <CourseCard course={item} />
+              </Animated.View>
+            )}
             renderSectionHeader={({ section }) => {
               const hasUngraded = section.data.some((c: Course) => c.grade === null);
               return (
@@ -175,10 +182,12 @@ export default function CoursesScreen() {
           />
         ) : (
           <EmptyState
-            icon="book-open"
-            title="No courses found"
+            mood={searchQuery ? 'happy' : 'sleepy'}
+            title={searchQuery ? 'No matches' : 'No courses yet'}
             message={
-              searchQuery ? 'Try adjusting your search' : 'Add your first course to get started'
+              searchQuery
+                ? 'Vee looked everywhere. Try a different search.'
+                : 'Add your first course and Vee will get to work.'
             }
           />
         )}

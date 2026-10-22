@@ -9,11 +9,6 @@
     "scheme": "gpavpa",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#1A73E8"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.akash1269.gpavpa",
@@ -23,8 +18,8 @@
       "package": "com.akash1269.gpavpa",
       "versionCode": 2,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#1A73E8"
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#3B5BDB"
       }
     },
     "web": {
@@ -35,7 +30,18 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#3B5BDB",
+          "image": "./assets/images/adaptive-icon.png",
+          "imageWidth": 240,
+          "dark": {
+            "backgroundColor": "#1F2A6B",
+            "image": "./assets/images/adaptive-icon.png"
+          }
+        }
+      ],
       "expo-status-bar",
       [
         "expo-build-properties",

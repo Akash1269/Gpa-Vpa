@@ -311,9 +311,8 @@ export default function SemesterScreen() {
           />
         ) : (
           <EmptyState
-            icon="book-open"
-            title="No courses yet"
-            message="Add courses to this semester to calculate your GPA"
+            title="A fresh semester"
+            message="Add your first course and Vee will work out the GPA"
           />
         )}
       </View>

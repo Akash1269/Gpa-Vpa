@@ -6,6 +6,7 @@ import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
 import { ChevronDown, ChevronRight } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import ScreenHeader from '@/components/ScreenHeader';
+import GradientBackground from '@/components/GradientBackground';
 
 export default function CreditsScreen() {
   const { colors } = useTheme();
@@ -29,8 +30,9 @@ export default function CreditsScreen() {
         : {}),
     },
     totalCard: {
-      backgroundColor: colors.hero,
+      backgroundColor: colors.heroGradient[0],
       borderRadius: radii.xl,
+      overflow: 'hidden',
       padding: spacing.xl,
       marginBottom: spacing['2xl'],
     },
@@ -120,6 +122,7 @@ export default function CreditsScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <Animated.View entering={FadeInDown.duration(400)}>
           <View style={styles.totalCard}>
+            <GradientBackground colors={colors.heroGradient} />
             <Text style={styles.totalLabel}>Total Credits Earned</Text>
             <Text style={styles.totalValue}>{totalCredits}</Text>
             <Text style={styles.totalSubtext}>

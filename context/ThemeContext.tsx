@@ -17,6 +17,12 @@ const lightColors = {
   onPrimary: '#FFFFFF',
   onError: '#FFFFFF',
   hero: '#1A73E8',
+  // Secondary accent: warm gold, reserved for achievements (goals met, best semester)
+  accent: '#F5A623',
+  accentSoft: '#FFF4D6',
+  accentText: '#8A5A00',
+  onAccent: '#3D2600',
+  heroGradient: ['#1A73E8', '#5B3FD6'] as [string, string],
   status: {
     inProgress: { bg: '#E3F2FD', text: '#1976D2' },
     completed: { bg: '#E8F5E9', text: '#34A853' },
@@ -42,6 +48,11 @@ const darkColors = {
   onPrimary: '#0B1E3D',
   onError: '#3B0A06',
   hero: '#1B4F9C',
+  accent: '#FFC857',
+  accentSoft: 'rgba(255,200,87,0.16)',
+  accentText: '#FFC857',
+  onAccent: '#3D2600',
+  heroGradient: ['#1B4F9C', '#3B2E8F'] as [string, string],
   status: {
     inProgress: { bg: 'rgba(138,180,248,0.16)', text: '#8AB4F8' },
     completed: { bg: 'rgba(129,201,149,0.16)', text: '#81C995' },
