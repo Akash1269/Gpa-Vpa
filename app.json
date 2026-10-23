@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "GPA Calculator",
+    "name": "GPA-VPA",
     "slug": "gpa-calculator",
     "version": "0.1.3",
     "runtimeVersion": "0.1.3",
@@ -20,7 +20,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#3B5BDB"
-      }
+      },
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",

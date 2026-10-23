@@ -212,15 +212,15 @@ export default function SettingsScreen() {
 
   const showAbout = () => {
     Alert.alert(
-      'About GPA Calculator',
-      'A comprehensive GPA Calculator and Course Management System to help students track their academic progress.',
+      'About GPA-VPA',
+      'A private GPA and CGPA tracker that helps students follow their courses, plan their goals and see their progress. Everything stays on your device.',
       [{ text: 'OK' }]
     );
   };
 
   const showHelp = () => {
     Alert.alert(
-      'GPA Calculator Help',
+      'GPA-VPA Help',
       `1. Add courses using the + button on the Courses tab\n\n2. View your GPA summary on the Dashboard\n\n3. See your complete academic record in the Record tab\n\n4. GPA is calculated on the ${gradingSystem.name} (${gradingSystem.grades[0].label} = ${gradingSystem.grades[0].value}). Change it in Settings > Grading system.`,
       [{ text: 'OK' }]
     );

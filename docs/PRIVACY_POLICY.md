@@ -1,16 +1,20 @@
-# Privacy Policy — GPA Calculator
+# Privacy Policy — GPA-VPA
 
-**Last Updated:** June 25, 2026
+**Last Updated:** October 23, 2026
 
 ## Overview
 
-GPA Calculator ("the App") is a mobile application that helps students track their courses and calculate Grade Point Averages. This privacy policy explains how the App handles your data.
+GPA-VPA ("the App") is a mobile application that helps students track their courses and calculate Grade Point Averages. This privacy policy explains how the App handles your data.
 
 ## Data Collection
 
 **We do not collect any personal data.**
 
 All academic information you enter (course names, grades, credits, semesters) is stored **exclusively on your device** using local storage. No data is transmitted to external servers, cloud services, or third parties.
+
+## Device Settings
+
+When you first open the App, it reads your phone's **time zone and language/region setting** to suggest a grading system (for example the Indian 10-point scale). This happens on your device only. The App does **not** access your location (no GPS, no network lookup) and does not request any location permission. The values are not stored or sent anywhere. You choose the grading system yourself and can change it at any time in Settings.
 
 ## Data Storage
 
@@ -37,6 +41,8 @@ Once deleted, data cannot be recovered.
 ## Third-Party Services
 
 The App does not integrate with any third-party services that collect data. No network requests are made during normal usage.
+
+If you use **Export as CSV** or **Export as JSON Backup**, the file is created on your device and handed to the sharing option you choose (for example saving it to Files or sending it in a chat app). What happens to it after that is up to the app you choose.
 
 ## Children's Privacy
 

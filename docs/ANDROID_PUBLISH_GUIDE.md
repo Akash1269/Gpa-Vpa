@@ -44,7 +44,9 @@ A complete step-by-step reference for publishing any Expo/React Native app to th
 - [ ] Set up a payments profile (even for free apps)
 - [ ] Note your Developer Account ID for reference
 
-**Important:** Organization accounts require additional documentation. Individual accounts are faster to set up.
+**Important:** Organization accounts require additional documentation (including a D-U-N-S number). Individual accounts are faster to set up.
+
+**New personal accounts must run a closed test first.** Google currently requires personal accounts created after November 2023 to run a closed test with at least 12 testers who stay opted in for 14 continuous days before they can apply for production access. Plan for at least three weeks between creating the account and the first public release, and start recruiting testers early. See [Closed testing before production](#closed-testing-before-production). Check the Play Console for the current numbers, since Google changes them.
 
 ---
 
@@ -88,7 +90,7 @@ A complete step-by-step reference for publishing any Expo/React Native app to th
 - [ ] `android.versionCode` — Integer, must increment with every upload
 - [ ] `android.adaptiveIcon.foregroundImage` — 1024x1024 PNG with transparent padding
 - [ ] `android.adaptiveIcon.backgroundColor` — Background color for adaptive icon
-- [ ] `android.permissions` — Only request permissions you actually use
+- [ ] `android.permissions` — Only request permissions you actually use. Libraries add their own, so check the **merged** manifest of the release build (`aapt2 dump permissions app-release.apk`) and block the ones you do not need with `android.blockedPermissions`. GPA-VPA blocks `SYSTEM_ALERT_WINDOW`, `READ_EXTERNAL_STORAGE` and `WRITE_EXTERNAL_STORAGE`, leaving only `INTERNET` and `VIBRATE`
 - [ ] `icon` — 1024x1024 PNG, no transparency, no rounded corners (store adds them)
 
 ### Versioning Rules
@@ -216,9 +218,9 @@ eas build --profile production --platform android
 
 | Asset | Size | Format | Notes |
 |-------|------|--------|-------|
-| App icon | 512x512 | PNG (32-bit, no alpha) | Must match in-app icon |
+| App icon | 512x512 | PNG (32-bit), up to 1 MB | Must match in-app icon. Do not bake in rounded corners. (The App Store needs an icon with no alpha channel; Google Play accepts one.) |
 | Feature graphic | 1024x500 | PNG or JPG | Shown at top of listing |
-| Phone screenshots | 1080x1920+ | PNG or JPG | Min 2, max 8 |
+| Phone screenshots | 1080x1920 to 1080x2160 | PNG or JPG | Min 2, max 8. Each side 320 to 3840 px, and the longer side at most **2x** the shorter one. A 1080x2400 emulator screenshot is rejected for being too tall |
 | 7" tablet screenshots | 1200x1920+ | PNG or JPG | Optional but recommended |
 | 10" tablet screenshots | 1920x1200+ | PNG or JPG | Optional but recommended |
 
@@ -345,6 +347,20 @@ eas submit --platform android --profile production
 5. [ ] In Play Console: Settings → API access → Link the service account
 6. [ ] Grant "Release manager" permission to the service account
 
+### Closed testing before production
+
+New personal developer accounts cannot publish to production straight away.
+
+1. [ ] In Play Console create a **Closed testing** track and upload the AAB there first
+2. [ ] Create a testers list (a Google Group or a list of email addresses) with **at least 12** people
+3. [ ] Send them the opt-in link and ask them to install the app from the Play Store
+4. [ ] Keep at least 12 testers opted in for **14 continuous days**. If people drop out, the count restarts, so recruit a few extra
+5. [ ] Ask testers to open the app a few times and send feedback
+6. [ ] After 14 days, use **Apply for production access** in the Play Console and answer the questions about your testing
+7. [ ] Fix what testers report and upload the fixes to the closed track while you wait
+
+Google reviews the production application separately; this commonly takes a few days.
+
 ### Review Timeline
 
 - First submission: 3-7 days typically
@@ -457,4 +473,4 @@ For the fastest path from code to Play Store:
 
 ---
 
-*Last updated: 2026-06-29*
+*Last updated: 2026-10-23*

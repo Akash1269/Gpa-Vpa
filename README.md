@@ -34,7 +34,6 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 
 ## Screenshots
 
-<!-- Replace these placeholders with actual screenshots -->
 <div align="center">
 <table>
 <tr>
@@ -51,8 +50,6 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 </tr>
 </table>
 </div>
-
-> _Screenshots coming soon — add your own to `docs/screenshots/`_
 
 ---
 
