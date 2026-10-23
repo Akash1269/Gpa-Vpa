@@ -147,6 +147,8 @@ docs/                 → Documentation
 | B-    | 2.7    |     | D     | 1.0    |
 |       |        |     | F     | 0.0    |
 
+The table shows the US 4.0 scale. The app also supports the Indian 10-point CGPA scale (O = 10 down to F = 0) and a custom scale you define yourself; choose one in **Settings → Grading system**.
+
 ---
 
 ## Scripts
@@ -161,6 +163,12 @@ docs/                 → Documentation
 | `npm test`              | Run unit tests             |
 | `npm run test:coverage` | Tests with coverage report |
 | `npm run build:web`     | Export for web deployment  |
+
+---
+
+## Publishing
+
+Step-by-step guide to creating a Google Play developer account and releasing the app: [docs/PLAY_STORE_LAUNCH.md](docs/PLAY_STORE_LAUNCH.md). Store text, answers and graphics are in [docs/STORE_LISTING.md](docs/STORE_LISTING.md).
 
 ---
 

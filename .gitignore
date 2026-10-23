@@ -12,6 +12,8 @@ expo-env.d.ts
 /ios
 *.orig.*
 *.jks
+*.keystore
+google-play-service-account*.json
 *.p8
 *.p12
 *.key
