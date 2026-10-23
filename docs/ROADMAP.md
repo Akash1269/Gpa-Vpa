@@ -59,5 +59,5 @@ Tasks that need your personal action (can't be automated).
 ### Priority 4 — Wishlist
 - [ ] **Semester Notes** — Add notes per semester ("heavy workload", "internship")
 - [ ] **Course Difficulty Rating** — Rate courses 1-5 stars for personal reference
-- [ ] **Streak/Achievements** — "3 semesters above 3.0" type motivational badges
+- [x] **Streak/Achievements** — "3 semesters above 3.0" type motivational badges (shipped: 10 achievements with a celebration popup, scaled to the active grading system)
 - [ ] **Course Schedule Integration** — Import courses from university schedule

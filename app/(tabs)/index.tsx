@@ -7,10 +7,11 @@ import AchievedBadge from '@/components/AchievedBadge';
 import SemesterProgress from '@/components/SemesterProgress';
 import { getAcademicStanding } from '@/utils/gpaCalculator';
 import { cgpaToPercent } from '@/utils/percentage';
+import { useAchievements } from '@/hooks/useAchievementQueue';
 import { useTheme } from '@/hooks/useTheme';
 import { useTabBarClearance } from '@/hooks/useTabBarClearance';
 import { fonts, fontSizes, spacing, radii } from '@/constants/theme';
-import { Trophy, TrendingUp, Target } from 'lucide-react-native';
+import { Trophy, TrendingUp, Target, ChevronRight } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function Dashboard() {
@@ -28,6 +29,8 @@ export default function Dashboard() {
     gradingSystem,
     percentFormula,
   } = useGpa();
+  const achievements = useAchievements();
+  const unlockedCount = achievements.filter((a) => a.unlocked).length;
   const academicStanding = getAcademicStanding(cumulativeGpa, gradingSystem);
 
   const styles = StyleSheet.create({
@@ -102,6 +105,16 @@ export default function Dashboard() {
       color: colors.primary,
     },
     goalCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.card,
+      borderRadius: 14,
+      padding: 14,
+      marginTop: spacing.md,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    achievementsCard: {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.card,
@@ -374,6 +387,27 @@ export default function Dashboard() {
               </View>
             </TouchableOpacity>
           )}
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(175).duration(500)}>
+          <PressableScale
+            style={styles.achievementsCard}
+            haptic="light"
+            onPress={() => router.push('/achievements')}
+            accessibilityRole="button"
+            accessibilityLabel={`Achievements, ${unlockedCount} of ${achievements.length} unlocked`}
+          >
+            <View style={[styles.statIconBg, { backgroundColor: colors.accentSoft }]}>
+              <Trophy size={16} color={colors.accentText} />
+            </View>
+            <View style={{ flex: 1, marginLeft: spacing.md }}>
+              <Text style={styles.goalCardTitle}>Achievements</Text>
+              <Text style={styles.goalCardSubtitle}>
+                {unlockedCount} of {achievements.length} unlocked
+              </Text>
+            </View>
+            <ChevronRight size={18} color={colors.textSecondary} />
+          </PressableScale>
         </Animated.View>
 
         {inProgressSemester && (

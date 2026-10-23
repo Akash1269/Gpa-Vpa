@@ -44,6 +44,14 @@ export default function StackNavigator() {
         }}
       />
       <Stack.Screen
+        name="achievements"
+        options={{
+          presentation: 'card',
+          headerShown: false,
+          animation: 'slide_from_right',
+        }}
+      />
+      <Stack.Screen
         name="custom-scale"
         options={{
           presentation: 'card',

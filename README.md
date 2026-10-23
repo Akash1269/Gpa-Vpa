@@ -63,6 +63,7 @@ Track courses, compute semester & cumulative GPA, and monitor academic standing 
 - **Academic standing indicators** — color-coded status (Excellent → Academic Warning)
 - **Course management** — add, edit, delete with search & semester filtering
 - **GPA progression chart** — visualize your academic trajectory
+- **Achievements** — ten milestones (first grade, goal met, three strong semesters in a row…) with a confetti celebration from Vee, the owl mascot
 - **Dark/Light theme** — automatic or manual toggle
 - **Privacy-first** — all data stored locally via AsyncStorage (no server, no tracking)
 - **Cross-platform** — runs on iOS, Android, and Web

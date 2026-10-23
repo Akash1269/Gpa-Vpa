@@ -43,6 +43,7 @@ type GpaContextType = {
   targetCredits: number | null;
   courseGoals: Record<string, string>;
   gradingSystem: GradingSystem;
+  isLoaded: boolean; // stored data has been read; before that the lists above are still empty
   gradingSystemPrompt: GradingSystemPrompt;
   setGradingSystem: (id: GradingSystemId, mode?: GradingSystemSwitchMode) => void;
   customScale: CustomScaleInput | null;
@@ -80,6 +81,7 @@ export const GpaContext = createContext<GpaContextType>({
   targetCredits: null,
   courseGoals: {},
   gradingSystem: getGradingSystem(DEFAULT_GRADING_SYSTEM_ID),
+  isLoaded: false,
   gradingSystemPrompt: null,
   setGradingSystem: () => {},
   customScale: null,
@@ -540,6 +542,7 @@ export const GpaProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         targetCredits,
         courseGoals,
         gradingSystem,
+        isLoaded,
         gradingSystemPrompt,
         setGradingSystem,
         customScale,
